@@ -5,7 +5,7 @@ This repo is the **Tanya Chai (תניא חי) demo**: a static, Hebrew-first, RT
 ## Hard rules
 
 - **No Lessons in Tanya**, and no other copyrighted commentary, anywhere in this repo: not quoted, paraphrased or used as a source. The repo is public.
-- **Never edit the Tanya text.** The Hebrew comes from `resources/texts/HE/` (with nikud) and is only split into sentences. The validator checks this (`npm run validate-content`).
+- **Never edit the Tanya text.** The Hebrew comes from `resources/texts/HE/` (with nikud) and is stored only there. Units are defined in `data/splits/` by their opening words; `data/units/` is generated and never edited. Everything else points at unit IDs, which are never renumbered (SPEC §6). The validator checks this (`npm run validate-content`).
 - **Torah content needs Alex's approval.** Every ביאור, glossary entry, question and Avos uBanim item starts with `reviewed: false`. Only Alex flips it, or you flip it on his explicit instruction for the specific items he approved.
 - **No external requests at runtime:** no Google Fonts, CDNs, embeds, analytics or live Sefaria calls. Fonts are self-hosted via `@fontsource`.
 - **Do not modify anything under `resources/`** (logo files and texts). Build the `HeartMark` component from the same path data as `resources/brand/logo/`.
@@ -35,5 +35,6 @@ This repo is the **Tanya Chai (תניא חי) demo**: a static, Hebrew-first, RT
 
 - `npm run dev`: local dev server
 - `npm run build`: production build (`VITE_BASE` sets the base path)
+- `npm run build-units`: regenerate `data/units/` from the raw text and the splits (runs automatically before dev and build)
 - `npm run validate-content`: content schema and integrity checks (`CONTENT_STRICT=1` fails on unreviewed items)
 - `npm run fetch-sefaria`: one-time download of the English, only if it is not in `resources/` (SPEC §8.1)
