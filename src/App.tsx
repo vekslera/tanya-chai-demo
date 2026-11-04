@@ -11,8 +11,12 @@ import { DoneScreen } from './screens/Done';
 import { TogetherScreen } from './screens/Together';
 import { TogetherQuizScreen } from './screens/TogetherQuiz';
 import { AboutScreen } from './screens/About';
+import { ShinunScreen } from './screens/Shinun';
+import { SHINUN_ENABLED } from './features';
 
 const SCREENS: Partial<Record<Route, () => JSX.Element | null>> = {
+  // With the flag off the route does not exist and falls back to Home.
+  ...(SHINUN_ENABLED ? { '/shinun': ShinunScreen } : {}),
   '/': HomeScreen,
   '/level': LevelScreen,
   '/read': ReadScreen,

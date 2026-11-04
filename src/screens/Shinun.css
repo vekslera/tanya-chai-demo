@@ -1,0 +1,63 @@
+.shinun-round {
+  margin-block-start: 12px;
+  font-size: 14px;
+  color: var(--navy-muted);
+}
+
+.shinun-instruction {
+  margin-block: 4px 20px;
+  font-family: var(--font-ui);
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.shinun-sentence {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  font-family: var(--font-text);
+  font-size: 26px;
+  line-height: 1.9;
+}
+
+.shinun-word {
+  white-space: nowrap;
+}
+
+/* A hidden word: a soft navy-tint pill, about the width of the word. Tap to reveal. */
+.shinun-pill {
+  min-height: 44px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--tint);
+  color: var(--navy);
+  font: inherit;
+  line-height: 1.6;
+  cursor: pointer;
+}
+
+.shinun-pill-blank {
+  visibility: hidden;
+}
+
+.shinun-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-block-start: auto;
+  padding-block-start: 28px;
+}
+
+.shinun-end {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.shinun-note {
+  padding: 14px 16px;
+  border-radius: var(--radius);
+  background: var(--bg-alt);
+  line-height: 1.6;
+}
