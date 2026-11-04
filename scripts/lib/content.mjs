@@ -233,15 +233,30 @@ export function validate(all) {
       if (!isReviewed(c[key])) errors.push(`card ${c.id}: ${key} is not a Reviewed<string>`);
     }
     if (c.talk && !isReviewed(c.talk)) errors.push(`card ${c.id}: talk is not a Reviewed<string>`);
+    for (const [key, max] of [
+      ['forParent', 30],
+      ['toChild', 35],
+    ]) {
+      const n = c[key]?.value.trim().split(/\s+/).length ?? 0;
+      if (n > max) warnings.push(`card ${c.id}: ${key} has ${n} words (max ${max})`);
+    }
     if (byId.has(c.from) && byId.has(c.to)) cardUnits.push(...inRange(c).map((u) => u.id));
   }
   if (cardUnits.join() !== portionUnits.map((u) => u.id).join()) {
     errors.push('together: cards do not cover the portion units exactly once, in order');
   }
+  const talks = cards.filter((c) => c.talk).length;
+  if (talks < 2 || talks > 3) warnings.push(`together: ${talks} cards with a talk question (2–3)`);
 
   if (p.shinun) {
     unitRef('shinun', p.shinun.unitId);
+    const wordCount = byId.get(p.shinun.unitId)?.text.trim().split(/\s+/).length ?? 0;
     if (!Array.isArray(p.shinun.rounds)) errors.push('shinun: rounds must be an array');
+    for (const round of p.shinun.rounds ?? []) {
+      if (round.some((i) => !Number.isInteger(i) || i < 0 || i >= wordCount)) {
+        errors.push(`shinun: word index out of range (the unit has ${wordCount} words)`);
+      }
+    }
   }
 
   // Unit IDs used anywhere must be well-formed.

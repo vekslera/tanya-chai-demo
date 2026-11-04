@@ -1,1 +1,137 @@
-[]
+[
+  {
+    "id": "nivzeh-venimas",
+    "term": "נבזה ונמאס",
+    "body": {
+      "value": "בזוי ומאוס: דבר שאין בו חשיבות, ואין בו במה להתגאות. כך האדם מסתכל כאן על הגוף שלו, לעומת הנשמה.",
+      "reviewed": false
+    }
+  },
+  {
+    "id": "veahavta",
+    "term": "ואהבת לרעך כמוך",
+    "body": {
+      "value": "מצוות התורה לאהוב כל יהודי כמו שאדם אוהב את עצמו.",
+      "reviewed": false
+    },
+    "source": "ויקרא יט, יח"
+  },
+  {
+    "id": "hanefesh-veharuach",
+    "term": "הנפש והרוח",
+    "body": {
+      "value": "שמות של חלקי הנשמה. כאן הכוונה לנשמה של היהודי, לעומת הגוף.",
+      "reviewed": false
+    }
+  },
+  {
+    "id": "beelokim-chaim",
+    "term": "באלקים חיים",
+    "body": {
+      "value": "בה׳, שהוא חי ונותן חיים לכל. שם נמצאים השורש והמקור של כל נשמה.",
+      "reviewed": false
+    }
+  },
+  {
+    "id": "matimos",
+    "term": "מתאימות",
+    "body": {
+      "value": "מלשון תאומים: הנשמות דומות זו לזו ושוות, כמו אחים תאומים.",
+      "reviewed": false
+    }
+  },
+  {
+    "id": "av-echad",
+    "term": "אב אחד",
+    "body": {
+      "value": "לכל הנשמות יש אב אחד, הקב״ה. לכן כל ישראל הם משפחה אחת.",
+      "reviewed": false
+    }
+  },
+  {
+    "id": "achim-mamash",
+    "term": "אחים ממש",
+    "body": {
+      "value": "אחים באמת, ולא רק במשל. כמו שאחים באים מאותם הורים, כך כל הנשמות באות מאותו שורש.",
+      "reviewed": false
+    }
+  },
+  {
+    "id": "ikar-vetafel",
+    "term": "עיקר וטפל",
+    "body": {
+      "value": "עיקר: הדבר החשוב ביותר. טפל: דבר משני, שבא רק בשביל העיקר.",
+      "reviewed": false
+    }
+  },
+  {
+    "id": "teluyah-bedavar",
+    "term": "אהבה התלויה בדבר",
+    "body": {
+      "value": "אהבה שיש לה סיבה חיצונית, כמו תועלת או הנאה. כשהסיבה נעלמת, נעלמת גם האהבה.",
+      "reviewed": false
+    },
+    "source": "משנה, אבות ה, טז"
+  },
+  {
+    "id": "hillel",
+    "term": "הלל הזקן",
+    "body": {
+      "value": "מגדולי החכמים בימי בית שני, נשיא הסנהדרין.",
+      "reviewed": false
+    }
+  },
+  {
+    "id": "veidach",
+    "term": "ואידך פירושא הוא",
+    "body": {
+      "value": "בארמית: ״והשאר, פירוש הוא״. שאר התורה מפרש ומרחיב את המצווה הזאת.",
+      "reviewed": false
+    },
+    "source": "שבת לא, א"
+  },
+  {
+    "id": "ikra-veshorsha",
+    "term": "עיקרא ושרשא דכל עלמין",
+    "body": {
+      "value": "בארמית: ״העיקר והשורש של כל העולמות״, כלומר הקב״ה.",
+      "reviewed": false
+    }
+  },
+  {
+    "id": "ohr-ein-sof",
+    "term": "אור אין סוף",
+    "body": {
+      "value": "האור והגילוי של הקב״ה, שאין לו גבול וסוף.",
+      "reviewed": false
+    }
+  },
+  {
+    "id": "knesses-yisrael",
+    "term": "כנסת ישראל",
+    "body": {
+      "value": "כאן: המקור הרוחני שממנו באות כל נשמות ישראל, כמו שמתבאר מיד בהמשך.",
+      "reviewed": false
+    }
+  },
+  {
+    "id": "echad-beechad",
+    "term": "למהוי אחד באחד",
+    "body": {
+      "value": "בארמית: ״להיות אחד באחד״. ה׳, שהוא אחד, שורה בישראל כשהם מאוחדים כאחד.",
+      "reviewed": false,
+      "note": "Source per the Kehot English footnote: Zohar II:135a. Alex to confirm before it is shown."
+    },
+    "source": "זוהר ח״ב קלה, א"
+  },
+  {
+    "id": "lo-sharya",
+    "term": "לא שריא באתר פגים",
+    "body": {
+      "value": "בארמית: ״אינו שורה במקום פגום״. פירוד בין יהודים הוא כמו פגם, ובמקום כזה השכינה אינה שורה.",
+      "reviewed": false,
+      "note": "Source per the Kehot English footnote: Zohar I:216b. Alex to confirm before it is shown."
+    },
+    "source": "זוהר ח״א רטז, ב"
+  }
+]
