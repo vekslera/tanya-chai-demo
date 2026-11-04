@@ -5,12 +5,12 @@
 | Text | Tanya, Likkutei Amarim, with nikud and punctuation |
 | Edition | Kehot Publication Society ([kehot.com](https://kehot.com)) |
 | Digitization | Sefaria |
-| License | [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/) |
+| License | CC-BY-NC, as given in the Sefaria API metadata. Sefaria's license link leads to [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/). |
 | Files | `tanya/LA/32`, written by `npm run fetch-sefaria` from the full API response saved next to it (`tanya/LA/32.sefaria.json`, with the fetch date). Identical in every letter and mark to the copy Alex made by hand in November 2026. |
 
 ## Attribution (shown in the app's About screen)
 
-לשון התניא בניקוד ובפיסוק: הוצאת קה״ת (Kehot Publication Society), באמצעות ספריא (Sefaria). רישיון CC BY-NC 4.0.
+לשון התניא בניקוד ובפיסוק: הוצאת קה״ת (Kehot Publication Society), באמצעות ספריא (Sefaria). רישיון CC-BY-NC.
 
 ## Terms in short
 

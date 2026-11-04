@@ -49,4 +49,4 @@ The Tanya texts, the original learning content, and the Tanya Chai name and logo
 
 ### Content license
 
-The Hebrew and English texts of Tanya are used under their own licenses (Kehot Publication Society, via Sefaria, CC BY-NC). The ביאור, glossary, questions and Avos uBanim materials are © Tanya Chai, all rights reserved. Details: [`content/CONTENT-LICENSE.md`](content/CONTENT-LICENSE.md).
+The Hebrew and English texts of Tanya are used under their own licenses (Kehot Publication Society, via Sefaria, CC-BY-NC). The ביאור, glossary, questions and Avos uBanim materials are © Tanya Chai, all rights reserved. Details: [`content/CONTENT-LICENSE.md`](content/CONTENT-LICENSE.md).

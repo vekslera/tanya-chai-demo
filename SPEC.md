@@ -470,7 +470,7 @@ type Reviewed<T> = { value: T; reviewed: boolean; note?: string };
 
 ### 8.1 The texts
 
-**Hebrew.** Read `resources/texts/he/tanya/LA/32`. Each line is one paragraph. Never change this file by hand. Its source and terms are recorded in `resources/texts/he/SOURCE.md`: Kehot's vocalized edition, digitized by Sefaria, CC BY-NC 4.0.
+**Hebrew.** Read `resources/texts/he/tanya/LA/32`. Each line is one paragraph. Never change this file by hand. Its source and terms are recorded in `resources/texts/he/SOURCE.md`: Kehot's vocalized edition, digitized by Sefaria, CC-BY-NC.
 
 **English.** `resources/texts/en/tanya/LA/32`, with its source and terms in `resources/texts/en/SOURCE.md`.
 
