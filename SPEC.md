@@ -1,6 +1,6 @@
 # Tanya Chai (תניא חי): Demo Specification
 
-**Version:** 1.2 (draft for build; text stored once and split into units with stable IDs)
+**Version:** 1.3 (draft for build; demo portion ט׳ אדר, two levels, Avos uBanim cards by thought)
 **Owner:** Alex Veksler
 **Repository:** `vekslera/tanya-chai-demo` (public; code under Apache-2.0, content under its own terms, see §9)
 **Target URL:** `https://demo.tanyachai.app` (initially `https://vekslera.github.io/tanya-chai-demo/`)
@@ -13,12 +13,12 @@ A short, polished, clickable demo of the **Matmid** path (the daily portion of T
 
 The message of the whole project is **chayus in learning and understanding** of Tanya, for all ages. Memorization is a secondary path, so the demo does not lead with it.
 
-The demo has to make four things felt within about three minutes:
+The demo has to make four things felt within a few minutes:
 
-1. **Learning at your own level.** The same portion can be studied as the text alone, with a short ביאור, or with an extended ביאור, and the questions change with the level.
+1. **Learning at your own level.** The same portion can be studied as the text alone or with a short ביאור, and the questions change with the level. Deeper study with classical commentaries belongs to the Maskil path and is only pointed to in the demo.
 2. **Immediate, warm feedback.** Each answer points back to the sentence in the text it relies on.
 3. **A living sense of progress.** At the end come a streak, the gold heart contour of the logo advancing, and a counter of the learning completed together by the community.
-4. **Avos uBanim.** A father gets ready-made tools for learning the portion with his son: a ביאור for the father, suggested words for explaining each sentence to a child, a question for the conversation, and simple questions the son answers. The demo does not rely on the father's own skill to explain Tanya.
+4. **Avos uBanim.** A father gets ready-made tools for learning the portion with his son: a ביאור for the father, suggested words for explaining each thought to a child, a question for the conversation, and simple questions the son answers. The demo does not rely on the father's own skill to explain Tanya.
 
 A taste of **Shinun** (memorization) exists behind a feature flag, off by default.
 
@@ -26,7 +26,7 @@ It is **not** the MVP. There are no accounts, no backend and no analytics. Every
 
 ### 1.1 Success criteria
 
-- A first-time user can open the link on a phone and finish the whole portion, at any level, in 3–6 minutes without guidance.
+- A first-time user can open the link on a phone and finish the whole portion, at either level, in 4–7 minutes without guidance.
 - A father who has never learned Tanya with his son can follow the Avos uBanim screen without preparation.
 - It looks and feels like a real product: RTL that never breaks, correct Hebrew typography, smooth transitions, no layout jumps.
 - It loads fast on a mid-range Android phone over 4G (Lighthouse mobile performance ≥ 90; total transfer < 600 KB excluding fonts, < 1 MB including fonts).
@@ -39,16 +39,16 @@ It is **not** the MVP. There are no accounts, no backend and no analytics. Every
 
 | Item | Value |
 | --- | --- |
-| Portion | The opening of Likkutei Amarim, chapter 32 ("the heart of the Tanya": אהבת ישראל) |
-| Label in UI | `שיעור לדוגמה: כ״ג אדר א׳` |
-| Calendar | Leap year (5787 is a leap year), following the official daily Tanya division |
-| Start | `וְהִנֵּה, עַל יְדֵי קִיּוּם הַדְּבָרִים הַנִּזְכָּרִים לְעֵיל` (beginning of chapter 32) |
-| End | Confirmed: the portion of כ״ג אדר א׳ is units `LA.32.001`–`LA.32.003`, the first paragraph of the chapter, ending `למגדול ועד קטן.` (`data/schedules/daily.json`). |
+| Portion | The first half of Likkutei Amarim, chapter 32 ("the heart of the Tanya": אהבת ישראל), as learned on ט׳ אדר in a regular year: units `LA.32.001`–`LA.32.019`, three paragraphs. It opens with the chapter's main point and ends with the reason it is "כל התורה כולה". |
+| Label in UI | `שיעור לדוגמה: ט׳ אדר` |
+| Calendar | Regular year, chosen for the narrative: it is a demo, so the year does not need to match the current one (5787 is a leap year). |
+| Start | `וְהִנֵּה, עַל יְדֵי קִיּוּם הַדְּבָרִים הַנִּזְכָּרִים לְעֵיל` (beginning of chapter 32, unit `LA.32.001`) |
+| End | `וּכְמוֹ שֶׁנִּתְבָּאֵר בְּמָקוֹם אַחֵר בַּאֲרִיכוּת:` (end of the third paragraph, unit `LA.32.019`). Confirmed by Alex; see `data/schedules/daily.json`, `regular["adar-09"]`. |
 | Hebrew text | `resources/texts/HE/tanya/LA/32`, supplied by Alex: the whole chapter with nikud and punctuation, one paragraph per line, abbreviations written out. This file is the source of truth for the Hebrew. |
 | English text | `resources/texts/ENG/tanya/LA/32` if Alex adds it; otherwise Sefaria's English version of Tanya (Kehot translation), fetched once (§8.1). Check its license. |
 | ביאור, glossary, questions, Avos uBanim tools | Original content written for this demo (§8.3), reviewed by Alex |
 
-**Lessons in Tanya must not appear anywhere** in this repository: not quoted, not paraphrased closely, not used as a hidden source for the ביאור. The same applies to any other copyrighted commentary.
+**Lessons in Tanya (Shiurim) is a local reference only.** Alex keeps the Hebrew Shiurim for chapter 32 in `resources/texts/HE/shiurim/`, excluded from Git (`.git/info/exclude`). It may be read to check the meaning of the text. It must never be quoted, paraphrased, reworded or followed in its order of explanation, and nothing from it may be committed or published. The same applies to any other copyrighted commentary.
 
 ---
 
@@ -67,7 +67,7 @@ Home ──► Choose level ──► Read ──► Questions ──► Complet
 #### S1: Home (`#/`)
 
 - The animated logo symbol (`resources/brand/logo/logo-mark-animated.svg`, inlined as a React component), with the wordmark below it: תניא in navy, חי in deep gold, Frank Ruhl Libre 900. The name is always written without gershayim.
-- A card reading `שיעור לדוגמה: כ״ג אדר א׳`, with the chapter label `ליקוטי אמרים, פרק ל״ב` and the estimated time (`כ־5 דקות`).
+- A card reading `שיעור לדוגמה: ט׳ אדר`, with the chapter label `ליקוטי אמרים, פרק ל״ב` and the estimated time (`כ־6 דקות`).
 - Status row: the streak, with a small heart-pulse icon and the text `רצף: 12 ימים` (no fire emoji). Points are not shown here.
 - Primary button: `התחל ללמוד`.
 - Secondary button: `לימוד אבות ובנים` (S8).
@@ -76,13 +76,14 @@ Home ──► Choose level ──► Read ──► Questions ──► Complet
 
 #### S2: Choose level (`#/level`)
 
-There are three large, tappable cards, each with a one-line description:
+There are two large, tappable cards, each with a one-line description:
 
 | Level | Title | Description | Questions |
 | --- | --- | --- | --- |
 | 1 | `טקסט בלבד` | `קוראים את לשון התניא כפי שהיא` | 3 literal questions (what does the text say) |
-| 2 | `טקסט עם ביאור קצר` | `ביאור קצר משולב אחרי כל משפט` | 3 understanding questions |
-| 3 | `טקסט עם ביאור מורחב` | `ביאור מורחב ומושגי יסוד` | 2 understanding + 1 concept question |
+| 2 | `טקסט עם ביאור` | `ביאור קצר ופשוט אחרי כל משפט` | 2 understanding questions + 1 concept question |
+
+Below them, a quiet line, not a button: `ללימוד מעמיק עם מפרשים: מסלול משכיל, בקרוב`. The demo has no extended level: deeper study with classical commentaries belongs to Maskil.
 
 The last choice is remembered. The default selection is level 2.
 
@@ -92,7 +93,6 @@ The last choice is remembered. The default selection is level 2.
 - **Body:** the text, split into **sentences**, each a block with a little breathing room. Frank Ruhl Libre 400, 20–22px on phones, line-height 2.0, since the text carries nikud.
 - **Level 1:** text only.
 - **Level 2:** the short ביאור (1–2 lines) appears after each sentence. Rubik, smaller, muted navy, with a thin gold rule on the right edge.
-- **Level 3:** the extended ביאור appears as an expandable block after each sentence (`הרחבה ▾`). The first one is open by default. It may contain a short "יסוד" note explaining a concept, such as נפש האלקית or אהבת ישראל.
 - **Glossary terms:** marked with a dotted gold underline. Tapping one opens a bottom sheet with the term, a 1–3 line ביאור, and (if present) a source line. At least these terms: `נבזה ונמאס`, `נפש` / `הנפש והרוח`, `באלקים חיים`, `אחים ממש`, `אב אחד`. Final list per §8.3.
 - **English toggle:** each paragraph has a small `EN` chip. Tapping it reveals the English translation of that paragraph below the Hebrew (LTR, `lang="en"`, serif, smaller). The toggle is per paragraph, not global. A global "show all English" action is in the overflow menu.
 - **Bottom bar:** a sticky primary button, `לשאלות` (enabled once the user has scrolled to the end, or after 20 seconds).
@@ -151,11 +151,11 @@ Memorization is a secondary path, so this screen is built last and stays hidden 
 A father learns the portion with his son on one device. The screen gives the father everything to say, so the session does not depend on the father's own skill in explaining Tanya.
 
 - **Intro card:** the title `לימוד אבות ובנים`, and one line: `האב קורא, מסביר ושואל, והילד עונה. כל מה שצריך לומר כתוב כאן.` A button `מתחילים`.
-- **One sentence per card**, moving forward with `הבא` and back with `הקודם`. Each card shows:
-  - the Tanya sentence, large;
+- **One thought per card:** 6–8 cards for the portion, each covering one or more consecutive units. Moving forward with `הבא` and back with `הקודם`. Each card shows:
+  - the Tanya words of that thought, large;
   - `לאבא`: a short ביאור for the father (1–2 lines);
   - `לומר לילד`: ready-made words the father can read aloud as they are, in simple Hebrew (1–3 short sentences), in a warm gold-tinted card;
-  - `שאלה לשיחה`: on some sentences only, an open question for the conversation. It is not scored.
+  - `שאלה לשיחה`: on some cards only, an open question for the conversation. It is not scored.
 - The glossary terms work here too.
 - **After the last card:** `עכשיו תורו של הילד`, and then S9.
 - Large text and large buttons: the phone is passed between father and son, often in a noisy place, such as a full beis midrash. Nothing depends on sound.
@@ -258,9 +258,9 @@ tanya-chai-demo/
 │  ├─ translations/en/LA/32.json  ← English, as spans over unit ranges
 │  └─ schedules/daily.json        ← dates → unit ranges, per year type
 ├─ content/                   ← the learning layer, keyed by unit ID (§6.5)
-│  ├─ LA/32.json                  ← ביאור, glossary marks, Avos uBanim tools, per unit
+│  ├─ LA/32.json                  ← ביאור and glossary marks, per unit
 │  ├─ glossary.json               ← glossary entries
-│  ├─ portions/adar1-23.json      ← the demo portion: date key, label, questions
+│  ├─ portions/adar-09.json       ← the demo portion: date key, label, questions, Avos uBanim cards
 │  ├─ REVIEW.md                   ← generated for Alex's review (§8.4)
 │  └─ CONTENT-LICENSE.md          ← terms for the texts (§9)
 ├─ scripts/
@@ -282,11 +282,11 @@ tanya-chai-demo/
 
 ```ts
 type DemoState = {
-  level: 1 | 2 | 3;
+  level: 1 | 2;
   streak: number;                 // seeded 12
   points: number;                 // seeded 340
   heartProgress: number;          // seeded 62, 0..100
-  completedLevels: (1 | 2 | 3)[]; // prevents double awarding
+  completedLevels: (1 | 2)[];     // prevents double awarding
   completedTogether: boolean;     // Avos uBanim done once (awards like a level)
   familyStreak: number;           // seeded 5, shown only in the Avos uBanim completion
   togetherIndex: number;          // current card in S8
@@ -380,27 +380,31 @@ The per-paragraph `EN` toggle (S3) opens one span.
 ```ts
 type UnitContent = {
   id: UnitId;
-  biur?: { short?: Reviewed<string>; long?: Reviewed<string> };
+  biur?: { short?: Reviewed<string> };              // the demo has one ביאור level (§3.1, S2)
   glossary?: { entryId: string; match: string }[];   // exact substring of the unit's text to underline
-  together?: {                                       // Avos uBanim (S8)
-    forParent: Reviewed<string>;                     // short ביאור for the father
-    toChild: Reviewed<string>;                       // words the father reads aloud to his son
-    talk?: Reviewed<string>;                         // open question for the conversation, unscored
-  };
 };
 // content/LA/32.json: UnitContent[]
 
 type GlossaryEntry = { id: string; term: string; body: Reviewed<string> };
 // content/glossary.json: GlossaryEntry[]
 
-type Portion = {                       // content/portions/adar1-23.json
-  dateKey: "adar1-23";
-  yearType: "leap";
-  label: { he: "שיעור לדוגמה: כ״ג אדר א׳" };
+type TogetherCard = {                  // Avos uBanim (S8): one thought
+  id: string;
+  from: UnitId; to: UnitId;            // consecutive units covered by this card
+  forParent: Reviewed<string>;         // short ביאור for the father
+  toChild: Reviewed<string>;           // words the father reads aloud to his son
+  talk?: Reviewed<string>;             // open question for the conversation, unscored
+};
+
+type Portion = {                       // content/portions/adar-09.json
+  dateKey: "adar-09";
+  yearType: "regular";
+  label: { he: "שיעור לדוגמה: ט׳ אדר" };
   location: { he: "ליקוטי אמרים, פרק ל״ב"; en: "Likkutei Amarim, chapter 32" };
   boundariesConfirmed: boolean;        // false until Alex confirms the daily division
   sources: Source[];                   // see §8.1
   questions: Question[];
+  together: TogetherCard[];            // 6–8 cards, in order
   shinun?: { unitId: UnitId; rounds: number[][] }; // word indices hidden per round
 };
 
@@ -417,7 +421,7 @@ type Source = {
 type Question = {
   id: string;
   track: "solo" | "together";  // together = the son's questions (S9)
-  level?: 1 | 2 | 3;           // solo track only
+  level?: 1 | 2;               // solo track only
   kind: "choice" | "trueFalse" | "findSentence";
   category: "literal" | "understanding" | "concept" | "child";
   prompt: Reviewed<string>;
@@ -442,8 +446,8 @@ type Reviewed<T> = { value: T; reviewed: boolean; note?: string };
 - Every `Range`, `TranslationSpan`, `unitRef`, unit-ID answer and `UnitContent.id` refers to existing units, with `from` not after `to`.
 - The translation spans of a chapter cover each of its units exactly once.
 - Every `glossary.match` occurs in its unit's text. Every `entryId` exists.
-- In the solo track, level 1 questions are `literal`, level 2 questions are `understanding`, and level 3 has at least one `concept` question.
-- Every unit in the demo portion has `together.forParent` and `together.toChild`. The together track has exactly 3 questions, all `category: "child"`, `kind` `choice` or `trueFalse`, with 2–3 options.
+- In the solo track, level 1 has 3 `literal` questions, and level 2 has 2 `understanding` questions and 1 `concept` question.
+- The Avos uBanim cards cover the portion's units exactly once, in order, with 6–8 cards. The together track has exactly 3 questions, all `category: "child"`, `kind` `choice` or `trueFalse`, with 2–3 options.
 - Every solo `choice` question has exactly one correct option and 3–4 options in total.
 - The validator prints a **summary of unreviewed items**. It fails the build only when `CONTENT_STRICT=1` is set. The production deploy sets `CONTENT_STRICT=1` once Alex has signed off (§8.4).
 
@@ -490,7 +494,7 @@ Claude Code prepares, for chapter 32:
 2. **Units:** `scripts/build-units.mjs` generates `data/units/he/LA/32.json`. Add it as `predev` and `prebuild` steps in `package.json`, so the units are always fresh.
 3. **Translations:** `data/translations/en/LA/32.json`, one span per paragraph, verbatim from the English source.
 4. **Schedule:** `data/schedules/daily.json` already exists; do not change it. If a future portion boundary falls inside a unit, split that unit (§6.1).
-5. **Portion:** `content/portions/adar1-23.json` with the date key, label, sources and questions.
+5. **Portion:** `content/portions/adar-09.json` with the date key, label, sources, questions and Avos uBanim cards.
 
 ### 8.3 Writing the ביאור, glossary, questions and Avos uBanim tools
 
@@ -499,17 +503,18 @@ These are drafted by Claude (in the claude.ai conversation or in Claude Code) an
 **Guidelines for the drafter:**
 
 - Stay strictly within the plain meaning of the text, as it is learned in Chabad. No novel interpretations, no stories, no attributions to the Rebbe or other sources unless Alex supplies them.
-- **Never** use Lessons in Tanya or any other copyrighted commentary as a source, and never imitate its phrasing.
-- **Short ביאור:** at most 25 words per sentence; it explains words and the flow. **Extended ביאור:** 40–90 words per sentence, plus at most two "יסוד" notes in the whole portion.
+- Lessons in Tanya may be read to check the meaning (§2), but the ביאור is written from scratch: own words, own examples, own order. **Never** copy, paraphrase or reword it, or any other copyrighted commentary.
+- **Overlap check:** before review, a script compares every draft item with the local Shiurim file and flags any run of 5 or more words in common (letters only, nikud ignored). Flagged items are rewritten. The check runs only where the file exists, that is on Alex's machine, never in CI.
+- **Short ביאור:** at most 25 words per unit; it explains words and the flow, so simply that a child of about 10, or someone opening Tanya for the first time, understands it. No unexplained terms. The third paragraph (`LA.32.011`–`LA.32.019`) is the hardest at this level and needs the most care. There is no extended ביאור in the demo.
 - **Questions** test the text, not trivia.
   - **Literal:** what does the text say.
   - **Understanding:** why does it say so.
   - **Concept:** how does this connect to the idea of the chapter, for example why a lowly view of the body makes אהבת ישראל easy, or what "אחים ממש" means.
   - **Distractors:** plausible but clearly wrong according to the text, never tricky wording. Avoid "all of the above".
 - **Avos uBanim** (written for boys of school age, about 8–12):
-  - **For the father (`forParent`):** at most 30 words; what the sentence says and why, so the father understands before explaining.
+  - **For the father (`forParent`):** at most 30 words per card; what the thought says and why, so the father understands before explaining.
   - **To the child (`toChild`):** 1–3 short sentences, at most 35 words, that the father can read aloud as they are. Simple words and examples from a child's world (family, friends, class), always faithful to the text. No invented stories attributed to anyone.
-  - **Conversation (`talk`):** on 2–3 sentences only; an open question about the child's own life, with no right answer.
+  - **Conversation (`talk`):** on 2–3 cards only; an open question about the child's own life, with no right answer.
   - **The son's questions:** 3 questions with 2–3 options, about the main idea, never about wording.
 - **Hebrew register:** modern Hebrew that is clear and respectful, using Chabad terms.
 
@@ -610,9 +615,9 @@ Each milestone is a small, reviewable step. Work on a branch per milestone, and 
 | --- | --- | --- |
 | M0 | **Scaffold and pipeline:** Vite + React + TS, ESLint/Prettier, tokens, self-hosted fonts, `HeartMark` component, a placeholder Home screen, the deploy workflow | The placeholder page is live on the project URL, RTL is correct, and the heart renders at 62% |
 | M1 | **Text layer:** splits for chapter 32, `build-units.mjs`, the English (from `resources/` or fetched with `fetch-sefaria.mjs`, license reported) as translation spans, the schedule entry, the portion file, the loader and the validator | The validator passes the integrity rules of §6.5, and Alex has confirmed the portion boundaries |
-| M2 | **Content drafts:** ביאור (short and long), glossary, 9 solo questions with hints and explanations, the Avos uBanim tools for every sentence and 3 questions for the son, all `reviewed: false`; `REVIEW.md` generated | REVIEW.md is ready for Alex |
+| M2 | **Content drafts:** short ביאור for the 19 units, glossary, 6 solo questions with hints and explanations, 6–8 Avos uBanim cards and 3 questions for the son, all `reviewed: false`; `REVIEW.md` generated | REVIEW.md is ready for Alex |
 | M3 | **Read screen:** levels, glossary sheet, per-paragraph English, reading progress | Works on a 360px phone and on desktop; no RTL glitches |
-| M4 | **Quiz:** three question types, feedback with sentence highlight, retry, points, back-to-text sheet | All 9 questions are playable, and state survives a reload |
+| M4 | **Quiz:** three question types, feedback with sentence highlight, retry, points, back-to-text sheet | All 6 questions are playable, and state survives a reload |
 | M5 | **Completion:** streak, heart contour animation, purify effect, community counter, points line, level replay | Smooth on a mid-range Android; reduced motion respected |
 | M6 | **Avos uBanim** (S8, S9, shared completion) and the About & credits screen | A father can go through all cards and his son's questions on one phone; attribution lines are exact; reset works |
 | M7 | **Polish and launch:** review fixes applied, `CONTENT_STRICT=1`, Lighthouse, custom domain, CNAME, filter submissions; optional Playwright smoke test | The demo runs at `https://demo.tanyachai.app` on Alex's phone, and the QR code for slide 7 is generated |

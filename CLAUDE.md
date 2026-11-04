@@ -4,7 +4,7 @@ This repo is the **Tanya Chai (תניא חי) demo**: a static, Hebrew-first, RT
 
 ## Hard rules
 
-- **No Lessons in Tanya**, and no other copyrighted commentary, anywhere in this repo: not quoted, paraphrased or used as a source. The repo is public.
+- **Lessons in Tanya is a local reference only.** The Hebrew Shiurim in `resources/texts/HE/shiurim/` is excluded from Git and must never be committed. You may read it to check the meaning of the text, but never quote, paraphrase, reword or follow its order of explanation (SPEC §2, §8.3). The same applies to any other copyrighted commentary. The repo is public.
 - **Never edit the Tanya text.** The Hebrew comes from `resources/texts/HE/` (with nikud) and is stored only there. Units are defined in `data/splits/` by their opening words; `data/units/` is generated and never edited. Everything else points at unit IDs, which are never renumbered (SPEC §6). The validator checks this (`npm run validate-content`).
 - **Torah content needs Alex's approval.** Every ביאור, glossary entry, question and Avos uBanim item starts with `reviewed: false`. Only Alex flips it, or you flip it on his explicit instruction for the specific items he approved.
 - **No external requests at runtime:** no Google Fonts, CDNs, embeds, analytics or live Sefaria calls. Fonts are self-hosted via `@fontsource`.
