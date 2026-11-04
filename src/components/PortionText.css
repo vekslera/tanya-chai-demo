@@ -1,0 +1,85 @@
+.quote-card {
+  margin: 0;
+  padding: 14px 16px;
+  background: var(--white);
+  border-radius: var(--radius-sm);
+  border-inline-start: 3px solid var(--gold);
+  box-shadow: var(--shadow);
+}
+
+.quote-card-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--navy-muted);
+  margin-block-end: 4px;
+}
+
+.quote-card-text {
+  margin: 0;
+  font-family: var(--font-text);
+  font-size: 19px;
+  line-height: 1.9;
+}
+
+.quote-card-text mark,
+.compact-sentence--highlight {
+  background: linear-gradient(
+    transparent 12%,
+    var(--gold-soft) 12%,
+    var(--gold-soft) 92%,
+    transparent 92%
+  );
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  color: inherit;
+  border-radius: 3px;
+}
+
+.compact-text {
+  font-family: var(--font-text);
+  font-size: 18px;
+  line-height: 1.9;
+}
+
+.compact-paragraph {
+  margin-block-end: 14px;
+  padding: 2px 4px;
+  border-radius: 8px;
+  transition: background-color 0.3s var(--ease);
+}
+
+.compact-paragraph--hint {
+  background: var(--gold-soft);
+}
+
+/* findSentence: every sentence is a tappable block. */
+button.compact-sentence {
+  display: block;
+  width: 100%;
+  margin-block: 6px;
+  padding: 8px 12px;
+  min-height: 44px;
+  text-align: start;
+  font: inherit;
+  line-height: 1.8;
+  color: var(--navy);
+  background: var(--white);
+  border: 2px solid var(--track);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+button.compact-sentence:hover {
+  border-color: var(--tint);
+}
+
+button.compact-sentence.compact-sentence--correct,
+button.compact-sentence.compact-sentence--highlight {
+  border-color: var(--gold);
+  background: var(--gold-soft);
+}
+
+button.compact-sentence.compact-sentence--wrong {
+  border-color: var(--tint);
+  color: var(--navy-muted);
+}

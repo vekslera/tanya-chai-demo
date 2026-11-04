@@ -6,11 +6,13 @@ import { StoreProvider } from './store/store';
 import { HomeScreen } from './screens/Home';
 import { LevelScreen } from './screens/Level';
 import { ReadScreen } from './screens/Read';
+import { QuizScreen } from './screens/Quiz';
 
-const SCREENS: Partial<Record<Route, () => JSX.Element>> = {
+const SCREENS: Partial<Record<Route, () => JSX.Element | null>> = {
   '/': HomeScreen,
   '/level': LevelScreen,
   '/read': ReadScreen,
+  '/quiz': QuizScreen,
 };
 
 function Screens() {
