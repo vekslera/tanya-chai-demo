@@ -1,0 +1,63 @@
+.heartmark {
+  display: block;
+  overflow: visible;
+}
+
+.heartmark--animated .heartmark-contour {
+  transition:
+    stroke-dashoffset 1.2s ease-in-out,
+    opacity 0.2s ease-in-out;
+}
+
+.heartmark-beat {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: heartmark-beat 1.6s ease-in-out infinite;
+}
+
+.heartmark-purify {
+  animation: heartmark-purify 1.8s ease-in-out 1 both;
+}
+
+/* Keyframes as in logo-mark-animated.svg. */
+@keyframes heartmark-beat {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  12% {
+    transform: scale(1.07);
+  }
+  24% {
+    transform: scale(1);
+  }
+  36% {
+    transform: scale(1.04);
+  }
+  50% {
+    transform: scale(1);
+  }
+}
+
+@keyframes heartmark-purify {
+  0% {
+    fill: var(--tint);
+  }
+  35%,
+  65% {
+    fill: var(--purify);
+  }
+  100% {
+    fill: var(--tint);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .heartmark-beat,
+  .heartmark-purify {
+    animation: none;
+  }
+  .heartmark--animated .heartmark-contour {
+    transition: none;
+  }
+}

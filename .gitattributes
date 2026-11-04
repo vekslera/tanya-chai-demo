@@ -1,0 +1,2 @@
+# Keep the raw texts byte-for-byte as supplied.
+resources/** -text

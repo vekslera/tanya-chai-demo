@@ -1,0 +1,12 @@
+dist
+node_modules
+package-lock.json
+resources
+data/units
+SPEC.md
+CLAUDE.md
+src/styles/fonts.css
+data/splits
+data/schedules
+README.md
+NOTICE

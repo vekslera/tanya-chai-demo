@@ -1,0 +1,16 @@
+.wordmark {
+  margin: 0;
+  font-family: var(--font-text);
+  font-weight: 900;
+  font-size: 44px;
+  line-height: 1.1;
+  letter-spacing: 0;
+}
+
+.wordmark-tanya {
+  color: var(--navy);
+}
+
+.wordmark-chai {
+  color: var(--gold-deep);
+}
