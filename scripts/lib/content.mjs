@@ -1,7 +1,8 @@
 // Loads every layer from disk and runs the integrity rules of SPEC §6.5.
 import fs from 'node:fs';
 import path from 'node:path';
-import { buildUnits, checkUnits, paragraphs, UNIT_ID } from './units.mjs';
+import { buildUnits, checkUnits, UNIT_ID } from './units.mjs';
+import { footnoteMarks, parseEnglish } from './english.mjs';
 
 export const root = path.resolve(import.meta.dirname, '../..');
 const readJson = (rel) => JSON.parse(fs.readFileSync(path.join(root, rel), 'utf8'));
@@ -26,7 +27,7 @@ export function loadAll() {
     schedule: readJson('data/schedules/daily.json'),
     translations: exists(translationsPath) ? readJson(translationsPath) : null,
     enResource: exists(enResourcePath)
-      ? paragraphs(fs.readFileSync(path.join(root, enResourcePath), 'utf8')).map((l) => l.trim())
+      ? parseEnglish(fs.readFileSync(path.join(root, enResourcePath), 'utf8'))
       : null,
     unitContent: exists(`content/${part}/${chapter}.json`)
       ? readJson(`content/${part}/${chapter}.json`)
@@ -98,8 +99,12 @@ export function validate(all) {
   }
 
   // Translations: cover each unit of the chapter exactly once, verbatim from the resource.
+  if (all.enResource?.errors.length)
+    errors.push(...all.enResource.errors.map((e) => `English resource: ${e}`));
   if (!all.translations) {
-    warnings.push('no English translation yet (data/translations/en/LA/32.json)');
+    (process.env.CONTENT_STRICT === '1' ? errors : warnings).push(
+      'no English translation yet (data/translations/en/LA/32.json)',
+    );
   } else {
     const covered = new Map();
     all.translations.forEach((s, i) => {
@@ -109,8 +114,23 @@ export function validate(all) {
       if (typeof s.text !== 'string' || !s.text.trim())
         errors.push(`translation[${i}]: empty text`);
       if (/<[^>]+>/.test(s.text)) errors.push(`translation[${i}]: contains HTML tags`);
-      if (s.sourceId === 'en-resource' && all.enResource && !all.enResource.includes(s.text)) {
+      const en = all.enResource;
+      if (s.sourceId === 'en-resource' && en && !en.paragraphs.includes(s.text)) {
         errors.push(`translation[${i}]: text is not verbatim from the English resource`);
+      }
+      const marks = footnoteMarks(s.text);
+      for (const n of marks) {
+        if (!s.footnotes?.[n])
+          errors.push(`translation[${i}]: footnote mark [${n}] has no footnote`);
+        else if (en && en.footnotes[n] !== s.footnotes[n]) {
+          errors.push(
+            `translation[${i}]: footnote [${n}] is not verbatim from the English resource`,
+          );
+        }
+      }
+      for (const n of Object.keys(s.footnotes ?? {})) {
+        if (!marks.includes(n))
+          errors.push(`translation[${i}]: footnote [${n}] is not marked in the text`);
       }
       for (const u of inRange(s)) covered.set(u.id, (covered.get(u.id) ?? 0) + 1);
     });

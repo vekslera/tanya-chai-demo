@@ -3,7 +3,8 @@
 // One span per Hebrew paragraph: line N of the English file covers paragraph N of the Hebrew.
 import fs from 'node:fs';
 import path from 'node:path';
-import { buildUnits, paragraphs } from './lib/units.mjs';
+import { buildUnits } from './lib/units.mjs';
+import { footnoteMarks, parseEnglish } from './lib/english.mjs';
 
 const root = path.resolve(import.meta.dirname, '..');
 const part = 'LA';
@@ -27,7 +28,12 @@ if (errors.length) {
   process.exit(1);
 }
 
-const english = paragraphs(fs.readFileSync(enPath, 'utf8')).map((l) => l.trim());
+const parsed = parseEnglish(fs.readFileSync(enPath, 'utf8'));
+const english = parsed.paragraphs;
+if (parsed.errors.length) {
+  console.error(parsed.errors.join('\n'));
+  process.exit(1);
+}
 if (english.length !== lines.length) {
   console.error(
     `build-translations: the English has ${english.length} paragraphs, the Hebrew ${lines.length}. Ask Alex how to align them.`,
@@ -37,11 +43,15 @@ if (english.length !== lines.length) {
 
 const spans = english.map((text, i) => {
   const inParagraph = units.filter((u) => u.paragraph === i + 1);
+  const marks = footnoteMarks(text).filter((n) => n in parsed.footnotes);
   return {
     from: inParagraph[0].id,
     to: inParagraph[inParagraph.length - 1].id,
     text,
     sourceId: 'en-resource',
+    ...(marks.length
+      ? { footnotes: Object.fromEntries(marks.map((n) => [n, parsed.footnotes[n]])) }
+      : {}),
   };
 });
 

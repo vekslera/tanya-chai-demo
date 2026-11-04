@@ -25,6 +25,8 @@ export type TranslationSpan = {
   text: string;
   sourceId: 'en-resource' | 'sefaria-en';
   sourceSegments?: number[];
+  /** Footnotes by number. The text marks each one where it applies, as "[n]". */
+  footnotes?: Record<string, string>;
 };
 
 export type Reviewed<T> = { value: T; reviewed: boolean; note?: string };

@@ -1,13 +1,35 @@
-import { HeartMark } from './components/HeartMark';
-import { Wordmark } from './components/Wordmark';
-import { he } from './strings/he';
+import { useEffect } from 'react';
+import { ErrorBoundary } from './components/ErrorBoundary';
+import { PortionProvider } from './content/PortionContext';
+import { useRoute, type Route } from './router';
+import { StoreProvider } from './store/store';
+import { HomeScreen } from './screens/Home';
+import { LevelScreen } from './screens/Level';
+import { ReadScreen } from './screens/Read';
+
+const SCREENS: Partial<Record<Route, () => JSX.Element>> = {
+  '/': HomeScreen,
+  '/level': LevelScreen,
+  '/read': ReadScreen,
+};
+
+function Screens() {
+  const route = useRoute();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [route]);
+  const Screen = SCREENS[route] ?? HomeScreen;
+  return <Screen key={route} />;
+}
 
 export function App() {
   return (
-    <main className="screen" style={{ alignItems: 'center', justifyContent: 'center', gap: 16 }}>
-      <HeartMark progress={62} animated drawIn beating size={180} label="תניא חי" />
-      <Wordmark />
-      <p className="muted">{he.home.comingSoon}</p>
-    </main>
+    <ErrorBoundary>
+      <StoreProvider>
+        <PortionProvider>
+          <Screens />
+        </PortionProvider>
+      </StoreProvider>
+    </ErrorBoundary>
   );
 }
