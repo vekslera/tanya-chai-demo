@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
-import type { GlossaryMark, PortionUnit } from '../content/loader';
+import type { PortionUnit } from '../content/loader';
 import type { GlossaryEntry } from '../content/types';
+import './Sentence.css';
 
 /**
  * A unit's text exactly as in the resource, with glossary terms marked. Each match is split out at
@@ -21,26 +22,34 @@ export function SentenceText({
 
   const parts: ReactNode[] = [];
   let pos = 0;
-  for (const m of marks as (GlossaryMark & { at: number })[]) {
+  for (const m of marks) {
     if (m.at < pos) continue;
-    if (m.at > pos) parts.push(text.slice(pos, m.at));
-    const word = text.slice(m.at, m.at + m.match.length);
+    const end = m.at + m.match.length;
+    // Letters or punctuation attached to the term (a prefix like וְ, a closing ״ or comma) stay on
+    // its line: a button is laid out as inline-block, so the line could otherwise break inside a word.
+    const before = text.slice(pos, m.at).match(/^([\s\S]*?)(\S*)$/)!;
+    const after = text.slice(end).match(/^\S*/)![0];
+    if (before[1]) parts.push(before[1]);
+    const term = text.slice(m.at, end);
     parts.push(
-      onTerm ? (
-        <button
-          key={m.at}
-          type="button"
-          className="term"
-          onClick={() => onTerm(m.entry)}
-          aria-haspopup="dialog"
-        >
-          {word}
-        </button>
-      ) : (
-        <span key={m.at}>{word}</span>
-      ),
+      <span key={m.at} className="term-group">
+        {before[2]}
+        {onTerm ? (
+          <button
+            type="button"
+            className="term"
+            onClick={() => onTerm(m.entry)}
+            aria-haspopup="dialog"
+          >
+            {term}
+          </button>
+        ) : (
+          term
+        )}
+        {after}
+      </span>,
     );
-    pos = m.at + m.match.length;
+    pos = end + after.length;
   }
   if (pos < text.length) parts.push(text.slice(pos));
   return <>{parts}</>;

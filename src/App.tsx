@@ -8,6 +8,9 @@ import { LevelScreen } from './screens/Level';
 import { ReadScreen } from './screens/Read';
 import { QuizScreen } from './screens/Quiz';
 import { DoneScreen } from './screens/Done';
+import { TogetherScreen } from './screens/Together';
+import { TogetherQuizScreen } from './screens/TogetherQuiz';
+import { AboutScreen } from './screens/About';
 
 const SCREENS: Partial<Record<Route, () => JSX.Element | null>> = {
   '/': HomeScreen,
@@ -15,6 +18,9 @@ const SCREENS: Partial<Record<Route, () => JSX.Element | null>> = {
   '/read': ReadScreen,
   '/quiz': QuizScreen,
   '/done': DoneScreen,
+  '/together': TogetherScreen,
+  '/together/quiz': TogetherQuizScreen,
+  '/about': AboutScreen,
 };
 
 function Screens() {

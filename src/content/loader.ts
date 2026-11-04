@@ -44,6 +44,18 @@ export type AssembledPortion = {
   glossary: GlossaryEntry[];
 };
 
+/** Reviewable items still marked reviewed: false (SPEC §8.4: the טיוטה badge in About). */
+export function unreviewedCount(): number {
+  const portion = portionJson as Portion;
+  const items: (Reviewed<string> | undefined)[] = [
+    ...(unitContentJson as UnitContent[]).map((c) => c.biur?.short),
+    ...(glossaryJson as GlossaryEntry[]).map((g) => g.body),
+    ...portion.questions.flatMap((q) => [q.prompt, q.hint, q.explanation]),
+    ...portion.together.flatMap((c) => [c.forParent, c.toChild, c.talk]),
+  ];
+  return items.filter((r) => r && !r.reviewed).length;
+}
+
 export function assemblePortion(): AssembledPortion {
   const portion = portionJson as Portion;
   const schedule = scheduleJson as DailySchedule;

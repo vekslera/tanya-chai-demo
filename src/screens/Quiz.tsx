@@ -5,9 +5,10 @@ import { CompactText, QuoteCard, type SentenceState } from '../components/Portio
 import { ProgressDots } from '../components/ProgressDots';
 import { TopBar } from '../components/TopBar';
 import { usePortion } from '../content/PortionContext';
+import { optionsOf } from '../content/options';
 import type { Question } from '../content/types';
 import { navigate, redirectFrom } from '../router';
-import { pointsFor, seededShuffle } from '../store/logic';
+import { pointsFor } from '../store/logic';
 import type { QuizState } from '../store/state';
 import { useStore } from '../store/store';
 import { he } from '../strings/he';
@@ -190,15 +191,4 @@ export function QuizScreen() {
       return question.options?.find((o) => o.id === question.answer)?.text;
     return null;
   }
-}
-
-function optionsOf(q: Question, seed: number) {
-  if (q.kind === 'trueFalse') {
-    return [
-      { id: 'true', text: he.quiz.true },
-      { id: 'false', text: he.quiz.false },
-    ];
-  }
-  const options = q.options ?? [];
-  return q.fixedOrder ? options : seededShuffle(options, seed, q.id);
 }

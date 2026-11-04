@@ -1,6 +1,7 @@
 import type { GlossaryEntry } from '../content/types';
 import { he } from '../strings/he';
 import { BottomSheet } from './BottomSheet';
+import './GlossarySheet.css';
 
 export function GlossarySheet({
   entry,

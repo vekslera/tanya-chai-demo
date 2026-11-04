@@ -1,0 +1,119 @@
+/* Large text and large buttons: the phone is passed between father and son (SPEC §3.1, S8). */
+.btn-big {
+  min-height: 60px;
+  font-size: 20px;
+}
+
+.together--center .together-intro {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  text-align: center;
+  max-width: 420px;
+  margin-inline: auto;
+  width: 100%;
+}
+
+.together-title {
+  font-size: 30px;
+  font-weight: 900;
+}
+
+.together-intro-text {
+  font-size: 19px;
+  line-height: 1.6;
+}
+
+.together-progress {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-block: 8px 12px;
+  font-size: 15px;
+  color: var(--navy-muted);
+}
+
+.together-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  animation: card-in 0.3s var(--ease);
+}
+
+.together-text {
+  font-family: var(--font-text);
+  font-size: 24px;
+  line-height: 1.95;
+}
+
+.together-section {
+  padding: 14px 16px;
+  border-radius: var(--radius);
+  background: var(--bg-alt);
+}
+
+.together-label {
+  margin-block-end: 4px;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--navy-muted);
+}
+
+.together-section p {
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+/* The words the father reads aloud: warm, gold-tinted. */
+.together-child {
+  background: rgba(232, 163, 23, 0.16);
+  border: 1px solid rgba(232, 163, 23, 0.45);
+}
+
+.together-child .together-label {
+  color: var(--gold-deep);
+}
+
+.together-child p {
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.together-talk {
+  background: transparent;
+  border: 2px dashed var(--tint);
+}
+
+.together-nav {
+  position: sticky;
+  bottom: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-block-start: auto;
+  margin-inline: calc(-1 * var(--gutter));
+  padding: 16px var(--gutter) calc(12px + env(safe-area-inset-bottom));
+  background: linear-gradient(to top, var(--bg) 80%, rgba(251, 250, 246, 0));
+}
+
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .together-card {
+    animation: none;
+  }
+}
