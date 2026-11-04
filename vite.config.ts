@@ -1,10 +1,11 @@
 import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import pkg from './package.json' with { type: 'json' };
+import { textsPlugin } from './texts.vite';
 
 export default defineConfig({
   base: process.env.VITE_BASE ?? '/',
-  plugins: [react()],
+  plugins: [react(), textsPlugin()],
   define: {
     __APP_VERSION__: JSON.stringify(pkg.version),
     __BUILD_DATE__: JSON.stringify(new Date().toISOString().slice(0, 10)),

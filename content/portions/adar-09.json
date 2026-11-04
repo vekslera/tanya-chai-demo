@@ -7,9 +7,18 @@
   "sources": [
     {
       "id": "he-resource",
-      "path": "resources/texts/HE/tanya/LA/32",
+      "ref": "Tanya, Part I; Likkutei Amarim 32",
+      "versionTitle": "Kehot Publication Society",
       "license": "CC BY-NC 4.0",
       "attribution": "לשון התניא בניקוד ובפיסוק: הוצאת קה״ת (Kehot Publication Society), באמצעות ספריא (Sefaria). רישיון CC BY-NC 4.0.",
+      "url": "https://creativecommons.org/licenses/by-nc/4.0/"
+    },
+    {
+      "id": "en-resource",
+      "ref": "Tanya, Part I; Likkutei Amarim 32",
+      "versionTitle": "Kehot Publication Society (English Translation)",
+      "license": "CC-BY-NC",
+      "attribution": "התרגום לאנגלית: Kehot Publication Society (English Translation), © Kehot Publication Society, באמצעות ספריא (Sefaria). רישיון CC-BY-NC.",
       "url": "https://creativecommons.org/licenses/by-nc/4.0/"
     }
   ],

@@ -7,11 +7,11 @@ Version 2.0 (see LICENSE).
 The following are NOT covered by the Apache License and remain under their
 own terms:
 
-1. The Hebrew text of Tanya (resources/texts/HE/): the vocalized edition of
+1. The Hebrew text of Tanya (resources/texts/he/): the vocalized edition of
    the Kehot Publication Society, digitized by Sefaria, licensed under
-   CC BY-NC 4.0. See resources/texts/HE/SOURCE.md.
+   CC BY-NC 4.0. See resources/texts/he/SOURCE.md.
 
-2. The English translation of Tanya, where included (resources/texts/ENG/):
+2. The English translation of Tanya, where included (resources/texts/en/):
    Kehot Publication Society, via Sefaria, under the license recorded with
    the text.
 

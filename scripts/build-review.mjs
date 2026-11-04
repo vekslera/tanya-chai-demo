@@ -1,8 +1,8 @@
-// Generates content/REVIEW.md (SPEC §8.4): every reviewable item in reading order, with its id,
+// Generates the review document (SPEC §8.4): every reviewable item in reading order, with its id,
 // so Alex can review the drafts in one pass.
 import fs from 'node:fs';
-import path from 'node:path';
-import { loadAll, root } from './lib/content.mjs';
+import { pathOf } from './lib/config.mjs';
+import { loadAll } from './lib/content.mjs';
 
 const all = loadAll();
 const byId = new Map(all.units.map((u) => [u.id, u]));
@@ -108,6 +108,5 @@ for (const c of p.together) {
 }
 
 out.splice(4, 0, `**Status:** ${unreviewed.length} item(s) to review.`, '');
-const file = path.join(root, 'content/REVIEW.md');
-fs.writeFileSync(file, out.join('\n'));
-console.log(`review: wrote content/REVIEW.md (${unreviewed.length} to review)`);
+fs.writeFileSync(pathOf('review', all, { absolute: true }), out.join('\n'));
+console.log(`review: wrote ${pathOf('review', all)} (${unreviewed.length} to review)`);

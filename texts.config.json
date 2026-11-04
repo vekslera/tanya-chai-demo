@@ -1,0 +1,32 @@
+{
+  "$comment": "The single place that names the texts and their files. Paths are relative to the repo root; {part} and {chapter} are filled in per chapter. Scripts read every path from here.",
+  "chapters": [{ "part": "LA", "chapter": 32 }],
+  "paths": {
+    "text": {
+      "he": "resources/texts/he/tanya/{part}/{chapter}",
+      "en": "resources/texts/en/tanya/{part}/{chapter}"
+    },
+    "sefariaResponse": {
+      "he": "resources/texts/he/tanya/{part}/{chapter}.sefaria.json",
+      "en": "resources/texts/en/tanya/{part}/{chapter}.sefaria.json"
+    },
+    "shiurim": "resources/texts/he/shiurim",
+    "splits": "data/splits/{part}/{chapter}.json",
+    "units": "data/units/he/{part}/{chapter}.json",
+    "translations": "data/translations/en/{part}/{chapter}.json",
+    "schedule": "data/schedules/daily.json",
+    "unitContent": "content/{part}/{chapter}.json",
+    "glossary": "content/glossary.json",
+    "portion": "content/portions/adar-09.json",
+    "review": "content/REVIEW.md"
+  },
+  "sefaria": {
+    "api": "https://www.sefaria.org/api/v3/texts/",
+    "refs": { "LA": "Tanya, Part I; Likkutei Amarim {chapter}" },
+    "versions": {
+      "he": "Kehot Publication Society",
+      "en": "Kehot Publication Society (English Translation)"
+    },
+    "allowedLicenses": ["Public Domain", "CC0", "CC-BY", "CC-BY-NC"]
+  }
+}

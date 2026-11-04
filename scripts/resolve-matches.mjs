@@ -1,9 +1,9 @@
 // Authoring helper: glossary matches may be written without nikud. This rewrites each one to the
 // exact vocalized substring of its unit (SPEC §7: matching works on the text as it is).
 import fs from 'node:fs';
-import path from 'node:path';
+import { pathOf } from './lib/config.mjs';
 import { lettersOnly, words } from './lib/units.mjs';
-import { loadAll, root } from './lib/content.mjs';
+import { loadAll } from './lib/content.mjs';
 
 const NOT_LETTER_OR_MARK = /^[^ְ-ת]+|[^ְ-ת]+$/g;
 
@@ -42,7 +42,7 @@ function skipLetters(s, n) {
 
 const all = loadAll();
 const byId = new Map(all.units.map((u) => [u.id, u]));
-const file = path.join(root, 'content/LA/32.json');
+const file = pathOf('unitContent', all, { absolute: true });
 let failed = false;
 for (const c of all.unitContent) {
   for (const m of c.glossary ?? []) {

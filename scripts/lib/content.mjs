@@ -1,41 +1,32 @@
 // Loads every layer from disk and runs the integrity rules of SPEC §6.5.
 import fs from 'node:fs';
 import path from 'node:path';
+import { config, pathOf, root } from './config.mjs';
 import { buildUnits, checkUnits, UNIT_ID } from './units.mjs';
 import { footnoteMarks, parseEnglish } from './english.mjs';
 
-export const root = path.resolve(import.meta.dirname, '../..');
-const readJson = (rel) => JSON.parse(fs.readFileSync(path.join(root, rel), 'utf8'));
+export { root };
+const read = (rel) => fs.readFileSync(path.join(root, rel), 'utf8');
+const readJson = (rel) => JSON.parse(read(rel));
 const exists = (rel) => fs.existsSync(path.join(root, rel));
 
-export function loadAll() {
-  const part = 'LA';
-  const chapter = 32;
-  const raw = fs.readFileSync(
-    path.join(root, `resources/texts/HE/tanya/${part}/${chapter}`),
-    'utf8',
-  );
-  const splits = readJson(`data/splits/${part}/${chapter}.json`);
-  const built = buildUnits({ raw, splits, part, chapter });
-  const translationsPath = `data/translations/en/${part}/${chapter}.json`;
-  const enResourcePath = `resources/texts/ENG/tanya/${part}/${chapter}`;
+/** Every layer of one chapter (by default the demo chapter, the first in texts.config.json). */
+export function loadAll(ch = config.chapters[0]) {
+  const { part, chapter } = ch;
+  const splits = readJson(pathOf('splits', ch));
+  const built = buildUnits({ raw: read(pathOf('text.he', ch)), splits, part, chapter });
+  const at = (key) => pathOf(key, ch);
   return {
     part,
     chapter,
     splits,
     ...built,
-    schedule: readJson('data/schedules/daily.json'),
-    translations: exists(translationsPath) ? readJson(translationsPath) : null,
-    enResource: exists(enResourcePath)
-      ? parseEnglish(fs.readFileSync(path.join(root, enResourcePath), 'utf8'))
-      : null,
-    unitContent: exists(`content/${part}/${chapter}.json`)
-      ? readJson(`content/${part}/${chapter}.json`)
-      : [],
-    glossary: exists('content/glossary.json') ? readJson('content/glossary.json') : [],
-    portion: exists('content/portions/adar-09.json')
-      ? readJson('content/portions/adar-09.json')
-      : null,
+    schedule: readJson(at('schedule')),
+    translations: exists(at('translations')) ? readJson(at('translations')) : null,
+    enResource: exists(at('text.en')) ? parseEnglish(read(at('text.en'))) : null,
+    unitContent: exists(at('unitContent')) ? readJson(at('unitContent')) : [],
+    glossary: exists(at('glossary')) ? readJson(at('glossary')) : [],
+    portion: exists(at('portion')) ? readJson(at('portion')) : null,
   };
 }
 
@@ -103,7 +94,7 @@ export function validate(all) {
     errors.push(...all.enResource.errors.map((e) => `English resource: ${e}`));
   if (!all.translations) {
     (process.env.CONTENT_STRICT === '1' ? errors : warnings).push(
-      'no English translation yet (data/translations/en/LA/32.json)',
+      `no English translation yet (${pathOf('translations', all)})`,
     );
   } else {
     const covered = new Map();
@@ -173,7 +164,7 @@ export function validate(all) {
   // Portion
   const p = all.portion;
   if (!p) {
-    errors.push('content/portions/adar-09.json is missing');
+    errors.push(`${pathOf('portion', all)} is missing`);
     return { errors, warnings };
   }
   const portionRanges = all.schedule[p.yearType]?.[p.dateKey];
@@ -191,6 +182,12 @@ export function validate(all) {
   for (const s of p.sources ?? []) {
     if (!s.license || !s.attribution)
       errors.push(`source ${s.id}: license and attribution are required`);
+  }
+  const shownSources = new Set((all.translations ?? []).map((s) => s.sourceId));
+  for (const id of shownSources) {
+    if (!(p.sources ?? []).some((s) => s.id === id)) {
+      errors.push(`portion: the English is shown but source "${id}" has no attribution`);
+    }
   }
 
   const qIds = new Set();

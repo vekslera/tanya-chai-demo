@@ -27,10 +27,13 @@ npm run validate-content  # SPEC §6.5 integrity rules; CONTENT_STRICT=1 also fa
 
 ## Content pipeline
 
+Every file path, the chapter list and the Sefaria refs are named once, in [`texts.config.json`](texts.config.json).
+
 | Step | Command | Output |
 | --- | --- | --- |
+| Download the Hebrew and English from Sefaria (once; checks version and license) | `npm run fetch-sefaria` | `resources/texts/{he,en}/tanya/LA/32` and the raw `32.sefaria.json` |
 | Units from the raw text and the splits (runs before dev, build and test) | `npm run build-units` | `data/units/he/LA/32.json` (generated, not committed) |
-| English spans from `resources/texts/ENG/tanya/LA/32` | `node scripts/build-translations.mjs` | `data/translations/en/LA/32.json` |
+| English spans from the English resource | `node scripts/build-translations.mjs` | `data/translations/en/LA/32.json` |
 | Glossary matches written without nikud → exact vocalized text | `node scripts/resolve-matches.mjs` | `content/LA/32.json` |
 | Review document for Alex | `npm run review` | `content/REVIEW.md` |
 | Overlap check against the local Shiurim file (Alex's machine only) | `npm run check-overlap` | report |

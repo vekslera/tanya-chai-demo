@@ -1,10 +1,14 @@
 // Assembles a portion from the schedule, units, translations and learning content (SPEC §6.5).
-// Everything is bundled at build time; nothing is fetched at runtime.
-import unitsJson from '../../data/units/he/LA/32.json';
-import scheduleJson from '../../data/schedules/daily.json';
-import unitContentJson from '../../content/LA/32.json';
-import glossaryJson from '../../content/glossary.json';
-import portionJson from '../../content/portions/adar-09.json';
+// Everything is bundled at build time; nothing is fetched at runtime. The files come from
+// `virtual:texts` (texts.vite.ts), at the paths named in texts.config.json.
+import {
+  glossary as glossaryJson,
+  portion as portionJson,
+  schedule as scheduleJson,
+  translations as translationsJson,
+  unitContent as unitContentJson,
+  units as unitsJson,
+} from 'virtual:texts';
 import type {
   DailySchedule,
   GlossaryEntry,
@@ -15,12 +19,6 @@ import type {
   UnitContent,
   UnitId,
 } from './types';
-
-// The English is optional until Alex adds it: a glob over a missing file yields nothing.
-const translationModules = import.meta.glob<TranslationSpan[]>(
-  '../../data/translations/en/LA/*.json',
-  { eager: true, import: 'default' },
-);
 
 export type GlossaryMark = { entry: GlossaryEntry; match: string };
 
@@ -64,7 +62,7 @@ export function assemblePortion(): AssembledPortion {
   const contentById = new Map((unitContentJson as UnitContent[]).map((c) => [c.id, c]));
   const glossaryById = new Map(glossary.map((g) => [g.id, g]));
   const seqOf = new Map(units.map((u) => [u.id, u.seq]));
-  const translations = Object.values(translationModules).flat();
+  const translations = translationsJson as TranslationSpan[];
 
   const ranges = schedule[portion.yearType][portion.dateKey];
   if (!ranges) throw new Error(`No schedule entry for ${portion.dateKey}`);

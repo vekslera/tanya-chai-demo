@@ -5,11 +5,12 @@
 // Output names the item and the overlapping words of the draft only.
 import fs from 'node:fs';
 import path from 'node:path';
+import { pathOf } from './lib/config.mjs';
 import { lettersOnly } from './lib/units.mjs';
-import { loadAll, reviewables, root } from './lib/content.mjs';
+import { loadAll, reviewables } from './lib/content.mjs';
 
 const RUN = 5;
-const shiurimDir = path.join(root, 'resources/texts/HE/shiurim');
+const shiurimDir = pathOf('shiurim', undefined, { absolute: true });
 if (!fs.existsSync(shiurimDir)) {
   console.log('check-overlap: no local Shiurim file, skipped');
   process.exit(0);

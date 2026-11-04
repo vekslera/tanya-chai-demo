@@ -9,8 +9,9 @@
     "moduleDetection": "force",
     "noEmit": true,
     "types": ["node"],
+    "resolveJsonModule": true,
     "strict": true,
     "skipLibCheck": true
   },
-  "include": ["vite.config.ts"]
+  "include": ["vite.config.ts", "texts.vite.ts"]
 }

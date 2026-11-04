@@ -44,11 +44,11 @@ It is **not** the MVP. There are no accounts, no backend and no analytics. Every
 | Calendar | Regular year, chosen for the narrative: it is a demo, so the year does not need to match the current one (5787 is a leap year). |
 | Start | `וְהִנֵּה, עַל יְדֵי קִיּוּם הַדְּבָרִים הַנִּזְכָּרִים לְעֵיל` (beginning of chapter 32, unit `LA.32.001`) |
 | End | `וּכְמוֹ שֶׁנִּתְבָּאֵר בְּמָקוֹם אַחֵר בַּאֲרִיכוּת:` (end of the third paragraph, unit `LA.32.019`). Confirmed by Alex; see `data/schedules/daily.json`, `regular["adar-09"]`. |
-| Hebrew text | `resources/texts/HE/tanya/LA/32`, supplied by Alex: the whole chapter with nikud and punctuation, one paragraph per line, abbreviations written out. This file is the source of truth for the Hebrew. |
-| English text | `resources/texts/ENG/tanya/LA/32` if Alex adds it; otherwise Sefaria's English version of Tanya (Kehot translation), fetched once (§8.1). Check its license. |
+| Hebrew text | `resources/texts/he/tanya/LA/32`, fetched from Sefaria (Kehot edition, §8.1): the whole chapter with nikud and punctuation, one paragraph per line, abbreviations written out. This file is the source of truth for the Hebrew. |
+| English text | `resources/texts/en/tanya/LA/32`: Sefaria's English version of Tanya (Kehot translation), fetched once (§8.1), license CC-BY-NC. |
 | ביאור, glossary, questions, Avos uBanim tools | Original content written for this demo (§8.3), reviewed by Alex |
 
-**Lessons in Tanya (Shiurim) is a local reference only.** Alex keeps the Hebrew Shiurim for chapter 32 in `resources/texts/HE/shiurim/`, excluded from Git (`.git/info/exclude`). It may be read to check the meaning of the text. It must never be quoted, paraphrased, reworded or followed in its order of explanation, and nothing from it may be committed or published. The same applies to any other copyrighted commentary.
+**Lessons in Tanya (Shiurim) is a local reference only.** Alex keeps the Hebrew Shiurim for chapter 32 in `resources/texts/he/shiurim/`, excluded from Git (`.git/info/exclude`). It may be read to check the meaning of the text. It must never be quoted, paraphrased, reworded or followed in its order of explanation, and nothing from it may be committed or published. The same applies to any other copyrighted commentary.
 
 ---
 
@@ -244,11 +244,12 @@ tanya-chai-demo/
 ├─ CLAUDE.md                  ← working rules for Claude Code
 ├─ README.md
 ├─ LICENSE                    ← Apache-2.0 (code)
-├─ resources/                 ← supplied by Alex; never edited by code
+├─ texts.config.json          ← the only place that names the texts and their files
+├─ resources/                 ← source material; texts change only through fetch-sefaria (§8.1)
 │  ├─ brand/logo/             ← source logo files
 │  └─ texts/
-│     ├─ HE/tanya/LA/32    ← Hebrew, with nikud, one paragraph per line
-│     └─ ENG/tanya/LA/     ← English, if Alex adds it; else the Sefaria raw file (§8.1)
+│     ├─ he/tanya/LA/32       ← Hebrew, with nikud, one paragraph per line (+ 32.sefaria.json)
+│     └─ en/tanya/LA/32       ← English, footnote marks [n], footnotes at the end (+ 32.sefaria.json)
 ├─ public/
 │  ├─ favicon.svg
 │  └─ CNAME                   ← "demo.tanyachai.app" (milestone M7)
@@ -469,18 +470,23 @@ type Reviewed<T> = { value: T; reviewed: boolean; note?: string };
 
 ### 8.1 The texts
 
-**Hebrew.** Read `resources/texts/HE/tanya/LA/32`. Each line is one paragraph. Never change this file. Its source and terms are recorded in `resources/texts/HE/SOURCE.md`: Kehot's vocalized edition, digitized by Sefaria, CC BY-NC 4.0.
+**Hebrew.** Read `resources/texts/he/tanya/LA/32`. Each line is one paragraph. Never change this file by hand. Its source and terms are recorded in `resources/texts/he/SOURCE.md`: Kehot's vocalized edition, digitized by Sefaria, CC BY-NC 4.0.
 
-**English.** If Alex has added `resources/texts/ENG/tanya/LA/32`, use it. Otherwise `scripts/fetch-sefaria.mjs` fetches it once, on Alex's machine:
+**English.** `resources/texts/en/tanya/LA/32`, with its source and terms in `resources/texts/en/SOURCE.md`.
+
+Both files are written by `scripts/fetch-sefaria.mjs` (`npm run fetch-sefaria`), once, on Alex's machine. All file paths, refs and expected versions are in `texts.config.json`. For each language the script does the following:
 
 1. Find the exact ref for Likkutei Amarim chapter 32 on Sefaria. Open the chapter on sefaria.org and copy the ref from the URL. It is expected to be similar to `Tanya, Part I; Likkutei Amarim 32`.
-2. Call the v3 texts API for the English version. For example:
-   `https://www.sefaria.org/api/v3/texts/<url-encoded ref>?version=english`
-3. Save the **full, unmodified response** to `resources/texts/ENG/tanya/LA/32.sefaria.json`, together with the fetch date.
+2. Call the v3 texts API for the version. For example:
+   `https://www.sefaria.org/api/v3/texts/<url-encoded ref>?version=english|<versionTitle>`
+3. Save the **full, unmodified response** next to the text file (`32.sefaria.json`), together with the fetch date.
 4. Print the version's `versionTitle`, `license` and `versionSource`.
-5. **Stop and report to Alex** in either case:
+5. **Stop and report to Alex**, writing nothing, in either case:
    - the license is not public domain, CC0, CC-BY or CC-BY-NC;
-   - the version is anything other than the Kehot translation of the Tanya text itself (for example, a commentary).
+   - the version is anything other than the Kehot edition of the Tanya text itself, or its Kehot translation (for example, a commentary).
+6. Write the plain text file: one paragraph per segment, HTML removed and the words kept exactly. In the English, each footnote becomes a mark `[n]` where it applies, and the footnotes follow after a blank line as `[n] text`.
+
+The Hebrew segments also carry the daily-portion markers (`[פ: ט אדר]` for a regular year, `[מ: …]` for a leap year); the script prints them so the schedule can be checked against them.
 
 **Alignment.** Sefaria's English segments may not match the lines of the Hebrew file. Write one translation span per Hebrew paragraph (§6.4), joining or dividing English segments only at sentence boundaries, and record the segments used in `sourceSegments`. If a paragraph cannot be matched cleanly, ask Alex.
 
@@ -530,7 +536,7 @@ These are drafted by Claude (in the claude.ai conversation or in Claude Code) an
 ## 9. Licensing and attribution
 
 - **Code:** Apache-2.0 (the existing `LICENSE`).
-- **Tanya Hebrew text:** the words are public domain, but the nikud and punctuation of a modern edition may be protected. The About screen credits the edition named in `resources/texts/HE/SOURCE.md`, under the terms recorded there.
+- **Tanya Hebrew text:** the words are public domain, but the nikud and punctuation of a modern edition may be protected. The About screen credits the edition named in `resources/texts/he/SOURCE.md`, under the terms recorded there.
 - **English translation:** use the license and attribution exactly as given in the Sefaria metadata. If it is CC-BY-NC (expected), the demo is non-commercial and free, which is compatible, and the attribution line is shown in About.
 - **ביאור, glossary, questions, Avos uBanim tools:** © Tanya Chai, all rights reserved. They are not covered by the Apache license.
 - `content/CONTENT-LICENSE.md` states all of the above. `README.md` gets a short "Content license" section linking to it.
@@ -644,7 +650,7 @@ All of these are covered in the product blueprint, not here.
 ## 13. Open items for Alex
 
 1. Done: the portion boundaries for chapter 32 are in `data/schedules/daily.json`.
-2. Done: the source of the Hebrew text is recorded in `resources/texts/HE/SOURCE.md`.
+2. Done: the source of the Hebrew text is recorded in `resources/texts/he/SOURCE.md`.
 3. Review all content in `content/REVIEW.md` (§8.4), including the Avos uBanim tools.
 4. Fill in the contact line on the About screen.
 5. Register `tanyachai.app` and set the DNS record (§10.2).
