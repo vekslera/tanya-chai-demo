@@ -6,7 +6,7 @@
 | Edition | Kehot Publication Society ([kehot.com](https://kehot.com)) |
 | Digitization | Sefaria |
 | License | [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/) |
-| Files | `tanya/likkutei-amarim/32` (copied from Sefaria by Alex Veksler, November 2026) |
+| Files | `tanya/LA/32` (copied from Sefaria by Alex Veksler, November 2026) |
 
 ## Attribution (shown in the app's About screen)
 

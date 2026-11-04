@@ -43,9 +43,9 @@ It is **not** the MVP. There are no accounts, no backend and no analytics. Every
 | Label in UI | `שיעור לדוגמה: כ״ג אדר א׳` |
 | Calendar | Leap year (5787 is a leap year), following the official daily Tanya division |
 | Start | `וְהִנֵּה, עַל יְדֵי קִיּוּם הַדְּבָרִים הַנִּזְכָּרִים לְעֵיל` (beginning of chapter 32) |
-| End | **TO CONFIRM BY ALEX** from the official daily division for כ״ג אדר א׳ (e.g. chabad.org daily Tanya). Until confirmed, use the first two paragraphs (lines) of the Hebrew resource file and set `portion.boundariesConfirmed: false`. |
-| Hebrew text | `resources/texts/HE/tanya/likkutei-amarim/32`, supplied by Alex: the whole chapter with nikud and punctuation, one paragraph per line, abbreviations written out. This file is the source of truth for the Hebrew. |
-| English text | `resources/texts/ENG/tanya/likkutei-amarim/32` if Alex adds it; otherwise Sefaria's English version of Tanya (Kehot translation), fetched once (§8.1). Check its license. |
+| End | Confirmed: the portion of כ״ג אדר א׳ is units `LA.32.001`–`LA.32.003`, the first paragraph of the chapter, ending `למגדול ועד קטן.` (`data/schedules/daily.json`). |
+| Hebrew text | `resources/texts/HE/tanya/LA/32`, supplied by Alex: the whole chapter with nikud and punctuation, one paragraph per line, abbreviations written out. This file is the source of truth for the Hebrew. |
+| English text | `resources/texts/ENG/tanya/LA/32` if Alex adds it; otherwise Sefaria's English version of Tanya (Kehot translation), fetched once (§8.1). Check its license. |
 | ביאור, glossary, questions, Avos uBanim tools | Original content written for this demo (§8.3), reviewed by Alex |
 
 **Lessons in Tanya must not appear anywhere** in this repository: not quoted, not paraphrased closely, not used as a hidden source for the ביאור. The same applies to any other copyrighted commentary.
@@ -247,8 +247,8 @@ tanya-chai-demo/
 ├─ resources/                 ← supplied by Alex; never edited by code
 │  ├─ brand/logo/             ← source logo files
 │  └─ texts/
-│     ├─ HE/tanya/likkutei-amarim/32    ← Hebrew, with nikud, one paragraph per line
-│     └─ ENG/tanya/likkutei-amarim/     ← English, if Alex adds it; else the Sefaria raw file (§8.1)
+│     ├─ HE/tanya/LA/32    ← Hebrew, with nikud, one paragraph per line
+│     └─ ENG/tanya/LA/     ← English, if Alex adds it; else the Sefaria raw file (§8.1)
 ├─ public/
 │  ├─ favicon.svg
 │  └─ CNAME                   ← "demo.tanyachai.app" (milestone M7)
@@ -318,12 +318,12 @@ All files are JSON, validated against the TypeScript types below and by `scripts
 
 ### 6.2 Splits (hand-maintained) and units (generated)
 
-`data/splits/LA/32.json` is the only place where units are defined. Each entry gives the unit's ID and the exact words it starts with, copied from the raw text with their nikud:
+`data/splits/LA/32.json` is the only place where units are defined. Each entry gives the unit's ID and the words it starts with, copied from the raw text **without nikud** (2–4 words are enough):
 
 ```ts
 type Split = {
-  id: UnitId;            // "LA.32.002"
-  startsWith: string;    // "כִּי מֵאַחַר שֶׁגּוּפוֹ" — exact, as in the raw file
+  id: UnitId;            // "LA.32.004"
+  startsWith: string;    // "כי מאחר שגופו נמאס" — the raw file's words, unvocalized
 };
 // data/splits/LA/32.json: Split[] in reading order
 ```
@@ -341,6 +341,8 @@ type Unit = {
 };
 ```
 
+**Matching.** Anchors are compared on Hebrew letters only: nikud, cantillation, punctuation and repeated spaces are ignored on both sides, and a maqaf counts as a space. Each anchor is searched from the end of the previous one, so a phrase that recurs later in the chapter is not a problem. A unit starts at the beginning of the word its anchor matches, including punctuation attached to it (such as `[` or `״`), and ends where the next unit starts or at the end of the paragraph. Anchors are taken from the raw file itself, never from another edition: editions differ in spelling as well as nikud (Kehot's vocalized text writes `מתועב` where unvocalized editions write `מתעב`).
+
 The units file is a build output: it is regenerated whenever the raw text or the splits change, it is listed in `.gitignore`, and nobody edits it. Anchors (opening words) are used instead of character positions so that a small correction in the raw text does not shift every unit after it.
 
 ### 6.3 Schedules
@@ -357,7 +359,7 @@ type DailySchedule = {
 // data/schedules/daily.json
 ```
 
-For the demo the file holds one entry, `leap["adar1-23"]`. Before the product covers a whole year, check in Hayom Yom how the division handles years with a 29-day Cheshvan or Kislev; the format allows adding more year-type keys if needed.
+The file already holds chapter 32 for both year types, as given by Alex: in a regular year 9–10 Adar, in a leap year 23–28 Adar I. Every portion starts at a unit boundary. Before the product covers a whole year, check in Hayom Yom how the division handles years with a 29-day Cheshvan or Kislev; the format allows adding more year-type keys if needed.
 
 ### 6.4 Translations
 
@@ -434,7 +436,7 @@ type Reviewed<T> = { value: T; reviewed: boolean; note?: string };
 
 **Integrity rules** (enforced by the validator, and run in CI):
 
-- Every `startsWith` anchor is found exactly once in its paragraph, in order, and the first unit of each paragraph starts at the beginning of its line.
+- Every `startsWith` anchor is found, letters only and in order (§6.2), and the first unit of each paragraph starts at the beginning of its line.
 - The units of each paragraph, joined, equal that line of the raw file exactly (apart from trailing whitespace and line endings). In other words, the text is never edited, only split.
 - Unit IDs are unique, follow the format of §6.1, and are never missing from a range they fall in.
 - Every `Range`, `TranslationSpan`, `unitRef`, unit-ID answer and `UnitContent.id` refers to existing units, with `from` not after `to`.
@@ -463,14 +465,14 @@ type Reviewed<T> = { value: T; reviewed: boolean; note?: string };
 
 ### 8.1 The texts
 
-**Hebrew.** Read `resources/texts/HE/tanya/likkutei-amarim/32`. Each line is one paragraph. Never change this file. Its source and terms are recorded in `resources/texts/HE/SOURCE.md`: Kehot's vocalized edition, digitized by Sefaria, CC BY-NC 4.0.
+**Hebrew.** Read `resources/texts/HE/tanya/LA/32`. Each line is one paragraph. Never change this file. Its source and terms are recorded in `resources/texts/HE/SOURCE.md`: Kehot's vocalized edition, digitized by Sefaria, CC BY-NC 4.0.
 
-**English.** If Alex has added `resources/texts/ENG/tanya/likkutei-amarim/32`, use it. Otherwise `scripts/fetch-sefaria.mjs` fetches it once, on Alex's machine:
+**English.** If Alex has added `resources/texts/ENG/tanya/LA/32`, use it. Otherwise `scripts/fetch-sefaria.mjs` fetches it once, on Alex's machine:
 
 1. Find the exact ref for Likkutei Amarim chapter 32 on Sefaria. Open the chapter on sefaria.org and copy the ref from the URL. It is expected to be similar to `Tanya, Part I; Likkutei Amarim 32`.
 2. Call the v3 texts API for the English version. For example:
    `https://www.sefaria.org/api/v3/texts/<url-encoded ref>?version=english`
-3. Save the **full, unmodified response** to `resources/texts/ENG/tanya/likkutei-amarim/32.sefaria.json`, together with the fetch date.
+3. Save the **full, unmodified response** to `resources/texts/ENG/tanya/LA/32.sefaria.json`, together with the fetch date.
 4. Print the version's `versionTitle`, `license` and `versionSource`.
 5. **Stop and report to Alex** in either case:
    - the license is not public domain, CC0, CC-BY or CC-BY-NC;
@@ -484,10 +486,10 @@ Runtime code never calls Sefaria. The app only reads the files in `data/` and `c
 
 Claude Code prepares, for chapter 32:
 
-1. **Splits:** `data/splits/LA/32.json` for the whole chapter, by the rules of §6.1 and §7. The text itself is never changed.
+1. **Splits:** `data/splits/LA/32.json` already exists: 48 units for the whole chapter, prepared by Alex and Claude (§6.1, §7). Do not change the existing IDs. The text itself is never changed.
 2. **Units:** `scripts/build-units.mjs` generates `data/units/he/LA/32.json`. Add it as `predev` and `prebuild` steps in `package.json`, so the units are always fresh.
 3. **Translations:** `data/translations/en/LA/32.json`, one span per paragraph, verbatim from the English source.
-4. **Schedule:** `data/schedules/daily.json` with `leap["adar1-23"]` set to the portion's range. If the official end of the portion falls inside a unit, split that unit (§6.1).
+4. **Schedule:** `data/schedules/daily.json` already exists; do not change it. If a future portion boundary falls inside a unit, split that unit (§6.1).
 5. **Portion:** `content/portions/adar1-23.json` with the date key, label, sources and questions.
 
 ### 8.3 Writing the ביאור, glossary, questions and Avos uBanim tools
@@ -636,7 +638,7 @@ All of these are covered in the product blueprint, not here.
 
 ## 13. Open items for Alex
 
-1. Confirm the exact end of the כ״ג אדר א׳ portion (§2).
+1. Done: the portion boundaries for chapter 32 are in `data/schedules/daily.json`.
 2. Done: the source of the Hebrew text is recorded in `resources/texts/HE/SOURCE.md`.
 3. Review all content in `content/REVIEW.md` (§8.4), including the Avos uBanim tools.
 4. Fill in the contact line on the About screen.

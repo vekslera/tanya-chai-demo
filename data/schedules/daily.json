@@ -1,0 +1,15 @@
+{
+  "source": "Daily Tanya division (Hayom Yom), as provided by Alex Veksler",
+  "regular": {
+    "adar-09": [{ "from": "LA.32.001", "to": "LA.32.019" }],
+    "adar-10": [{ "from": "LA.32.020", "to": "LA.32.048" }]
+  },
+  "leap": {
+    "adar1-23": [{ "from": "LA.32.001", "to": "LA.32.003" }],
+    "adar1-24": [{ "from": "LA.32.004", "to": "LA.32.010" }],
+    "adar1-25": [{ "from": "LA.32.011", "to": "LA.32.019" }],
+    "adar1-26": [{ "from": "LA.32.020", "to": "LA.32.025" }],
+    "adar1-27": [{ "from": "LA.32.026", "to": "LA.32.034" }],
+    "adar1-28": [{ "from": "LA.32.035", "to": "LA.32.048" }]
+  }
+}
