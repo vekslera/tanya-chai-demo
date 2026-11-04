@@ -6,7 +6,7 @@ import { ProgressDots } from '../components/ProgressDots';
 import { TopBar } from '../components/TopBar';
 import { usePortion } from '../content/PortionContext';
 import type { Question } from '../content/types';
-import { navigate } from '../router';
+import { navigate, redirectFrom } from '../router';
 import { pointsFor, seededShuffle } from '../store/logic';
 import type { QuizState } from '../store/state';
 import { useStore } from '../store/store';
@@ -32,7 +32,7 @@ export function QuizScreen() {
   const [shake, setShake] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!quiz) navigate('/level', { replace: true });
+    if (!quiz) redirectFrom('/quiz', '/level');
   }, [quiz]);
   if (!quiz) return null;
 

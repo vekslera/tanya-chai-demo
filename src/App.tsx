@@ -7,12 +7,14 @@ import { HomeScreen } from './screens/Home';
 import { LevelScreen } from './screens/Level';
 import { ReadScreen } from './screens/Read';
 import { QuizScreen } from './screens/Quiz';
+import { DoneScreen } from './screens/Done';
 
 const SCREENS: Partial<Record<Route, () => JSX.Element | null>> = {
   '/': HomeScreen,
   '/level': LevelScreen,
   '/read': ReadScreen,
   '/quiz': QuizScreen,
+  '/done': DoneScreen,
 };
 
 function Screens() {

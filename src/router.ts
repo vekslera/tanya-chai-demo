@@ -39,6 +39,14 @@ export function navigate(to: Route, { replace = false } = {}) {
   }
 }
 
+/**
+ * Leaves a screen that has nothing to show, but only while it is still the current route: a screen
+ * that just navigated away (e.g. the quiz after completing) must not redirect.
+ */
+export function redirectFrom(from: Route, to: Route) {
+  if (current() === from) navigate(to, { replace: true });
+}
+
 export function useRoute(): Route {
   const [route, setRoute] = useState(current);
   useEffect(() => {
