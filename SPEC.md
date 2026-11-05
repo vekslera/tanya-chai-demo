@@ -46,9 +46,15 @@ It is **not** the MVP. There are no accounts, no backend and no analytics. Every
 | End | `וּכְמוֹ שֶׁנִּתְבָּאֵר בְּמָקוֹם אַחֵר בַּאֲרִיכוּת:` (end of the third paragraph, unit `LA.32.019`). Confirmed by Alex; see `data/schedules/daily.json`, `regular["adar-09"]`. |
 | Hebrew text | `resources/texts/he/tanya/LA/32`, fetched from Sefaria (Kehot edition, §8.1): the whole chapter with nikud and punctuation, one paragraph per line, abbreviations written out. This file is the source of truth for the Hebrew. |
 | English text | `resources/texts/en/tanya/LA/32`: Sefaria's English version of Tanya (Kehot translation), fetched once (§8.1), license CC-BY-NC. |
-| ביאור, glossary, questions, Avos uBanim tools | Original content written for this demo (§8.3), reviewed by Alex |
+| ביאור, glossary, questions, Avos uBanim tools | Original content, drafted with AI for this demo (§8.3), reviewed by Alex and approved by a rav or a recognized educator (§8.4) |
 
 **Lessons in Tanya (Shiurim) is a local reference only.** Alex keeps the Hebrew Shiurim for chapter 32 in `resources/texts/he/shiurim/`, excluded from Git (`.git/info/exclude`). It may be read to check the meaning of the text. It must never be quoted, paraphrased, reworded or followed in its order of explanation, and nothing from it may be committed or published. The same applies to any other copyrighted commentary.
+
+**Content sources.** All content in Tanya Chai comes from three sources, and only from them:
+
+1. **The raw text**, Hebrew and translation, from Sefaria, under the license recorded for each version (§8.1, §9).
+2. **Chassidus books**, such as Lessons in Tanya, used only with the publisher's written permission. Until permission is given, they serve only as a local reference, as above.
+3. **Level-adapted content generated with AI** (ביאור, glossary, questions, Avos uBanim tools), published only after review and approval by a rav or a recognized educator (§8.4).
 
 ---
 
@@ -174,6 +180,7 @@ A father learns the portion with his son on one device. The screen gives the fat
 - Mobile first, designed for 360–430px width. On larger screens the layout is a single centered column with a max width of 680px.
 - **Navigation:** hash-based (`#/read`) so GitHub Pages needs no SPA fallback. The browser back button works.
 - **State:** the current level, progress and answers survive a reload. They are kept in `localStorage`, with every access wrapped in try/catch; the demo works without storage.
+- **No chat:** no chat or free text between users, and no direct conversation with an AI model. The app never calls an AI model at runtime; AI is used only offline, to draft content before review, so the learner sees only approved content.
 - **No external requests:** no Google Fonts, CDNs, embeds or analytics. Fonts are self-hosted.
 - **Motion:** all animation respects `prefers-reduced-motion: reduce`, replacing motion with instant state changes.
 - **Accessibility:** visible focus rings (gold), tap targets ≥ 44px, contrast AA, `aria-live="polite"` for feedback text, and buttons that are real `<button>` elements.
@@ -528,7 +535,7 @@ These are drafted by Claude (in the claude.ai conversation or in Claude Code) an
 
 1. Claude Code generates `content/REVIEW.md` from the JSON: every reviewable item in reading order, with its id. Alex can read it in one pass.
 2. Alex marks corrections, either in REVIEW.md or directly in the JSON. Claude Code applies them and flips `reviewed: true` only for items Alex approved.
-3. Before showing the demo publicly, all items must be `reviewed: true`. The deploy workflow then runs with `CONTENT_STRICT=1`.
+3. Before showing the demo publicly, all items must be `reviewed: true`. Alex's review is the first pass; an item becomes `reviewed: true` only after a rav or a recognized educator has also approved it (moderation). The deploy workflow then runs with `CONTENT_STRICT=1`.
 4. While items are unreviewed, a small `טיוטה` badge appears in the About screen. This is development mode only, never in the strict build.
 
 ---
