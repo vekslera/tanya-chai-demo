@@ -1,7 +1,7 @@
 // Authoring helper: glossary matches may be written without nikud. This rewrites each one to the
 // exact vocalized substring of its unit (SPEC §7: matching works on the text as it is).
 import fs from 'node:fs';
-import { pathOf } from './lib/config.mjs';
+import { pathOf } from './lib/config.ts';
 import { lettersOnly, words } from './lib/units.mjs';
 import { loadAll } from './lib/content.mjs';
 

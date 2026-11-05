@@ -10,8 +10,10 @@
     "noEmit": true,
     "types": ["node"],
     "resolveJsonModule": true,
+    "allowImportingTsExtensions": true,
+    "erasableSyntaxOnly": true,
     "strict": true,
     "skipLibCheck": true
   },
-  "include": ["vite.config.ts", "texts.vite.ts"]
+  "include": ["vite.config.ts", "virtual.vite.ts", "scripts/**/*.ts"]
 }

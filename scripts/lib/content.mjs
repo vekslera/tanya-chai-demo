@@ -1,7 +1,7 @@
 // Loads every layer from disk and runs the integrity rules of SPEC §6.5.
 import fs from 'node:fs';
 import path from 'node:path';
-import { config, pathOf, root } from './config.mjs';
+import { config, pathOf, root } from './config.ts';
 import { buildUnits, checkUnits, UNIT_ID } from './units.mjs';
 import { footnoteMarks, parseEnglish } from './english.mjs';
 

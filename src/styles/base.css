@@ -207,3 +207,20 @@ a {
     scroll-behavior: auto !important;
   }
 }
+
+.icon {
+  inline-size: var(--icon);
+  block-size: var(--icon);
+}
+
+.icon--sm {
+  inline-size: var(--icon-sm);
+  block-size: var(--icon-sm);
+}
+
+/* The calm full-screen message of the error boundary (SPEC §7). */
+.error-screen {
+  justify-content: center;
+  text-align: center;
+  gap: 16px;
+}

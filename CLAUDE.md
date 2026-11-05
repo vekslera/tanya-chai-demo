@@ -9,7 +9,7 @@ This repo is the **Tanya Chai (תניא חי) demo**: a static, Hebrew-first, RT
 - **Torah content needs Alex's approval.** Every ביאור, glossary entry, question and Avos uBanim item starts with `reviewed: false`. Only Alex flips it, or you flip it on his explicit instruction for the specific items he approved.
 - **No external requests at runtime:** no Google Fonts, CDNs, embeds, analytics or live Sefaria calls. Fonts are self-hosted via `@fontsource`.
 - **Do not modify anything under `resources/` by hand** (logo files and texts). The texts change only through `npm run fetch-sefaria`, run on Alex's instruction. Build the `HeartMark` component from the same path data as `resources/brand/logo/`.
-- **Never hardcode a resource or data file path in code.** Every path is named once, in `texts.config.json`; scripts read it through `scripts/lib/config.mjs`, and the app through `virtual:texts`.
+- **Never hardcode a resource or data file path in code.** Every path is named once, in `texts.config.json`; scripts read it through `scripts/lib/config.ts`, and the app through `virtual:texts`.
 - The name is written **חי, without gershayim**. The Tanya text is shown exactly as in the resource file.
 
 ## Conventions

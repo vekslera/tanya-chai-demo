@@ -32,6 +32,10 @@
   --gutter: 20px;
   --max-width: 680px;
   --tap: 48px;
+  /* The heart's default size; a screen sets its own --heart-size around it. */
+  --heart-size: 156px;
+  --icon: 24px;
+  --icon-sm: 20px;
 
   --shadow: 0 1px 2px rgba(30, 42, 90, 0.06), 0 4px 16px rgba(30, 42, 90, 0.06);
   --ease: cubic-bezier(0.4, 0, 0.2, 1);

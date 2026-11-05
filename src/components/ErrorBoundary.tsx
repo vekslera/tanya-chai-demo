@@ -12,7 +12,7 @@ export class ErrorBoundary extends Component<{ children: ReactNode }, { failed: 
   render() {
     if (!this.state.failed) return this.props.children;
     return (
-      <main className="screen" style={{ justifyContent: 'center', textAlign: 'center', gap: 16 }}>
+      <main className="screen error-screen">
         <h1 className="screen-title">{he.error.title}</h1>
         <p className="muted">{he.error.text}</p>
         <button type="button" className="btn btn-primary" onClick={() => window.location.reload()}>

@@ -1,38 +1,17 @@
 // Hash routing (SPEC §3.2): GitHub Pages needs no SPA fallback, and the back button works.
 import { useEffect, useState } from 'react';
+import { ROUTES, type Route } from './routes';
 
-export type Route =
-  | '/'
-  | '/level'
-  | '/read'
-  | '/quiz'
-  | '/done'
-  | '/together'
-  | '/together/quiz'
-  | '/shinun'
-  | '/about';
+const ALL: readonly string[] = Object.values(ROUTES);
 
-const ROUTES: Route[] = [
-  '/',
-  '/level',
-  '/read',
-  '/quiz',
-  '/done',
-  '/together',
-  '/together/quiz',
-  '/shinun',
-  '/about',
-];
-
-function current(): Route {
-  const path = window.location.hash.replace(/^#/, '') || '/';
-  return (ROUTES as string[]).includes(path) ? (path as Route) : '/';
+export function currentRoute(): Route {
+  const path = window.location.hash.replace(/^#/, '') || ROUTES.home;
+  return ALL.includes(path) ? (path as Route) : ROUTES.home;
 }
 
 export function navigate(to: Route, { replace = false } = {}) {
-  const hash = `#${to}`;
   if (replace) {
-    window.history.replaceState(null, '', hash);
+    window.history.replaceState(null, '', `#${to}`);
     window.dispatchEvent(new HashChangeEvent('hashchange'));
   } else {
     window.location.hash = to;
@@ -44,13 +23,13 @@ export function navigate(to: Route, { replace = false } = {}) {
  * that just navigated away (e.g. the quiz after completing) must not redirect.
  */
 export function redirectFrom(from: Route, to: Route) {
-  if (current() === from) navigate(to, { replace: true });
+  if (currentRoute() === from) navigate(to, { replace: true });
 }
 
 export function useRoute(): Route {
-  const [route, setRoute] = useState(current);
+  const [route, setRoute] = useState(currentRoute);
   useEffect(() => {
-    const onChange = () => setRoute(current());
+    const onChange = () => setRoute(currentRoute());
     window.addEventListener('hashchange', onChange);
     return () => window.removeEventListener('hashchange', onChange);
   }, []);

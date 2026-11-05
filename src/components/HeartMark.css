@@ -1,11 +1,13 @@
 .heartmark {
   display: block;
   overflow: visible;
+  inline-size: var(--heart-size);
+  block-size: var(--heart-size);
 }
 
 .heartmark--animated .heartmark-contour {
   transition:
-    stroke-dashoffset 1.2s ease-in-out,
+    stroke-dashoffset var(--heart-contour-ms) ease-in-out,
     opacity 0.2s ease-in-out;
 }
 

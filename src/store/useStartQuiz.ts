@@ -1,22 +1,21 @@
-import { usePortion } from '../content/PortionContext';
+import { usePortion } from '../content/PortionProvider';
+import { questionIdsFor } from '../domain/quiz';
+import { isResumable } from '../domain/quizSession';
+import { newSeed } from '../domain/shuffle';
+import type { Level, Track } from '../domain/types';
 import { navigate } from '../router';
-import type { Level, Track } from './logic';
-import { useStore } from './store';
+import { quizRoute } from '../routes';
+import { useStore } from './StoreProvider';
 
 /** Starts a quiz, or resumes the one in progress for the same track and level. */
 export function useStartQuiz() {
   const { state, dispatch } = useStore();
   const { portion } = usePortion();
   return (track: Track, level?: Level) => {
-    const q = state.quiz;
-    const resumable = q && q.track === track && q.level === level && q.index < q.questionIds.length;
-    if (!resumable) {
-      const questionIds = portion.questions
-        .filter((x) => x.track === track && (track === 'together' || x.level === level))
-        .map((x) => x.id);
-      const seed = Math.floor(Math.random() * 2 ** 31);
-      dispatch({ type: 'startQuiz', track, level, questionIds, seed });
+    if (!isResumable(state.quiz, track, level)) {
+      const questionIds = questionIdsFor(portion.questions, track, level);
+      dispatch({ type: 'startQuiz', track, level, questionIds, seed: newSeed() });
     }
-    navigate(track === 'solo' ? '/quiz' : '/together/quiz');
+    navigate(quizRoute(track));
   };
 }

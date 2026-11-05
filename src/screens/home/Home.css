@@ -1,0 +1,49 @@
+.home {
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  text-align: center;
+}
+
+.home-brand {
+  --heart-size: 168px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.home-portion {
+  width: 100%;
+  max-width: 420px;
+  border: 1px solid var(--track);
+}
+
+.home-portion-label {
+  font-family: var(--font-text);
+  font-weight: 700;
+  font-size: 22px;
+}
+
+.home-portion-meta {
+  color: var(--navy-muted);
+  font-size: 15px;
+  margin-block-start: 2px;
+}
+
+.home-streak {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  color: var(--navy);
+}
+
+.home-actions {
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}

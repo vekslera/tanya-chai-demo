@@ -1,7 +1,7 @@
 // Generates the review document (SPEC §8.4): every reviewable item in reading order, with its id,
 // so Alex can review the drafts in one pass.
 import fs from 'node:fs';
-import { pathOf } from './lib/config.mjs';
+import { pathOf } from './lib/config.ts';
 import { loadAll } from './lib/content.mjs';
 
 const all = loadAll();

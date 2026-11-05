@@ -3,6 +3,12 @@
 
 const days = (n: number) => (n === 1 ? 'יום אחד' : `${n} ימים`);
 
+/** The title and description of each level in app.config.json, by level ID. */
+const levelOptions: Record<number, { title: string; description: string }> = {
+  1: { title: 'טקסט בלבד', description: 'קוראים את לשון התניא כפי שהיא' },
+  2: { title: 'טקסט עם ביאור', description: 'ביאור קצר ופשוט אחרי כל משפט' },
+};
+
 export const he = {
   appName: { tanya: 'תניא', chai: 'חי', full: 'תניא חי' },
 
@@ -16,7 +22,7 @@ export const he = {
   },
 
   home: {
-    estimatedTime: 'כ־6 דקות',
+    estimatedTime: (minutes: number) => `כ־${minutes} דקות`,
     streak: (n: number) => `רצף: ${days(n)}`,
     start: 'התחל ללמוד',
     together: 'לימוד אבות ובנים',
@@ -25,10 +31,7 @@ export const he = {
 
   level: {
     title: 'איך תרצו ללמוד היום?',
-    options: {
-      1: { title: 'טקסט בלבד', description: 'קוראים את לשון התניא כפי שהיא' },
-      2: { title: 'טקסט עם ביאור', description: 'ביאור קצר ופשוט אחרי כל משפט' },
-    },
+    options: levelOptions,
     selected: 'הבחירה האחרונה',
     maskil: 'ללימוד מעמיק עם מפרשים: מסלול משכיל, בקרוב',
   },
@@ -84,7 +87,6 @@ export const he = {
     pointsAlreadyTogether: 'על לימוד אבות ובנים כבר התקבלו נקודות, ולכן הפעם לא נוספו',
     communityLabel: 'כל הלומדים יחד השבוע:',
     communityUnit: 'שיעורים',
-    communityValue: 12480,
     heartLine: 'הקו המוזהב מקיף את הלב ככל שמתקדמים בלימוד',
     heartLabel: (p: number) => `התקדמות בלימוד: ${p}%`,
     otherLevel: 'נסה רמה אחרת',

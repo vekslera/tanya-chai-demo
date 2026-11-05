@@ -1,4 +1,5 @@
-import type { PortionParagraph, PortionUnit } from '../content/loader';
+import type { PortionParagraph, PortionUnit } from '../domain/portion';
+import type { AnswerState } from '../domain/quiz';
 import './PortionText.css';
 
 /** One sentence in a gold-highlighted quote card (SPEC §3.1, S4 feedback). */
@@ -13,8 +14,6 @@ export function QuoteCard({ unit, label }: { unit: PortionUnit; label?: string }
   );
 }
 
-export type SentenceState = 'correct' | 'wrong' | undefined;
-
 /**
  * The portion's text in compact form: used in the back-to-text sheet, and as the answer surface
  * of findSentence questions (each sentence is then a button).
@@ -28,16 +27,17 @@ export function CompactText({
 }: {
   paragraphs: PortionParagraph[];
   highlight?: string;
-  highlightParagraph?: number;
-  states?: Record<string, SentenceState>;
+  /** The key of a paragraph to mark as a hint. */
+  highlightParagraph?: string;
+  states?: Record<string, AnswerState>;
   onSelect?: (unitId: string) => void;
 }) {
   return (
     <div className="compact-text">
       {paragraphs.map((p) => (
         <p
-          key={p.paragraph}
-          className={`compact-paragraph${p.paragraph === highlightParagraph ? ' compact-paragraph--hint' : ''}`}
+          key={p.key}
+          className={`compact-paragraph${p.key === highlightParagraph ? ' compact-paragraph--hint' : ''}`}
         >
           {p.units.map((u) => {
             const cls = [

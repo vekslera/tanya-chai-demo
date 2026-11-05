@@ -1,11 +1,8 @@
-import type { ReactNode } from 'react';
-import type { TranslationSpan } from '../content/types';
+import { footnoteSegments } from '../domain/footnotes';
+import type { TranslationSpan } from '../domain/types';
 import { he } from '../strings/he';
 
-/**
- * The English of one paragraph. Footnote marks "[n]" become superscript buttons; the footnote
- * itself opens on tap. Brackets that hold words, like "[transitory]", are translation text.
- */
+/** The English of one paragraph. Footnote marks become superscript buttons that open the note. */
 export function EnglishText({
   span,
   onFootnote,
@@ -13,28 +10,25 @@ export function EnglishText({
   span: TranslationSpan;
   onFootnote: (n: string) => void;
 }) {
-  const notes = span.footnotes ?? {};
-  const parts: ReactNode[] = [];
-  let pos = 0;
-  for (const m of span.text.matchAll(/\[(\d+)\]/g)) {
-    const n = m[1]!;
-    if (!(n in notes)) continue;
-    parts.push(span.text.slice(pos, m.index));
-    parts.push(
-      <sup key={m.index}>
-        <button
-          type="button"
-          className="footnote-mark"
-          onClick={() => onFootnote(n)}
-          aria-label={he.read.footnote(n)}
-          aria-haspopup="dialog"
-        >
-          {n}
-        </button>
-      </sup>,
-    );
-    pos = m.index + m[0].length;
-  }
-  parts.push(span.text.slice(pos));
-  return <>{parts}</>;
+  return (
+    <>
+      {footnoteSegments(span.text, span.footnotes ?? {}).map((s, i) =>
+        s.kind === 'text' ? (
+          s.text
+        ) : (
+          <sup key={i}>
+            <button
+              type="button"
+              className="footnote-mark"
+              onClick={() => onFootnote(s.n)}
+              aria-label={he.read.footnote(s.n)}
+              aria-haspopup="dialog"
+            >
+              {s.n}
+            </button>
+          </sup>
+        ),
+      )}
+    </>
+  );
 }

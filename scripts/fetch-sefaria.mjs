@@ -8,7 +8,7 @@
 // Usage: npm run fetch-sefaria [-- --lang he|en]
 import fs from 'node:fs';
 import path from 'node:path';
-import { config, fill, pathOf } from './lib/config.mjs';
+import { config, fill, pathOf } from './lib/config.ts';
 import { englishText, hebrewText, portionMarkers } from './lib/sefaria.mjs';
 
 const only = process.argv.includes('--lang')

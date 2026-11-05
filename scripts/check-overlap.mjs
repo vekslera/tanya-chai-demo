@@ -5,7 +5,7 @@
 // Output names the item and the overlapping words of the draft only.
 import fs from 'node:fs';
 import path from 'node:path';
-import { pathOf } from './lib/config.mjs';
+import { pathOf } from './lib/config.ts';
 import { lettersOnly } from './lib/units.mjs';
 import { loadAll, reviewables } from './lib/content.mjs';
 

@@ -6,7 +6,7 @@ import tseslint from 'typescript-eslint';
 export default tseslint.config(
   { ignores: ['dist', 'node_modules', 'data/units'] },
   {
-    files: ['src/**/*.{ts,tsx}', 'vite.config.ts', 'texts.vite.ts'],
+    files: ['src/**/*.{ts,tsx}', 'vite.config.ts', 'virtual.vite.ts', 'scripts/**/*.ts'],
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     languageOptions: { ecmaVersion: 2022, globals: globals.browser },
     plugins: { 'react-hooks': reactHooks },

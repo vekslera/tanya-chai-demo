@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { config, pathOf } from './config.mjs';
+import { config, pathOf } from './config.ts';
 import { englishText, hebrewText, portionMarkers } from './sefaria.mjs';
 
 describe('englishText', () => {

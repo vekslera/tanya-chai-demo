@@ -3,7 +3,7 @@
 // One span per Hebrew paragraph: line N of the English file covers paragraph N of the Hebrew.
 import fs from 'node:fs';
 import path from 'node:path';
-import { config, pathOf } from './lib/config.mjs';
+import { config, pathOf } from './lib/config.ts';
 import { footnoteMarks, parseEnglish } from './lib/english.mjs';
 import { loadAll } from './lib/content.mjs';
 

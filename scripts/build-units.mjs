@@ -2,7 +2,7 @@
 // The output is generated: never edit it, and it is not committed.
 import fs from 'node:fs';
 import path from 'node:path';
-import { config, pathOf } from './lib/config.mjs';
+import { config, pathOf } from './lib/config.ts';
 import { buildUnits } from './lib/units.mjs';
 
 let failed = false;

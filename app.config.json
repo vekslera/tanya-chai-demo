@@ -1,0 +1,54 @@
+{
+  "$comment": "The single place for the app's parameters. Each one is defined here once and read through src/config.ts (the app) or scripts/lib/config.ts (the scripts). Paths and text sources live in texts.config.json; colors, sizes and spacing live in src/styles/tokens.css.",
+  "storage": {
+    "key": "tanyachai.demo.v1"
+  },
+  "levels": [
+    { "id": 1, "showBiur": false },
+    { "id": 2, "showBiur": true }
+  ],
+  "defaultLevel": 2,
+  "demo": {
+    "initialProgress": { "streak": 12, "points": 340, "heartProgress": 62, "familyStreak": 5 },
+    "estimatedMinutes": 6,
+    "communityLessons": 12480,
+    "aboutHeartProgress": 75
+  },
+  "scoring": {
+    "pointsByAttempt": [10, 5],
+    "completionBonus": 20,
+    "heartStep": 3,
+    "heartMax": 100
+  },
+  "quiz": {
+    "solo": { "maxAttempts": 2 },
+    "together": { "retryUntilCorrect": true }
+  },
+  "read": {
+    "unlockAfterMs": 20000,
+    "seenMargin": "0px 0px -15% 0px"
+  },
+  "motion": {
+    "heartContourMs": 1200,
+    "countUpMs": 900,
+    "done": {
+      "contourAtMs": 500,
+      "streakAtMs": 900,
+      "pointsAtMs": 1300,
+      "purifyAfterContourMs": 100
+    }
+  },
+  "format": {
+    "numberLocale": "en-US"
+  },
+  "text": {
+    "bidiNowrapMaxChars": 30
+  },
+  "contentRules": {
+    "biurMaxWords": 25,
+    "levelQuestions": { "1": { "literal": 3 }, "2": { "understanding": 2, "concept": 1 } },
+    "togetherQuestions": { "count": 3, "category": "child", "kinds": ["choice", "trueFalse"] },
+    "optionCount": { "solo": [3, 4], "together": [2, 3] },
+    "cards": { "count": [6, 8], "talks": [2, 3], "maxWords": { "forParent": 30, "toChild": 35 } }
+  }
+}

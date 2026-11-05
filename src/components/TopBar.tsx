@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
-import { navigate, type Route } from '../router';
+import { navigate } from '../router';
+import type { Route } from '../routes';
 import { he } from '../strings/he';
 import { BackIcon } from './Icons';
 
