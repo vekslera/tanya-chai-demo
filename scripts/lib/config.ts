@@ -5,6 +5,30 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 export type ChapterRef = { part: string; chapter: number };
+type Range = [min: number, max: number];
+
+export type TextsConfig = {
+  chapters: ChapterRef[];
+  paths: Record<string, unknown>;
+  sefaria: {
+    api: string;
+    refs: Record<string, string>;
+    versions: Record<string, string>;
+    allowedLicenses: string[];
+  };
+};
+
+/** The content rules of app.config.json, checked by the validator (SPEC §6.5). */
+export type ContentRules = {
+  biurMaxWords: number;
+  /** Runs of this many words shared with a reference text are flagged (SPEC §8.3). */
+  overlapRunWords: number;
+  /** By level: how many questions of each category. */
+  levelQuestions: Record<string, Record<string, number>>;
+  togetherQuestions: { count: number; category: string; kinds: string[] };
+  optionCount: Record<string, Range>;
+  cards: { count: Range; talks: Range; maxWords: Record<string, number> };
+};
 
 export const root = path.resolve(import.meta.dirname, '../..');
 
@@ -15,8 +39,9 @@ export const CONFIG_FILES = { texts: 'texts.config.json', app: 'app.config.json'
 export const readJson = (file: string) =>
   JSON.parse(fs.readFileSync(path.join(root, file), 'utf8'));
 
-export const config = readJson(CONFIG_FILES.texts);
+export const config: TextsConfig = readJson(CONFIG_FILES.texts);
 export const appConfig = readJson(CONFIG_FILES.app);
+export const contentRules: ContentRules = appConfig.contentRules;
 
 /** Fills {part} and {chapter} in a path template. */
 export function fill(template: string, ch?: ChapterRef): string {

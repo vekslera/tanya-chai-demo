@@ -5,10 +5,10 @@
   "type": "module",
   "license": "Apache-2.0",
   "engines": {
-    "node": ">=20.19"
+    "node": ">=22.18"
   },
   "scripts": {
-    "build-units": "node scripts/build-units.mjs",
+    "build-units": "node scripts/build-units.ts",
     "predev": "npm run build-units",
     "dev": "vite",
     "prebuild": "npm run build-units",
@@ -18,10 +18,14 @@
     "format": "prettier --write .",
     "pretest": "npm run build-units",
     "test": "vitest run",
-    "validate-content": "node scripts/validate-content.mjs",
-    "review": "node scripts/build-review.mjs",
-    "check-overlap": "node scripts/check-overlap.mjs",
-    "fetch-sefaria": "node scripts/fetch-sefaria.mjs"
+    "validate-content": "node scripts/validate-content.ts",
+    "review": "node scripts/build-review.ts",
+    "check-overlap": "node scripts/check-overlap.ts",
+    "fetch-sefaria": "node scripts/fetch-sefaria.ts",
+    "precoverage": "npm run build-units",
+    "coverage": "vitest run --coverage",
+    "resolve-matches": "node scripts/resolve-matches.ts",
+    "build-translations": "node scripts/build-translations.ts"
   },
   "dependencies": {
     "@fontsource/frank-ruhl-libre": "^5.3.0",

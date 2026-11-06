@@ -46,6 +46,7 @@
   },
   "contentRules": {
     "biurMaxWords": 25,
+    "overlapRunWords": 5,
     "levelQuestions": { "1": { "literal": 3 }, "2": { "understanding": 2, "concept": 1 } },
     "togetherQuestions": { "count": 3, "category": "child", "kinds": ["choice", "trueFalse"] },
     "optionCount": { "solo": [3, 4], "together": [2, 3] },

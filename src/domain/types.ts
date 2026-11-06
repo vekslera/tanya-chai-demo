@@ -13,7 +13,8 @@ export type Unit = ChapterRef & {
 };
 
 export type DateKey = string;
-export type YearType = 'regular' | 'leap';
+export const YEAR_TYPES = ['regular', 'leap'] as const;
+export type YearType = (typeof YEAR_TYPES)[number];
 export type Range = { from: UnitId; to: UnitId };
 export type DailySchedule = { source: string } & Record<YearType, Record<DateKey, Range[]>>;
 

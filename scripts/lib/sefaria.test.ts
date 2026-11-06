@@ -1,7 +1,8 @@
-import fs from 'node:fs';
+// @vitest-environment node
 import { describe, expect, it } from 'vitest';
 import { config, pathOf } from './config.ts';
-import { englishText, hebrewText, portionMarkers } from './sefaria.mjs';
+import { diskFiles } from './env.ts';
+import { englishText, hebrewText, portionMarkers } from './sefaria.ts';
 
 describe('englishText', () => {
   it('turns footnotes into [n] marks and lists them after a blank line', () => {
@@ -10,6 +11,10 @@ describe('englishText', () => {
     expect(englishText([seg, 'Second.'])).toBe(
       'love “yourself”[1] toward all.\nSecond.\n\n[1] Leviticus 19:18.\n',
     );
+  });
+
+  it('has no footnote block without footnotes', () => {
+    expect(englishText(['One.'])).toBe('One.\n');
   });
 });
 
@@ -24,12 +29,12 @@ describe('hebrewText', () => {
 // The resource files are exactly what fetch-sefaria derives from the saved responses: nobody has
 // edited them by hand.
 describe.each(config.chapters)('resources for $part $chapter', (ch) => {
+  const files = diskFiles();
   it.each(['he', 'en'])('%s text matches its saved Sefaria response', (lang) => {
-    const saved = pathOf(`sefariaResponse.${lang}`, ch, { absolute: true });
-    if (!fs.existsSync(saved)) return;
-    const { response } = JSON.parse(fs.readFileSync(saved, 'utf8'));
-    const segments = response.versions[0].text;
+    const saved = pathOf(`sefariaResponse.${lang}`, ch);
+    expect(files.exists(saved)).toBe(true);
+    const segments: string[] = JSON.parse(files.read(saved)).response.versions[0].text;
     const expected = lang === 'he' ? hebrewText(segments) : englishText(segments);
-    expect(fs.readFileSync(pathOf(`text.${lang}`, ch, { absolute: true }), 'utf8')).toBe(expected);
+    expect(files.read(pathOf(`text.${lang}`, ch))).toBe(expected);
   });
 });

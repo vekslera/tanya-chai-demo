@@ -14,12 +14,14 @@ export default defineConfig({
   test: {
     environment: 'jsdom',
     setupFiles: ['src/test/setup.ts'],
-    include: ['src/**/*.test.{ts,tsx}', 'scripts/**/*.test.{mjs,ts}', '*.test.ts'],
+    include: ['src/**/*.test.{ts,tsx}', 'scripts/**/*.test.ts', '*.test.ts'],
     coverage: {
       provider: 'v8',
       include: ['src/**', 'scripts/**', '*.vite.ts'],
-      exclude: ['**/*.test.*', 'src/test/**', '**/*.css', 'src/vite-env.d.ts'],
+      exclude: ['**/*.test.*', 'src/test/**', 'scripts/test/**', '**/*.css', 'src/vite-env.d.ts'],
       reporter: ['text', 'html'],
+      // Every line and branch of the code is tested (npm run coverage fails otherwise).
+      thresholds: { 100: true },
     },
   },
 });

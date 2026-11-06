@@ -7,7 +7,14 @@ import fs from 'node:fs';
 import path from 'node:path';
 import type { Plugin } from 'vite';
 import { heartGeometry } from './scripts/lib/brand.ts';
-import { CONFIG_FILES, config, pathOf, readJson, root } from './scripts/lib/config.ts';
+import {
+  CONFIG_FILES,
+  config,
+  pathOf,
+  readJson,
+  root,
+  type ChapterRef,
+} from './scripts/lib/config.ts';
 import { chapterKey } from './src/domain/units.ts';
 
 const TEXTS = 'virtual:texts';
@@ -20,10 +27,10 @@ const SHARED = ['schedule', 'glossary', 'portion'] as const;
 
 const importPath = (file: string) => JSON.stringify(file.replaceAll(path.sep, '/'));
 
-export function textsModule(): string {
+export function textsModule(chapters: ChapterRef[] = config.chapters): string {
   const imports: string[] = [];
   const maps = Object.fromEntries(PER_CHAPTER.map((k) => [k, [] as string[]]));
-  config.chapters.forEach((ch: { part: string; chapter: number }, i: number) => {
+  chapters.forEach((ch, i) => {
     for (const key of PER_CHAPTER) {
       const file = pathOf(key, ch, { absolute: true });
       if (key !== REQUIRED && !fs.existsSync(file)) continue;

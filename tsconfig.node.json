@@ -15,5 +15,5 @@
     "strict": true,
     "skipLibCheck": true
   },
-  "include": ["vite.config.ts", "virtual.vite.ts", "scripts/**/*.ts"]
+  "include": ["vite.config.ts", "virtual.vite.ts", "virtual.vite.test.ts", "scripts/**/*.ts"]
 }
