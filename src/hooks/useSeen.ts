@@ -17,7 +17,7 @@ export function useSeen(
       setSeen(new Set(allIds));
       return;
     }
-    const els = container.current?.querySelectorAll<HTMLElement>('[data-unit]') ?? [];
+    const els = container.current!.querySelectorAll<HTMLElement>('[data-unit]');
     const io = new IntersectionObserver(
       (entries) => {
         const visible = entries.filter((e) => e.isIntersecting).map((e) => e.target as HTMLElement);

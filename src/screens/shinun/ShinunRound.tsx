@@ -28,7 +28,7 @@ export function ShinunRound({
         {round === 0 ? he.shinun.readAloud : he.shinun.roundHidden}
       </h1>
       <p className="shinun-sentence">
-        {roundWords(sentence, rounds[round] ?? [], revealed).map((w) =>
+        {roundWords(sentence, rounds[round]!, revealed).map((w) =>
           w.hidden ? (
             <button
               key={w.index}
