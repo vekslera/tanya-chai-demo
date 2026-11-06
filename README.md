@@ -6,7 +6,7 @@ A static, Hebrew-first demo of **Tanya Chai (תניא חי)**: the daily portion
 
 ## Running it
 
-Node 20.19+ is required.
+Node 22.18+ is required (it runs the TypeScript scripts directly).
 
 ```sh
 npm install
@@ -21,26 +21,37 @@ Optional feature: `VITE_FEATURE_SHINUN=true npm run dev` shows the Shinun taste 
 
 ```sh
 npm run lint              # ESLint and Prettier
-npm test                  # Vitest: text layer, content integrity, scoring, streak, shuffling
+npm test                  # Vitest: every module of the app and the scripts
+npm run coverage          # the same, failing below 100% line and branch coverage (run in CI)
 npm run validate-content  # SPEC §6.5 integrity rules; CONTENT_STRICT=1 also fails on unreviewed items
 ```
 
 ## Content pipeline
 
-Every file path, the chapter list and the Sefaria refs are named once, in [`texts.config.json`](texts.config.json).
+Every file path, the chapter list and the Sefaria refs are named once, in [`texts.config.json`](texts.config.json). The app's parameters (scoring, attempts, timings, demo values, the validator's content rules) are named once, in [`app.config.json`](app.config.json).
 
 | Step | Command | Output |
 | --- | --- | --- |
 | Download the Hebrew and English from Sefaria (once; checks version and license) | `npm run fetch-sefaria` | `resources/texts/{he,en}/tanya/LA/32` and the raw `32.sefaria.json` |
 | Units from the raw text and the splits (runs before dev, build and test) | `npm run build-units` | `data/units/he/LA/32.json` (generated, not committed) |
-| English spans from the English resource | `node scripts/build-translations.mjs` | `data/translations/en/LA/32.json` |
-| Glossary matches written without nikud → exact vocalized text | `node scripts/resolve-matches.mjs` | `content/LA/32.json` |
+| English spans from the English resource | `npm run build-translations` | `data/translations/en/LA/32.json` |
+| Glossary matches written without nikud → exact vocalized text | `npm run resolve-matches` | `content/LA/32.json` |
 | Review document for Alex | `npm run review` | `content/REVIEW.md` |
 | Overlap check against the local Shiurim file (Alex's machine only) | `npm run check-overlap` | report |
 
 The English resource file has one paragraph per line, with footnote marks written `[n]` where they apply, then a blank line and one footnote per line (`[n] text`).
 
 The Tanya text is never edited: it is only split into units by their opening words (`data/splits/`), and every other layer points into it by unit ID.
+
+## Code structure
+
+The code follows four rules (SPEC §5.4): no hardcoded parameters, single responsibility and dependency inversion, small files, and tests for all the code.
+
+- `src/domain/`: the pure logic, with no React and no DOM, shared by the app and the scripts.
+- `src/ports.ts`: what the app needs from outside (the text, the learning content, storage). `src/adapters/` implements it with the bundled files and `localStorage`, and `src/composition.ts` is the one place that chooses them. A Sefaria-backed text source would be a new adapter and a change in that file.
+- `src/screens/<screen>/`: each screen, split into small views; `src/hooks/`, `src/components/`, `src/store/` as named.
+- `scripts/`: thin entry points over `scripts/lib/`. Each script takes a `ScriptEnv` (files, log, network, clock), so the tests run it in memory.
+- `virtual.vite.ts`: serves the data files (`virtual:texts`), `app.config.json` (`virtual:app-config`) and the logo's paths (`virtual:brand`) to the app at build time.
 
 ## License
 
