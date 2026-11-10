@@ -50,7 +50,7 @@ It is **not** the MVP. There are no accounts, no backend and no analytics. Every
 
 **Approved commentaries are references for the meaning only.** Alex has approved these commentaries:
 
-- **Lessons in Tanya (Shiurim).** Alex keeps the Hebrew for chapter 32 in `resources/texts/he/shiurim/`, excluded from Git (`.git/info/exclude`).
+- **Lessons in Tanya (Shiurim).** Alex keeps the Hebrew for chapter 32 in `resources/texts/he/shiurim/`, excluded from Git (`.git/info/exclude`). The English is on Chabad.org.
 - **Rabbi Adin Steinsaltz's commentary** on the Steinsaltz Center site, in Hebrew and English.
 - **Chassidus Mevu'eres**, from Heichel Menachem.
 - **The Chabad.org rendering of Tanya**, by Rabbi Tzvi Freeman.
@@ -565,8 +565,8 @@ These are drafted by Claude (in the claude.ai conversation or in Claude Code) an
 
 - Stay strictly within the plain meaning of the text, as it is learned in Chabad. No novel interpretations, no stories, no attributions to the Rebbe or other sources unless Alex supplies them.
 - The ביאור follows the meaning of the approved commentaries (§2), so it carries the inner, Chassidic point of each unit and not only its literal sense. It is written in our own words with our own examples. **Never** quote a commentary or rewrite its sentences one by one.
-- **Overlap check:** before review, a script compares every draft item with the local Shiurim file and flags any run of 5 or more words in common (letters only, nikud ignored). Flagged items are rewritten. The check runs only where the file exists, that is on Alex's machine, never in CI.
-- **Short ביאור:** written in each language (Hebrew and English), at most 25 words per unit in Hebrew and 35 in English (`contentRules.biurMaxWords`). Each language explains its own text of the unit, with the same meaning; it explains words and the flow, so simply that a child of about 10, or someone opening Tanya for the first time, understands it. No unexplained terms. The third paragraph (`LA.32.011`–`LA.32.019`) is the hardest at this level and needs the most care. There is no extended ביאור in the demo.
+- **Overlap check:** before review, a script compares every draft item with the local Shiurim file and flags any run of 5 or more words in common (letters only, nikud ignored). Flagged items are rewritten. The check runs only where the file exists, that is on Alex's machine, never in CI. The English ביאור is checked the same way against the English commentaries it follows.
+- **Short ביאור:** written in each language (Hebrew and English), at most 25 words per unit in Hebrew and 35 in English (`contentRules.biurMaxWords`). Each language explains its own text of the unit, with the same meaning, and is written from the commentaries in that language: the English ביאור follows Lessons in Tanya and Steinsaltz in English, and is not a translation of the Hebrew ביאור. (The English ביאור of `LA.32.001`–`LA.32.019` was carried over from the Hebrew; it is to be rewritten this way.) It explains words and the flow, so simply that a child of about 10, or someone opening Tanya for the first time, understands it. No unexplained terms. The third paragraph (`LA.32.011`–`LA.32.019`) is the hardest at this level and needs the most care. There is no extended ביאור in the demo.
 - **Questions** test the text, not trivia.
   - **Literal:** what does the text say.
   - **Understanding:** why does it say so.
