@@ -48,7 +48,14 @@ It is **not** the MVP. There are no accounts, no backend and no analytics. Every
 | English text | `resources/texts/en/tanya/LA/32`: Sefaria's English version of Tanya (Kehot translation), fetched once (§8.1), license CC-BY-NC. |
 | ביאור, glossary, questions, Avos uBanim tools | Original content, drafted with AI for this demo (§8.3), reviewed by Alex and approved by a rav or a recognized educator (§8.4) |
 
-**Lessons in Tanya (Shiurim) is a local reference only.** Alex keeps the Hebrew Shiurim for chapter 32 in `resources/texts/he/shiurim/`, excluded from Git (`.git/info/exclude`). It may be read to check the meaning of the text. It must never be quoted, paraphrased, reworded or followed in its order of explanation, and nothing from it may be committed or published. The same applies to any other copyrighted commentary.
+**Approved commentaries are references for the meaning only.** Alex has approved these commentaries:
+
+- **Lessons in Tanya (Shiurim).** Alex keeps the Hebrew for chapter 32 in `resources/texts/he/shiurim/`, excluded from Git (`.git/info/exclude`).
+- **Rabbi Adin Steinsaltz's commentary** on the Steinsaltz Center site, in Hebrew and English.
+- **Chassidus Mevu'eres**, from Heichel Menachem.
+- **The Chabad.org rendering of Tanya**, by Rabbi Tzvi Freeman.
+
+The ביאור follows their meaning: how they understand each unit. It is written in our own words, short and simple. These commentaries are copyrighted, so they are never quoted, their sentences are never rewritten one by one, and nothing from them is committed or published. Any other commentary needs Alex's approval first.
 
 **Content sources.** All content in Tanya Chai comes from three sources, and only from them:
 
@@ -552,7 +559,7 @@ These are drafted by Claude (in the claude.ai conversation or in Claude Code) an
 **Guidelines for the drafter:**
 
 - Stay strictly within the plain meaning of the text, as it is learned in Chabad. No novel interpretations, no stories, no attributions to the Rebbe or other sources unless Alex supplies them.
-- Lessons in Tanya may be read to check the meaning (§2), but the ביאור is written from scratch: own words, own examples, own order. **Never** copy, paraphrase or reword it, or any other copyrighted commentary.
+- The ביאור follows the meaning of the approved commentaries (§2), so it carries the inner, Chassidic point of each unit and not only its literal sense. It is written in our own words with our own examples. **Never** quote a commentary or rewrite its sentences one by one.
 - **Overlap check:** before review, a script compares every draft item with the local Shiurim file and flags any run of 5 or more words in common (letters only, nikud ignored). Flagged items are rewritten. The check runs only where the file exists, that is on Alex's machine, never in CI.
 - **Short ביאור:** at most 25 words per unit; it explains words and the flow, so simply that a child of about 10, or someone opening Tanya for the first time, understands it. No unexplained terms. The third paragraph (`LA.32.011`–`LA.32.019`) is the hardest at this level and needs the most care. There is no extended ביאור in the demo.
 - **Questions** test the text, not trivia.
