@@ -6,23 +6,40 @@ import { UNIT_ID } from '../../src/domain/units.ts';
 export type Split = { id: string; startsWith: string };
 type Word = { start: number; letters: string };
 
-const HEBREW_LETTER = /[א-ת]/g;
-const MAQAF = '־';
+/**
+ * How each language's words are compared: on letters only, so nikud, cantillation, punctuation,
+ * quotes and footnote numbers never count. A joiner (the Hebrew maqaf, the English em dash) counts
+ * as a space.
+ */
+export const SCRIPTS: Record<
+  string,
+  { letter: RegExp; joiner: string; fold: (s: string) => string }
+> = {
+  he: { letter: /[א-ת]/g, joiner: '־', fold: (s) => s },
+  en: { letter: /[a-z]/g, joiner: '—', fold: (s) => s.toLowerCase() },
+};
 const BOM = 0xfeff;
 
-/** Hebrew letters only: nikud, cantillation, punctuation and gershayim are dropped. */
-export function lettersOnly(s: string): string {
-  return (s.match(HEBREW_LETTER) ?? []).join('');
+function scriptOf(language: string) {
+  const script = SCRIPTS[language];
+  if (!script) throw new Error(`no script for language "${language}"`);
+  return script;
+}
+
+/** The letters of a string in a language (Hebrew by default), and nothing else. */
+export function lettersOnly(s: string, language = 'he'): string {
+  const { letter, fold } = scriptOf(language);
+  return (fold(s).match(letter) ?? []).join('');
 }
 
 /**
- * Words of a string with their offsets. A maqaf counts as a space. Words with no Hebrew letters
- * (such as a lone dash) are skipped, so they never take part in matching.
+ * Words of a string with their offsets. Words with no letters (such as a lone dash) are skipped,
+ * so they never take part in matching.
  */
-export function words(s: string): Word[] {
+export function words(s: string, language = 'he'): Word[] {
   const out: Word[] = [];
-  for (const m of s.matchAll(new RegExp(`[^\\s${MAQAF}]+`, 'g'))) {
-    const letters = lettersOnly(m[0]);
+  for (const m of s.matchAll(new RegExp(`[^\\s${scriptOf(language).joiner}]+`, 'g'))) {
+    const letters = lettersOnly(m[0], language);
     if (letters) out.push({ start: m.index, letters });
   }
   return out;
@@ -52,8 +69,8 @@ function findAnchor(lineWords: Word[][], anchor: string[], line: number, from: n
 }
 
 /**
- * Builds the units of one chapter. Each anchor is searched from the end of the previous one, on
- * Hebrew letters only. A paragraph's first unit must start at its first word. With errors, `units`
+ * Builds the units of one chapter in one language. Each anchor is searched from the end of the
+ * previous one, on letters only. A paragraph's first unit must start at its first word. With errors, `units`
  * holds what could be built.
  */
 export function buildUnits({
@@ -61,23 +78,25 @@ export function buildUnits({
   splits,
   part,
   chapter,
+  language = 'he',
 }: {
   raw: string;
   splits: Split[];
   part: string;
   chapter: number;
+  language?: string;
 }) {
   const lines = paragraphs(raw);
-  const lineWords = lines.map(words);
+  const lineWords = lines.map((l) => words(l, language));
   const errors: string[] = [];
   const starts: Start[] = [];
   let line = 0;
   let from = 0;
 
   for (const split of splits) {
-    const anchor = words(split.startsWith).map((w) => w.letters);
+    const anchor = words(split.startsWith, language).map((w) => w.letters);
     if (anchor.length === 0) {
-      errors.push(`${split.id}: anchor "${split.startsWith}" has no Hebrew letters`);
+      errors.push(`${split.id}: anchor "${split.startsWith}" has no letters`);
       continue;
     }
     const found = findAnchor(lineWords, anchor, line, from);

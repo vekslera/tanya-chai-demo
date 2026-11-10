@@ -33,6 +33,8 @@ export type PortionParagraph = {
 
 /** Everything a portion is assembled from. `units` and `translations` cover its chapters. */
 export type PortionData = {
+  /** The language of the ביאור to attach. */
+  language: string;
   portion: Portion;
   schedule: DailySchedule;
   units: Unit[];
@@ -78,7 +80,7 @@ export function assemblePortion(data: PortionData): AssembledPortion {
       return {
         ...u,
         display: u.text.trim(),
-        biur: c?.biur?.short,
+        biur: c?.biur?.[data.language]?.short,
         glossary: (c?.glossary ?? []).flatMap((m) => {
           const entry = glossaryById.get(m.entryId);
           return entry ? [{ entry, match: m.match }] : [];

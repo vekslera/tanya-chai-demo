@@ -41,6 +41,21 @@ describe('units and schedule', () => {
   });
 });
 
+describe('the other languages', () => {
+  it('are split into the same units as the Hebrew', () => {
+    const en = (a: ChapterLayers) => a.texts.en!;
+    expect(errorsAfter((a) => en(a).errors.push('anchor not found'))).toMatch(
+      'text en: anchor not found',
+    );
+    expect(errorsAfter((a) => (en(a).units[0]!.text = 'Other words'))).toMatch(
+      'text en: paragraph 1: units do not join back',
+    );
+    expect(errorsAfter((a) => (en(a).splits[0]!.id = 'LA.32.000'))).toMatch(
+      'text en: the splits do not have the same unit IDs as the he',
+    );
+  });
+});
+
 describe('translations', () => {
   it('warns about missing English, and fails on it when strict', () => {
     expect(warningsAfter((a) => (a.translations = null))).toMatch('no English translation yet');
@@ -104,17 +119,21 @@ describe('glossary and ביאור', () => {
     const c = (a: ChapterLayers) => a.unitContent[0]!;
     expect(errorsAfter((a) => a.unitContent.push({ ...c(a) }))).toMatch('content: duplicate');
     expect(errorsAfter((a) => (c(a).id = 'LA.99.001'))).toMatch('content: unknown unit');
-    expect(errorsAfter((a) => ((c(a).biur!.short as unknown) = 'x'))).toMatch(
-      'biur is not a Reviewed',
+    expect(errorsAfter((a) => ((c(a).biur!.he!.short as unknown) = 'x'))).toMatch(
+      'biur.he is not a Reviewed',
+    );
+    expect(errorsAfter((a) => (c(a).biur!.fr = { short: c(a).biur!.he!.short }))).toMatch(
+      'biur in an unknown language "fr"',
     );
     expect(errorsAfter((a) => (c(a).glossary![0]!.entryId = 'nope'))).toMatch(
       'unknown glossary entry',
     );
     expect(errorsAfter((a) => (c(a).glossary![0]!.match = 'אין'))).toMatch('not in the unit text');
-    const long = Array(contentRules.biurMaxWords + 1)
+    const long = Array(contentRules.biurMaxWords.he! + 1)
       .fill('מילה')
       .join(' ');
-    expect(warningsAfter((a) => (c(a).biur!.short!.value = long))).toMatch('biur has');
+    expect(warningsAfter((a) => (c(a).biur!.he!.short!.value = long))).toMatch('biur.he has');
+    expect(after((a) => (c(a).biur = { he: {} })).errors).toEqual([]);
   });
 
   it('accepts content without ביאור or glossary', () => {
@@ -133,7 +152,12 @@ describe('portion', () => {
 
   it('warns about unconfirmed boundaries and missing ביאור', () => {
     expect(warningsAfter((a) => (portion(a).boundariesConfirmed = false))).toMatch('not confirmed');
-    expect(warningsAfter((a) => delete a.unitContent[0]!.biur)).toMatch('has no short biur');
+    expect(warningsAfter((a) => delete a.unitContent[0]!.biur)).toMatch(
+      'has no short biur in "he"',
+    );
+    expect(warningsAfter((a) => delete a.unitContent[0]!.biur!.en)).toMatch(
+      'LA.32.001 has no short biur in "en"',
+    );
   });
 
   it('checks the sources', () => {

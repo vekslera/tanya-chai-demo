@@ -1,21 +1,28 @@
-// Raw text + splits → units (SPEC §8.2), for every chapter in texts.config.json.
-// The output is generated: never edit it, and it is not committed.
-import { config, pathOf } from './lib/config.ts';
+// Raw text + splits → units (SPEC §8.2), for every chapter in texts.config.json and every
+// language with splits. The output is generated: never edit it, and it is not committed.
+import { config, pathOf, textLanguages } from './lib/config.ts';
 import { runMain, type ScriptEnv } from './lib/env.ts';
-import { buildUnits } from './lib/units.ts';
+import { loadText } from './lib/load.ts';
 
 export function run({ files, log }: ScriptEnv): number {
   let failed = false;
   for (const ch of config.chapters) {
-    const splits = JSON.parse(files.read(pathOf('splits', ch)));
-    const { units, errors } = buildUnits({ raw: files.read(pathOf('text.he', ch)), splits, ...ch });
-    if (errors.length) {
-      failed = true;
-      for (const e of errors) log.error(`${ch.part} ${ch.chapter}: ${e}`);
-      continue;
+    for (const language of textLanguages) {
+      const where = `${ch.part} ${ch.chapter} (${language})`;
+      const text = loadText(files, ch, language);
+      if (!text) {
+        log.warn(`build-units: ${where} has no text or no splits yet`);
+        continue;
+      }
+      if (text.errors.length) {
+        failed = true;
+        for (const e of text.errors) log.error(`${where}: ${e}`);
+        continue;
+      }
+      const out = pathOf(`units.${language}`, ch);
+      files.write(out, JSON.stringify(text.units, null, 2) + '\n');
+      log.info(`build-units: ${where}, ${text.units.length} units`);
     }
-    files.write(pathOf('units', ch), JSON.stringify(units, null, 2) + '\n');
-    log.info(`build-units: ${ch.part} ${ch.chapter}, ${units.length} units`);
   }
   return failed ? 1 : 0;
 }

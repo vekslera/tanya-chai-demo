@@ -11,6 +11,8 @@ import type { Level } from './domain/types';
 export type DemoProgress = Pick<Progress, 'streak' | 'points' | 'heartProgress' | 'familyStreak'>;
 
 export type AppConfig = {
+  /** The language of the app: its text, its ביאור and its UI. */
+  language: string;
   storage: { key: string };
   levels: LevelRule[];
   defaultLevel: Level;

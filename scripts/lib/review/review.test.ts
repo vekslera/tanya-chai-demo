@@ -38,4 +38,20 @@ describe('reviewDocument', () => {
     expect(text).not.toMatch('Source line');
     expect(text).toMatch('### Level 9:  ()');
   });
+
+  it('quotes the text of each other language before its ביאור', () => {
+    const all = structuredClone(real);
+    const { text } = reviewDocument(all, all.portion!);
+    const english = all.texts.en!.units[0]!.text.trim();
+    expect(text).toMatch(`> ${english}\n\n- **LA.32.001/biur.en**`);
+    all.unitContent[0]!.biur = {
+      he: {},
+      en: {},
+      fr: { short: { value: 'Bonjour', reviewed: false } },
+    };
+    const other = reviewDocument(all, all.portion!).text;
+    expect(other).not.toMatch('LA.32.001/biur.he');
+    expect(other).not.toMatch('LA.32.001/biur.en');
+    expect(other).toMatch('- **LA.32.001/biur.fr** (⬜ to review)\n  Bonjour');
+  });
 });

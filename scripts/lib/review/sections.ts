@@ -3,7 +3,7 @@
 import type { Portion, Question, Unit } from '../../../src/domain/types.ts';
 import { unitsIn } from '../../../src/domain/units.ts';
 import { he } from '../../../src/strings/he.ts';
-import type { ContentRules } from '../config.ts';
+import { appLanguage, type ContentRules } from '../config.ts';
 import type { ChapterLayers } from '../load.ts';
 import { item, quote } from './item.ts';
 
@@ -19,11 +19,18 @@ export function textSection(all: ChapterLayers, portionUnits: Unit[]): string[] 
     }
     out.push(`#### ${u.id}`, '', quote([u]), '');
     const c = content.get(u.id);
-    if (c?.biur?.short) out.push(item(`${u.id}/biur`, c.biur.short));
+    const { [appLanguage]: own, ...others } = c?.biur ?? {};
+    if (own?.short) out.push(item(`${u.id}/biur.${appLanguage}`, own.short));
     for (const m of c?.glossary ?? []) {
       const g = glossary.get(m.entryId)!;
       out.push(item(`glossary/${g.id}: ${g.term}`, g.body));
       if (g.source) out.push(`  Source line: ${g.source}`);
+    }
+    // The ביאור in another language follows that language's text of the unit.
+    for (const [language, b] of Object.entries(others)) {
+      const translated = all.texts[language]?.units.find((x) => x.id === u.id);
+      if (translated) out.push('', quote([translated]), '');
+      if (b.short) out.push(item(`${u.id}/biur.${language}`, b.short));
     }
     out.push('');
   }

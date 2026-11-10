@@ -7,14 +7,24 @@ import { pathToFileURL } from 'node:url';
 import { describe, expect, it, vi } from 'vitest';
 import { memoryEnv, memoryFiles, repoFiles } from '../test/memoryEnv.ts';
 import { heartGeometry } from './brand.ts';
-import { appConfig, config, contentRules, fill, pathOf, root } from './config.ts';
+import {
+  appConfig,
+  config,
+  contentRules,
+  fill,
+  pathOf,
+  printConfig,
+  root,
+  textLanguages,
+} from './config.ts';
 import { diskFiles, nodeEnv, runMain } from './env.ts';
 
 describe('config', () => {
   it('fills path templates, relative or absolute', () => {
     const ch = { part: 'LA', chapter: 32 };
     expect(fill('a/{part}/{chapter}', ch)).toBe('a/LA/32');
-    expect(pathOf('splits', ch)).toBe('data/splits/LA/32.json');
+    expect(pathOf('splits.he', ch)).toBe('data/splits/he/LA/32.json');
+    expect(pathOf('splits.en', ch)).toBe('data/splits/en/LA/32.json');
     expect(pathOf('text.he', ch, { absolute: true })).toBe(
       path.join(root, 'resources/texts/he/tanya/LA/32'),
     );
@@ -25,7 +35,9 @@ describe('config', () => {
   it('reads both config files', () => {
     expect(config.chapters.length).toBeGreaterThan(0);
     expect(appConfig.storage.key).toBeTruthy();
-    expect(contentRules.biurMaxWords).toBeGreaterThan(0);
+    expect(contentRules.biurMaxWords.he).toBeGreaterThan(0);
+    expect(textLanguages).toEqual(['he', 'en']);
+    expect(Object.keys(printConfig.languages)).toEqual(textLanguages);
   });
 });
 

@@ -1,7 +1,7 @@
 // @vitest-environment node
 // The text libraries: units, the English resource, glossary matches, overlaps, translation spans.
 import { describe, expect, it } from 'vitest';
-import { parseEnglish } from './english.ts';
+import { parseResource } from './resource.ts';
 import { resolveMatch, sameLetters, skipLetters } from './matches.ts';
 import { overlaps, runs, toWords } from './overlap.ts';
 import { translationSpans } from './translations.ts';
@@ -11,6 +11,11 @@ describe('lettersOnly', () => {
   it('drops nikud, punctuation and gershayim', () => {
     expect(lettersOnly('דְּ״קוּדְשָׁא,')).toBe('דקודשא');
     expect(lettersOnly('–')).toBe('');
+  });
+
+  it('reads English case-blind, without quotes or footnote numbers', () => {
+    expect(lettersOnly('“Bless us,”[7]', 'en')).toBe('blessus');
+    expect(() => lettersOnly('x', 'fr')).toThrow('no script for language "fr"');
   });
 });
 
@@ -60,7 +65,7 @@ describe('buildUnits', () => {
       /not found/,
     );
     expect(errors([splits[0]!, { id: 'LA.1.002', startsWith: '–' }, splits[2]!])).toMatch(
-      /no Hebrew letters/,
+      /has no letters/,
     );
     expect(errors([splits[0]!])).toMatch(/paragraph 2 has no unit/);
   });
@@ -78,12 +83,12 @@ describe('buildUnits', () => {
   });
 });
 
-describe('parseEnglish', () => {
+describe('parseResource', () => {
   const raw =
     '﻿First “quote”[1] and a [bracketed] word.\r\nSecond paragraph.[2]\r\n\r\n[1] Leviticus 19:18.\r\n[2] Avot 5:16.\r\n';
 
   it('splits paragraphs from footnotes', () => {
-    expect(parseEnglish(raw)).toEqual({
+    expect(parseResource(raw)).toEqual({
       paragraphs: ['First “quote”[1] and a [bracketed] word.', 'Second paragraph.[2]'],
       footnotes: { 1: 'Leviticus 19:18.', 2: 'Avot 5:16.' },
       errors: [],
@@ -91,11 +96,11 @@ describe('parseEnglish', () => {
   });
 
   it('works without footnotes', () => {
-    expect(parseEnglish('One.\nTwo.\n').paragraphs).toEqual(['One.', 'Two.']);
+    expect(parseResource('One.\nTwo.\n').paragraphs).toEqual(['One.', 'Two.']);
   });
 
   it('reports malformed and repeated footnotes', () => {
-    expect(parseEnglish('One.\n\nnot a note\n[1] a\n[1] b\n').errors).toEqual([
+    expect(parseResource('One.\n\nnot a note\n[1] a\n[1] b\n').errors).toEqual([
       'footnote line without "[n]": not a note',
       'footnote [1] appears twice',
     ]);
@@ -145,7 +150,7 @@ describe('translationSpans', () => {
   }).units;
 
   it('makes one span per paragraph, with the footnotes it marks', () => {
-    const english = parseEnglish('One[1], two[9].\nThree.\n\n[1] Note.\n');
+    const english = parseResource('One[1], two[9].\nThree.\n\n[1] Note.\n');
     expect(translationSpans(units, 2, english)).toEqual({
       spans: [
         {
@@ -161,7 +166,7 @@ describe('translationSpans', () => {
   });
 
   it('refuses a different number of paragraphs', () => {
-    expect(translationSpans(units, 3, parseEnglish('One.\n'))).toEqual({
+    expect(translationSpans(units, 3, parseResource('One.\n'))).toEqual({
       error: 'the English has 1 paragraphs, the Hebrew 3. Ask Alex how to align them.',
     });
   });

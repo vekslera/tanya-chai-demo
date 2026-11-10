@@ -24,7 +24,7 @@ export function createDeps(
 ): AppDeps {
   const initialState = initialStateFrom(appConfig);
   return {
-    loadPortion: () => loadPortion(text, content),
+    loadPortion: () => loadPortion(text, content, appConfig.language),
     store: {
       reducer: createReducer({ scoring: appConfig.scoring, initialState }),
       persistence: createPersistence(storage, appConfig.storage.key, initialState),

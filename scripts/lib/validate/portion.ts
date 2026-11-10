@@ -19,8 +19,11 @@ export function checkPortion(ctx: Context): { p: Portion; units: Unit[] } | null
   const units = ranges.flatMap(ctx.unitsOf);
   if (!p.boundariesConfirmed) ctx.warnings.push('portion: boundaries not confirmed');
   for (const u of units) {
-    if (!all.unitContent.find((c) => c.id === u.id)?.biur?.short) {
-      ctx.warnings.push(`content: ${u.id} has no short biur`);
+    const biur = all.unitContent.find((c) => c.id === u.id)?.biur;
+    for (const language of Object.keys(all.texts)) {
+      if (!biur?.[language]?.short) {
+        ctx.warnings.push(`content: ${u.id} has no short biur in "${language}"`);
+      }
     }
   }
   checkSources(ctx, p);

@@ -20,12 +20,17 @@ export function checkUnitContent(ctx: Context, glossaryIds: Set<string>, rules: 
     const known = ctx.unitRef('content', c.id);
     if (ids.has(c.id)) ctx.errors.push(`content: duplicate ${c.id}`);
     ids.add(c.id);
-    const biur = c.biur?.short;
-    if (biur && !isReviewed(biur)) ctx.errors.push(`${where}: biur is not a Reviewed<string>`);
-    else if (biur && wordCount(biur.value) > rules.biurMaxWords) {
-      ctx.warnings.push(
-        `${where}: biur has ${wordCount(biur.value)} words (max ${rules.biurMaxWords})`,
-      );
+    for (const [language, b] of Object.entries(c.biur ?? {})) {
+      const biur = b.short;
+      const max = rules.biurMaxWords[language];
+      if (max === undefined) ctx.errors.push(`${where}: biur in an unknown language "${language}"`);
+      else if (biur && !isReviewed(biur)) {
+        ctx.errors.push(`${where}: biur.${language} is not a Reviewed<string>`);
+      } else if (biur && wordCount(biur.value) > max) {
+        ctx.warnings.push(
+          `${where}: biur.${language} has ${wordCount(biur.value)} words (max ${max})`,
+        );
+      }
     }
     for (const m of c.glossary ?? []) {
       if (!glossaryIds.has(m.entryId)) {

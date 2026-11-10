@@ -28,9 +28,13 @@ export type TranslationSpan = Range & {
 
 export type Reviewed<T> = { value: T; reviewed: boolean; note?: string };
 
+/** A unit's ביאור in one language. */
+export type Biur = { short?: Reviewed<string> };
+
 export type UnitContent = {
   id: UnitId;
-  biur?: { short?: Reviewed<string> };
+  /** By language code: "he", "en". */
+  biur?: Record<string, Biur>;
   glossary?: { entryId: string; match: string }[];
 };
 
@@ -81,7 +85,7 @@ export type Question = {
 export type Portion = {
   dateKey: DateKey;
   yearType: YearType;
-  label: { he: string };
+  label: { he: string; en: string };
   location: { he: string; en: string };
   boundariesConfirmed: boolean;
   sources: Source[];

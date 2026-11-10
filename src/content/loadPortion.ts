@@ -7,6 +7,7 @@ import type { LearningContentSource, TextSource } from '../ports';
 export async function loadPortion(
   text: TextSource,
   content: LearningContentSource,
+  language: string,
 ): Promise<AssembledPortion> {
   const [portion, schedule, glossary] = await Promise.all([
     content.portion(),
@@ -20,6 +21,7 @@ export async function loadPortion(
     ),
   );
   return assemblePortion({
+    language,
     portion,
     schedule,
     glossary,

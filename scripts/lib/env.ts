@@ -9,7 +9,7 @@ import { root } from './config.ts';
 export interface Files {
   read(rel: string): string;
   exists(rel: string): boolean;
-  write(rel: string, body: string): void;
+  write(rel: string, body: string | Uint8Array): void;
   /** Every file under a directory, recursively, as paths relative to the repo root. */
   list(relDir: string): string[];
 }

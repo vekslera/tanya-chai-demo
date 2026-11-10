@@ -78,6 +78,7 @@ export const questions: Question[] = [
 
 export function portionData(): PortionData {
   return {
+    language: 'he',
     units,
     schedule: {
       source: 'test',
@@ -97,12 +98,15 @@ export function portionData(): PortionData {
     unitContent: [
       {
         id: 'LA.1.001',
-        biur: { short: reviewed('ביאור ראשון', true) },
+        biur: {
+          he: { short: reviewed('ביאור ראשון', true) },
+          en: { short: reviewed('The first biur') },
+        },
         glossary: [{ entryId: 'ahava', match: 'אַהֲבָה' }],
       },
       {
         id: 'LA.1.002',
-        biur: { short: reviewed('ביאור שני') },
+        biur: { he: { short: reviewed('ביאור שני') } },
         glossary: [{ entryId: 'missing', match: 'שׁוֹרֶשׁ' }],
       },
     ],
@@ -113,7 +117,7 @@ export function portionData(): PortionData {
     portion: {
       dateKey: 'day-1',
       yearType: 'regular',
-      label: { he: 'שיעור לבדיקה' },
+      label: { he: 'שיעור לבדיקה', en: 'Test lesson' },
       location: { he: 'פרק א', en: 'chapter 1' },
       boundariesConfirmed: true,
       sources: [

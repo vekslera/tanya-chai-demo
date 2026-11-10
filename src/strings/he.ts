@@ -1,7 +1,12 @@
 // All UI strings (SPEC §4.4), in one place for review. Chabad terminology: ביאור, שיעור, לימוד.
 // The name is written חי, without gershayim.
 
+import type { Source } from '../domain/types.ts';
+
 const days = (n: number) => (n === 1 ? 'יום אחד' : `${n} ימים`);
+
+const contentCredit =
+  'הביאור, המילון, השאלות והכלים ללימוד אבות ובנים נכתבו עבור תניא חי. כל הזכויות שמורות.';
 
 /** The title and description of each level in app.config.json, by level ID. */
 const levelOptions: Record<number, { title: string; description: string }> = {
@@ -152,8 +157,7 @@ export const he = {
     ],
     sourcesTitle: 'מקורות וזכויות',
     licenseLink: 'נוסח הרישיון',
-    contentCredit:
-      'הביאור, המילון, השאלות והכלים ללימוד אבות ובנים נכתבו עבור תניא חי. כל הזכויות שמורות.',
+    contentCredit,
     contactTitle: 'יצירת קשר',
     contact: '[TO FILL BY ALEX]',
     resetTitle: 'התחלה מחדש',
@@ -165,6 +169,16 @@ export const he = {
     version: (v: string, date: string) => `גרסה ${v}, נבנתה ב־${date}`,
     draft: 'טיוטה',
     draftNote: (n: number) => `${n} פריטי תוכן עדיין ממתינים לאישור`,
+  },
+
+  print: {
+    title: 'ביאור משולב',
+    legend: { text: 'לשון התניא באותיות מודגשות', biur: 'והביאור באותיות רגילות' },
+    draft: 'טיוטה: הביאור עדיין ממתין לאישור.',
+    page: 'עמוד',
+    /** The Hebrew sources carry their own Hebrew attribution. */
+    sourceCredit: (s: Source) => s.attribution,
+    contentCredit,
   },
 
   error: {

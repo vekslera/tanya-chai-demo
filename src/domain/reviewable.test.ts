@@ -7,9 +7,10 @@ describe('reviewableItems', () => {
 
   it('lists every reviewable field in reading order, with stable IDs', () => {
     const ids = items.map((r) => r.id);
-    expect(ids.slice(0, 4)).toEqual([
-      'LA.1.001/biur',
-      'LA.1.002/biur',
+    expect(ids.slice(0, 5)).toEqual([
+      'LA.1.001/biur.he',
+      'LA.1.001/biur.en',
+      'LA.1.002/biur.he',
       'glossary/ahava',
       'glossary/plain',
     ]);

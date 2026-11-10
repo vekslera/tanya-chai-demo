@@ -15,7 +15,10 @@ export type ReviewableContent = {
 export function reviewableItems({ unitContent, glossary, portion }: ReviewableContent) {
   const out: ReviewableItem[] = [];
   const add = (id: string, item: Reviewed<string> | undefined) => item && out.push({ id, item });
-  for (const c of unitContent) add(`${c.id}/biur`, c.biur?.short);
+  for (const c of unitContent) {
+    for (const [language, b] of Object.entries(c.biur ?? {}))
+      add(`${c.id}/biur.${language}`, b.short);
+  }
   for (const g of glossary) add(`glossary/${g.id}`, g.body);
   for (const q of portion.questions) {
     for (const key of QUESTION_FIELDS) add(`${q.id}/${key}`, q[key]);

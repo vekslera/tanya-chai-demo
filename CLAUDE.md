@@ -5,8 +5,8 @@ This repo is the **Tanya Chai (תניא חי) demo**: a static, Hebrew-first, RT
 ## Hard rules
 
 - **Approved commentaries are references for the meaning only.** They are listed in SPEC §2: Lessons in Tanya (the Hebrew Shiurim in `resources/texts/he/shiurim/`, excluded from Git, never committed), Steinsaltz, Chassidus Mevu'eres and Chabad.org's rendering. The ביאור follows their meaning, in your own words, short and simple. Never quote them, never rewrite their sentences one by one, and never commit anything from them; `npm run check-overlap` must flag nothing. Any other commentary needs Alex's approval first. The repo is public.
-- **Never edit the Tanya text.** The Hebrew comes from `resources/texts/he/` (with nikud) and is stored only there. Units are defined in `data/splits/` by their opening words; `data/units/` is generated and never edited. Everything else points at unit IDs, which are never renumbered (SPEC §6). The validator checks this (`npm run validate-content`).
-- **Torah content needs Alex's approval.** Every ביאור, glossary entry, question and Avos uBanim item starts with `reviewed: false`. Only Alex flips it, or you flip it on his explicit instruction for the specific items he approved.
+- **Never edit the Tanya text.** The Hebrew comes from `resources/texts/he/` (with nikud) and is stored only there. Units are defined in `data/splits/he/` by their opening words, and anchored the same way in the English in `data/splits/en/`; `data/units/` is generated and never edited. Everything else points at unit IDs, which are never renumbered (SPEC §6). The validator checks this (`npm run validate-content`).
+- **Torah content needs Alex's approval.** Every ביאור (in each language), glossary entry, question and Avos uBanim item starts with `reviewed: false`. Only Alex flips it, or you flip it on his explicit instruction for the specific items he approved.
 - **No external requests at runtime:** no Google Fonts, CDNs, embeds, analytics or live Sefaria calls. Fonts are self-hosted via `@fontsource`.
 - **Do not modify anything under `resources/` by hand** (logo files and texts). The texts change only through `npm run fetch-sefaria`, run on Alex's instruction. `HeartMark` draws the logo's own paths, read from `resources/brand/logo/` at build time (`virtual:brand`); never copy them into the code.
 - **Never hardcode a resource or data file path in code.** Every path is named once, in `texts.config.json`; scripts read it through `scripts/lib/config.ts`, and the app through `virtual:texts`.
@@ -52,4 +52,5 @@ The demo is the first step toward the full app.
 - `npm run build-units`: regenerate `data/units/` from the raw text and the splits (runs automatically before dev, build and tests)
 - `npm run validate-content`: content schema and integrity checks (`CONTENT_STRICT=1` fails on unreviewed items)
 - `npm run build-translations`, `npm run resolve-matches`, `npm run review`, `npm run check-overlap`: the content pipeline (README)
+- `npm run print`: the printable ביאור משולב, one Word file per language, in `out/` (not committed)
 - `npm run fetch-sefaria`: download the Hebrew and English from Sefaria into `resources/texts/` (SPEC §8.1); never at build time or runtime

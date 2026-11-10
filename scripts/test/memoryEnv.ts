@@ -4,17 +4,20 @@ import { diskFiles } from '../lib/env.ts';
 
 export function memoryFiles(initial: Record<string, string> = {}) {
   const data = new Map(Object.entries(initial));
+  /** Binary files, such as a .docx, kept apart from the text. */
+  const bytes = new Map<string, Uint8Array>();
   const files: Files = {
     read(rel) {
       const body = data.get(rel);
       if (body === undefined) throw new Error(`ENOENT: ${rel}`);
       return body;
     },
-    exists: (rel) => data.has(rel),
-    write: (rel, body) => void data.set(rel, body),
-    list: (dir) => [...data.keys()].filter((k) => k.startsWith(`${dir}/`)),
+    exists: (rel) => data.has(rel) || bytes.has(rel),
+    write: (rel, body) =>
+      void (typeof body === 'string' ? data.set(rel, body) : bytes.set(rel, body)),
+    list: (dir) => [...data.keys(), ...bytes.keys()].filter((k) => k.startsWith(`${dir}/`)),
   };
-  return { files, data };
+  return { files, data, bytes };
 }
 
 /** The repo's files, readable but never written: writes stay in memory. */
@@ -27,7 +30,7 @@ export function repoFiles() {
     write: mem.files.write,
     list: disk.list,
   };
-  return { files, written: mem.data };
+  return { files, written: mem.data, writtenBytes: mem.bytes };
 }
 
 export function memoryEnv(files: Files, over: Partial<ScriptEnv> = {}) {

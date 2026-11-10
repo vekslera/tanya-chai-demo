@@ -19,7 +19,7 @@ describe('AboutScreen', () => {
   it('marks a development build with unreviewed content as a draft', async () => {
     const { unmount } = await renderScreen(ROUTES.about, <AboutScreen strict={false} />);
     expect(screen.getByText(he.about.draft)).toBeTruthy();
-    expect(screen.getByText(he.about.draftNote(26))).toBeTruthy();
+    expect(screen.getByText(he.about.draftNote(27))).toBeTruthy();
     unmount();
     await renderScreen(ROUTES.about, <AboutScreen strict />);
     expect(screen.queryByText(he.about.draft)).toBeNull();

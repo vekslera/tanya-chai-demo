@@ -1,17 +1,17 @@
-// The English resource file (SPEC §8.1):
+// A text resource file, in any language (SPEC §8.1):
 //   one paragraph per line, footnote marks written "[n]" where they apply;
-//   then a blank line, then one footnote per line: "[n] text".
+//   then, if it has footnotes, a blank line and one footnote per line: "[n] text".
 import { withoutBom } from './units.ts';
 
 const FOOTNOTE_LINE = /^\[(\d+)\]\s*(.+)$/;
 
-export type ParsedEnglish = {
+export type ParsedResource = {
   paragraphs: string[];
   footnotes: Record<string, string>;
   errors: string[];
 };
 
-export function parseEnglish(raw: string): ParsedEnglish {
+export function parseResource(raw: string): ParsedResource {
   const lines = withoutBom(raw)
     .split(/\r?\n/)
     .map((l) => l.trim());

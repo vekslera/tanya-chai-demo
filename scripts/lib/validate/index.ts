@@ -7,7 +7,7 @@ import { checkGlossary, checkUnitContent } from './content.ts';
 import { createContext, type Findings } from './context.ts';
 import { checkPortion } from './portion.ts';
 import { checkQuestions } from './questions.ts';
-import { checkSchedule, checkTranslations } from './text.ts';
+import { checkSchedule, checkTexts, checkTranslations } from './text.ts';
 
 export type { Findings };
 
@@ -19,6 +19,7 @@ export function validate(
   if (all.errors.length) return { errors: [...all.errors], warnings: [] };
   const ctx = createContext(all);
   ctx.errors.push(...checkUnits(all));
+  checkTexts(ctx);
   checkSchedule(ctx);
   checkTranslations(ctx, strict);
   checkUnitContent(ctx, checkGlossary(ctx), rules);

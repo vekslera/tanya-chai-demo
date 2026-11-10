@@ -2,9 +2,17 @@
   {
     "id": "LA.32.001",
     "biur": {
-      "short": {
-        "value": "בפרקים הקודמים למדנו לא להתרשם מהגוף ומהרצונות שלו, כי הם מסתירים את הנשמה, והיא העיקר שבנו.",
-        "reviewed": false
+      "he": {
+        "short": {
+          "value": "בפרקים הקודמים למדנו לא להתרשם מהגוף ומהרצונות שלו, כי הם מסתירים את הנשמה, והיא העיקר שבנו.",
+          "reviewed": false
+        }
+      },
+      "en": {
+        "short": {
+          "value": "In the last chapters we learned not to be impressed by the body and its wants, because they hide the soul, and the soul is the real you.",
+          "reviewed": false
+        }
       }
     },
     "glossary": [
@@ -17,18 +25,34 @@
   {
     "id": "LA.32.002",
     "biur": {
-      "short": {
-        "value": "והשמחה האמיתית שלנו באה מהנשמה: כל מצווה מחזירה אותה הביתה, קרוב לה׳.",
-        "reviewed": false
+      "he": {
+        "short": {
+          "value": "והשמחה האמיתית שלנו באה מהנשמה: כל מצווה מחזירה אותה הביתה, קרוב לה׳.",
+          "reviewed": false
+        }
+      },
+      "en": {
+        "short": {
+          "value": "Our true joy comes from the soul: every mitzvah brings it back home, close to G-d.",
+          "reviewed": false
+        }
       }
     }
   },
   {
     "id": "LA.32.003",
     "biur": {
-      "short": {
-        "value": "מי שחי כך, קל לו לאהוב כל יהודי כמו את עצמו: גם את מי שעושה הרבה מצוות, וגם את מי שעושה מעט.",
-        "reviewed": false
+      "he": {
+        "short": {
+          "value": "מי שחי כך, קל לו לאהוב כל יהודי כמו את עצמו: גם את מי שעושה הרבה מצוות, וגם את מי שעושה מעט.",
+          "reviewed": false
+        }
+      },
+      "en": {
+        "short": {
+          "value": "Someone who lives this way finds it easy to love every Jew like himself: one who does many mitzvos, and one who does only a few.",
+          "reviewed": false
+        }
       }
     },
     "glossary": [
@@ -41,18 +65,34 @@
   {
     "id": "LA.32.004",
     "biur": {
-      "short": {
-        "value": "למה זה קל? כי מי שהגוף שלו אינו חשוב בעיניו, כבר לא מרגיש ״אני יותר חשוב ממך״.",
-        "reviewed": false
+      "he": {
+        "short": {
+          "value": "למה זה קל? כי מי שהגוף שלו אינו חשוב בעיניו, כבר לא מרגיש ״אני יותר חשוב ממך״.",
+          "reviewed": false
+        }
+      },
+      "en": {
+        "short": {
+          "value": "Why is it easy? When your body is not so important to you, you stop feeling “I am more important than you.”",
+          "reviewed": false
+        }
       }
     }
   },
   {
     "id": "LA.32.005",
     "biur": {
-      "short": {
-        "value": "וגם הנשמה שלי אינה גבוהה משלך: רק ה׳ יודע כמה גדולה כל נשמה. אולי דווקא הנשמה של החבר גדולה יותר!",
-        "reviewed": false
+      "he": {
+        "short": {
+          "value": "וגם הנשמה שלי אינה גבוהה משלך: רק ה׳ יודע כמה גדולה כל נשמה. אולי דווקא הנשמה של החבר גדולה יותר!",
+          "reviewed": false
+        }
+      },
+      "en": {
+        "short": {
+          "value": "And my soul is not higher than yours: only G-d knows how great each soul is. Maybe your friend’s soul is even greater!",
+          "reviewed": false
+        }
       }
     },
     "glossary": [
@@ -69,9 +109,17 @@
   {
     "id": "LA.32.006",
     "biur": {
-      "short": {
-        "value": "ובאמת, בשורש שלהן כל הנשמות שוות, ומתאימות זו לזו כמו תאומים.",
-        "reviewed": false
+      "he": {
+        "short": {
+          "value": "ובאמת, בשורש שלהן כל הנשמות שוות, ומתאימות זו לזו כמו תאומים.",
+          "reviewed": false
+        }
+      },
+      "en": {
+        "short": {
+          "value": "In fact, at their root all souls are equal, and match each other like twins.",
+          "reviewed": false
+        }
       }
     },
     "glossary": [
@@ -84,9 +132,17 @@
   {
     "id": "LA.32.007",
     "biur": {
-      "short": {
-        "value": "ויותר מזה: לכולן יש אבא אחד, הקב״ה. הן לא רק דומות, הן ממש משפחה אחת.",
-        "reviewed": false
+      "he": {
+        "short": {
+          "value": "ויותר מזה: לכולן יש אבא אחד, הקב״ה. הן לא רק דומות, הן ממש משפחה אחת.",
+          "reviewed": false
+        }
+      },
+      "en": {
+        "short": {
+          "value": "Even more: they all have one Father, G-d. They are not just alike; they are really one family.",
+          "reviewed": false
+        }
       }
     },
     "glossary": [
@@ -99,9 +155,17 @@
   {
     "id": "LA.32.008",
     "biur": {
-      "short": {
-        "value": "לכן כל היהודים הם אחים אמיתיים. וכמו שאח אוהב את אחיו בלי סיבה, כך הנשמה שלי אוהבת כל יהודי.",
-        "reviewed": false
+      "he": {
+        "short": {
+          "value": "לכן כל היהודים הם אחים אמיתיים. וכמו שאח אוהב את אחיו בלי סיבה, כך הנשמה שלי אוהבת כל יהודי.",
+          "reviewed": false
+        }
+      },
+      "en": {
+        "short": {
+          "value": "So all Jews are real brothers. Just as a brother loves his brother without needing a reason, my soul loves every Jew.",
+          "reviewed": false
+        }
       }
     },
     "glossary": [
@@ -114,9 +178,17 @@
   {
     "id": "LA.32.009",
     "biur": {
-      "short": {
-        "value": "רק הגופים נפרדים: לכל אחד גוף משלו. מי שהגוף הוא העיקר אצלו, רואה בחבר ״מישהו אחר״, ואינו יכול לאהוב אותו באמת.",
-        "reviewed": false
+      "he": {
+        "short": {
+          "value": "רק הגופים נפרדים: לכל אחד גוף משלו. מי שהגוף הוא העיקר אצלו, רואה בחבר ״מישהו אחר״, ואינו יכול לאהוב אותו באמת.",
+          "reviewed": false
+        }
+      },
+      "en": {
+        "short": {
+          "value": "Only the bodies are separate: each person has his own. If the body matters most to someone, he sees his friend as “someone else,” and cannot truly love him.",
+          "reviewed": false
+        }
       }
     },
     "glossary": [
@@ -129,9 +201,17 @@
   {
     "id": "LA.32.010",
     "biur": {
-      "short": {
-        "value": "הוא אוהב רק בגלל משהו: כי החבר נחמד אליו או נותן לו. וכשהסיבה נגמרת, גם האהבה נגמרת.",
-        "reviewed": false
+      "he": {
+        "short": {
+          "value": "הוא אוהב רק בגלל משהו: כי החבר נחמד אליו או נותן לו. וכשהסיבה נגמרת, גם האהבה נגמרת.",
+          "reviewed": false
+        }
+      },
+      "en": {
+        "short": {
+          "value": "He loves only because of something: the friend is nice to him or gives him things. When the reason ends, the love ends too.",
+          "reviewed": false
+        }
       }
     },
     "glossary": [
@@ -144,9 +224,17 @@
   {
     "id": "LA.32.011",
     "biur": {
-      "short": {
-        "value": "עכשיו נבין דבר מפתיע שאמר הלל הזקן: לאהוב יהודי אחר, זו כל התורה כולה!",
-        "reviewed": false
+      "he": {
+        "short": {
+          "value": "עכשיו נבין דבר מפתיע שאמר הלל הזקן: לאהוב יהודי אחר, זו כל התורה כולה!",
+          "reviewed": false
+        }
+      },
+      "en": {
+        "short": {
+          "value": "Now we can understand a surprising thing Hillel the Elder said: loving another Jew is the whole Torah!",
+          "reviewed": false
+        }
       }
     },
     "glossary": [
@@ -159,9 +247,17 @@
   {
     "id": "LA.32.012",
     "biur": {
-      "short": {
-        "value": "ושאר התורה היא כמו פירוש של המצווה הזאת. אבל איך גם תפילין ושבת קשורות לאהבת חבר?",
-        "reviewed": false
+      "he": {
+        "short": {
+          "value": "ושאר התורה היא כמו פירוש של המצווה הזאת. אבל איך גם תפילין ושבת קשורות לאהבת חבר?",
+          "reviewed": false
+        }
+      },
+      "en": {
+        "short": {
+          "value": "The rest of the Torah is like an explanation of this mitzvah. But how are tefillin and Shabbos connected to loving a friend?",
+          "reviewed": false
+        }
       }
     },
     "glossary": [
@@ -174,9 +270,17 @@
   {
     "id": "LA.32.013",
     "biur": {
-      "short": {
-        "value": "התשובה: כל מצווה מרימה את הנשמה מעל הגוף ומקרבת אותה לה׳. וזה בדיוק מה שצריך כדי לאהוב חבר באמת.",
-        "reviewed": false
+      "he": {
+        "short": {
+          "value": "התשובה: כל מצווה מרימה את הנשמה מעל הגוף ומקרבת אותה לה׳. וזה בדיוק מה שצריך כדי לאהוב חבר באמת.",
+          "reviewed": false
+        }
+      },
+      "en": {
+        "short": {
+          "value": "The answer: every mitzvah lifts the soul above the body and brings it close to G-d. That is exactly what we need to truly love a friend.",
+          "reviewed": false
+        }
       }
     },
     "glossary": [
@@ -189,9 +293,17 @@
   {
     "id": "LA.32.014",
     "biur": {
-      "short": {
-        "value": "והתורה פועלת גם בכיוון ההפוך: היא מורידה את האור של ה׳ אלינו, אל ״כנסת ישראל״.",
-        "reviewed": false
+      "he": {
+        "short": {
+          "value": "והתורה פועלת גם בכיוון ההפוך: היא מורידה את האור של ה׳ אלינו, אל ״כנסת ישראל״.",
+          "reviewed": false
+        }
+      },
+      "en": {
+        "short": {
+          "value": "The Torah also works the other way: it brings G-d’s light down to us, to “the community of Israel.”",
+          "reviewed": false
+        }
       }
     },
     "glossary": [
@@ -208,9 +320,17 @@
   {
     "id": "LA.32.015",
     "biur": {
-      "short": {
-        "value": "״כנסת ישראל״ היא המקור של כל הנשמות. ה׳, שהוא אחד, מאיר שם דווקא כשגם אנחנו מאוחדים כמו אחד.",
-        "reviewed": false
+      "he": {
+        "short": {
+          "value": "״כנסת ישראל״ היא המקור של כל הנשמות. ה׳, שהוא אחד, מאיר שם דווקא כשגם אנחנו מאוחדים כמו אחד.",
+          "reviewed": false
+        }
+      },
+      "en": {
+        "short": {
+          "value": "“The community of Israel” is the source of all souls. G-d, who is One, shines there when we, too, are united as one.",
+          "reviewed": false
+        }
       }
     },
     "glossary": [
@@ -223,18 +343,34 @@
   {
     "id": "LA.32.016",
     "biur": {
-      "short": {
-        "value": "אבל כשיש פירוד ומחלוקת בין יהודים, חס ושלום, האור הזה אינו מאיר.",
-        "reviewed": false
+      "he": {
+        "short": {
+          "value": "אבל כשיש פירוד ומחלוקת בין יהודים, חס ושלום, האור הזה אינו מאיר.",
+          "reviewed": false
+        }
+      },
+      "en": {
+        "short": {
+          "value": "But when Jews are divided and quarrel, G-d forbid, this light does not shine.",
+          "reviewed": false
+        }
       }
     }
   },
   {
     "id": "LA.32.017",
     "biur": {
-      "short": {
-        "value": "כי ה׳ שורה רק במקום שלם. כשיהודים נפרדים זה מזה, חסרה השלמות, והאור של ה׳ מסתתר.",
-        "reviewed": false
+      "he": {
+        "short": {
+          "value": "כי ה׳ שורה רק במקום שלם. כשיהודים נפרדים זה מזה, חסרה השלמות, והאור של ה׳ מסתתר.",
+          "reviewed": false
+        }
+      },
+      "en": {
+        "short": {
+          "value": "For G-d rests only in a place that is whole. When Jews are apart from each other, something is missing, and G-d’s light is hidden.",
+          "reviewed": false
+        }
       }
     },
     "glossary": [
@@ -247,18 +383,34 @@
   {
     "id": "LA.32.018",
     "biur": {
-      "short": {
-        "value": "לכן אנחנו מבקשים בתפילה: ״ברכנו אבינו כולנו כאחד״. כשכולנו יחד, כמו משפחה אחת, ה׳ מברך אותנו.",
-        "reviewed": false
+      "he": {
+        "short": {
+          "value": "לכן אנחנו מבקשים בתפילה: ״ברכנו אבינו כולנו כאחד״. כשכולנו יחד, כמו משפחה אחת, ה׳ מברך אותנו.",
+          "reviewed": false
+        }
+      },
+      "en": {
+        "short": {
+          "value": "That is why we pray, “Bless us, our Father, all of us as one.” When we are all together, like one family, G-d blesses us.",
+          "reviewed": false
+        }
       }
     }
   },
   {
     "id": "LA.32.019",
     "biur": {
-      "short": {
-        "value": "רבנו הזקן מבאר זאת באריכות במקום אחר. והעיקר כבר ברור: האהבה בינינו מביאה את האור של ה׳.",
-        "reviewed": false
+      "he": {
+        "short": {
+          "value": "רבנו הזקן מבאר זאת באריכות במקום אחר. והעיקר כבר ברור: האהבה בינינו מביאה את האור של ה׳.",
+          "reviewed": false
+        }
+      },
+      "en": {
+        "short": {
+          "value": "The Alter Rebbe explains this at length elsewhere. But the main point is already clear: our love for each other brings G-d’s light.",
+          "reviewed": false
+        }
       }
     }
   }

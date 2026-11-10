@@ -5,7 +5,7 @@ import { lettersOnly } from './units.ts';
 export const toWords = (s: string) =>
   s
     .split(/[\s־]+/)
-    .map(lettersOnly)
+    .map((w) => lettersOnly(w))
     .filter(Boolean);
 
 /** Every run of `length` consecutive words. */

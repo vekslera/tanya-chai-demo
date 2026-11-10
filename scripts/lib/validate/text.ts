@@ -1,14 +1,28 @@
 // Checks of the text layers: the schedule and the English translation.
 import { footnoteMarks } from '../../../src/domain/footnotes.ts';
 import { YEAR_TYPES, type TranslationSpan } from '../../../src/domain/types.ts';
-import { pathOf } from '../config.ts';
+import { appLanguage, pathOf } from '../config.ts';
 import { EN_RESOURCE } from '../translations.ts';
+import { checkUnits } from '../units.ts';
 import type { Context } from './context.ts';
 
 export function checkSchedule(ctx: Context) {
   for (const yearType of YEAR_TYPES) {
     for (const [key, ranges] of Object.entries(ctx.all.schedule[yearType] ?? {})) {
       ranges.forEach((r, i) => ctx.range(`schedule ${yearType}.${key}[${i}]`, r));
+    }
+  }
+}
+
+/** Every other language is split into the same units as the app's, in the same order. */
+export function checkTexts(ctx: Context) {
+  const ids = ctx.all.splits.map((s) => s.id).join();
+  for (const [language, text] of Object.entries(ctx.all.texts)) {
+    if (language === appLanguage) continue;
+    const where = `text ${language}`;
+    ctx.errors.push(...[...text.errors, ...checkUnits(text)].map((e) => `${where}: ${e}`));
+    if (text.splits.map((s) => s.id).join() !== ids) {
+      ctx.errors.push(`${where}: the splits do not have the same unit IDs as the ${appLanguage}`);
     }
   }
 }

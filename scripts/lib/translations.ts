@@ -2,7 +2,7 @@
 // of the Hebrew, with the footnotes it marks.
 import { footnoteMarks } from '../../src/domain/footnotes.ts';
 import type { TranslationSpan, Unit } from '../../src/domain/types.ts';
-import type { ParsedEnglish } from './english.ts';
+import type { ParsedResource } from './resource.ts';
 
 /** The source ID of spans taken from the English resource file. */
 export const EN_RESOURCE = 'en-resource';
@@ -10,7 +10,7 @@ export const EN_RESOURCE = 'en-resource';
 export function translationSpans(
   units: Unit[],
   hebrewParagraphs: number,
-  english: ParsedEnglish,
+  english: ParsedResource,
 ): { spans: TranslationSpan[] } | { error: string } {
   if (english.paragraphs.length !== hebrewParagraphs) {
     return {

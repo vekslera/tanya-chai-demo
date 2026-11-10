@@ -20,7 +20,8 @@ export type TextsConfig = {
 
 /** The content rules of app.config.json, checked by the validator (SPEC §6.5). */
 export type ContentRules = {
-  biurMaxWords: number;
+  /** By language: English needs more words than Hebrew for the same ביאור. */
+  biurMaxWords: Record<string, number>;
   /** Runs of this many words shared with a reference text are flagged (SPEC §8.3). */
   overlapRunWords: number;
   /** By level: how many questions of each category. */
@@ -28,6 +29,25 @@ export type ContentRules = {
   togetherQuestions: { count: number; category: string; kinds: string[] };
   optionCount: Record<string, Range>;
   cards: { count: Range; talks: Range; maxWords: Record<string, number> };
+};
+
+/** How one language is printed. */
+export type PrintLanguage = {
+  /** The language tag Word checks spelling with, e.g. "he-IL". */
+  tag: string;
+  rtl: boolean;
+  /** For each run style, one family of its font stack in tokens.css. */
+  fonts: { text: string; biur: string };
+};
+
+/** The print section of app.config.json: the printable ביאור משולב. */
+export type PrintConfig = {
+  /** The ביאור's size; the other sizes keep the tokens' proportions to it. */
+  biurPt: number;
+  lineSpacing: number;
+  paragraphSpacingPt: number;
+  /** The languages printed, one document each. */
+  languages: Record<string, PrintLanguage>;
 };
 
 export const root = path.resolve(import.meta.dirname, '../..');
@@ -42,6 +62,11 @@ export const readJson = (file: string) =>
 export const config: TextsConfig = readJson(CONFIG_FILES.texts);
 export const appConfig = readJson(CONFIG_FILES.app);
 export const contentRules: ContentRules = appConfig.contentRules;
+export const printConfig: PrintConfig = appConfig.print;
+/** The app's language: its text, its ביאור and its UI. */
+export const appLanguage: string = appConfig.language;
+/** The languages whose text is split into units: the keys of paths.splits. */
+export const textLanguages = Object.keys(config.paths.splits as Record<string, string>);
 
 /** Fills {part} and {chapter} in a path template. */
 export function fill(template: string, ch?: ChapterRef): string {

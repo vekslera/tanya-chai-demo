@@ -1,5 +1,6 @@
 {
   "$comment": "The single place for the app's parameters. Each one is defined here once and read through src/config.ts (the app) or scripts/lib/config.ts (the scripts). Paths and text sources live in texts.config.json; colors, sizes and spacing live in src/styles/tokens.css.",
+  "language": "he",
   "storage": {
     "key": "tanyachai.demo.v1"
   },
@@ -45,11 +46,25 @@
     "bidiNowrapMaxChars": 30
   },
   "contentRules": {
-    "biurMaxWords": 25,
+    "biurMaxWords": { "he": 25, "en": 35 },
     "overlapRunWords": 5,
     "levelQuestions": { "1": { "literal": 3 }, "2": { "understanding": 2, "concept": 1 } },
     "togetherQuestions": { "count": 3, "category": "child", "kinds": ["choice", "trueFalse"] },
     "optionCount": { "solo": [3, 4], "together": [2, 3] },
     "cards": { "count": [6, 8], "talks": [2, 3], "maxWords": { "forParent": 30, "toChild": 35 } }
+  },
+  "print": {
+    "$comment": "The printable ביאור משולב (npm run print), one document per language. Word cannot use the web fonts, so each font is one of the fallbacks of its stack in tokens.css; the other sizes keep the tokens' proportions to biurPt.",
+    "biurPt": 11,
+    "lineSpacing": 1.6,
+    "paragraphSpacingPt": 10,
+    "languages": {
+      "he": { "tag": "he-IL", "rtl": true, "fonts": { "text": "David", "biur": "Arial" } },
+      "en": {
+        "tag": "en-US",
+        "rtl": false,
+        "fonts": { "text": "Times New Roman", "biur": "Arial" }
+      }
+    }
   }
 }

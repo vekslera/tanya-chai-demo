@@ -9,6 +9,7 @@ import type { Plugin } from 'vite';
 import { heartGeometry } from './scripts/lib/brand.ts';
 import {
   CONFIG_FILES,
+  appLanguage,
   config,
   pathOf,
   readJson,
@@ -20,19 +21,26 @@ import { chapterKey } from './src/domain/units.ts';
 const TEXTS = 'virtual:texts';
 const APP_CONFIG = 'virtual:app-config';
 const BRAND = 'virtual:brand';
-const PER_CHAPTER = ['units', 'translations', 'unitContent'] as const;
+/** Each per-chapter export, with the path it reads: the units are those of the app's language. */
+const PER_CHAPTER = {
+  units: `units.${appLanguage}`,
+  translations: 'translations',
+  unitContent: 'unitContent',
+} as const;
+type PerChapter = keyof typeof PER_CHAPTER;
+const EXPORTS = Object.keys(PER_CHAPTER) as PerChapter[];
 /** Generated before every build; the other per-chapter files may not exist yet for a chapter. */
-const REQUIRED = 'units';
+const REQUIRED: PerChapter = 'units';
 const SHARED = ['schedule', 'glossary', 'portion'] as const;
 
 const importPath = (file: string) => JSON.stringify(file.replaceAll(path.sep, '/'));
 
 export function textsModule(chapters: ChapterRef[] = config.chapters): string {
   const imports: string[] = [];
-  const maps = Object.fromEntries(PER_CHAPTER.map((k) => [k, [] as string[]]));
+  const maps = Object.fromEntries(EXPORTS.map((k) => [k, [] as string[]]));
   chapters.forEach((ch, i) => {
-    for (const key of PER_CHAPTER) {
-      const file = pathOf(key, ch, { absolute: true });
+    for (const key of EXPORTS) {
+      const file = pathOf(PER_CHAPTER[key], ch, { absolute: true });
       if (key !== REQUIRED && !fs.existsSync(file)) continue;
       imports.push(`import ${key}${i} from ${importPath(file)};`);
       maps[key]!.push(`${JSON.stringify(chapterKey(ch))}: ${key}${i}`);
@@ -40,7 +48,7 @@ export function textsModule(chapters: ChapterRef[] = config.chapters): string {
   });
   return [
     ...imports,
-    ...PER_CHAPTER.map((key) => `export const ${key} = { ${maps[key]!.join(', ')} };`),
+    ...EXPORTS.map((key) => `export const ${key} = { ${maps[key]!.join(', ')} };`),
     ...SHARED.map(
       (key) =>
         `export { default as ${key} } from ${importPath(pathOf(key, undefined, { absolute: true }))};`,
