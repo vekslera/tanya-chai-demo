@@ -34,8 +34,9 @@ The demo is the first step toward the full app.
 
 ## Workflow
 
-- Work on one branch per milestone (`m0-scaffold`, `m1-texts`, …) and keep commits small.
-- Do not push or merge to `main` without Alex's go-ahead.
+- Two long-lived branches: `main` is the stable version, updated only by pull request; `dev` is the current state of the app.
+- Work on one branch per feature or milestone (`biur-rewrite`, `dedication`, …), checked out from `dev`, and keep commits small.
+- A feature branch is merged into `dev` once it is tested, its documents (SPEC, README, CLAUDE.md) are updated, and Alex approves the merge. Never merge into `dev` or `main` without his go-ahead.
 - Before saying a milestone is done, run:
   - `npm run lint`
   - `npm run coverage`
