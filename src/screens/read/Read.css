@@ -149,6 +149,10 @@
   background: linear-gradient(to top, var(--bg) 75%, rgba(251, 250, 246, 0));
 }
 
+.bottom-bar .dedication {
+  margin-block-start: 8px;
+}
+
 /* Overflow menu */
 .menu {
   position: relative;

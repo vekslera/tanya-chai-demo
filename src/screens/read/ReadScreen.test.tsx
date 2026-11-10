@@ -51,6 +51,18 @@ describe('ReadScreen', () => {
     expect(screen.queryByRole('menu')).toBeNull();
   });
 
+  it('shows the dedication under the button, when the day has one', async () => {
+    for (const kind of Object.keys(he.dedication) as (keyof typeof he.dedication)[]) {
+      const data = portionData();
+      data.portion.dedication = { kind, name: 'פלוני בן פלוני' };
+      const { unmount } = await renderApp(ROUTES.read, { data });
+      expect(screen.getByText(he.dedication[kind]('פלוני בן פלוני'))).toBeTruthy();
+      unmount();
+    }
+    await renderApp(ROUTES.read);
+    expect(document.querySelector('.dedication')).toBeNull();
+  });
+
   it('has no menu without English', async () => {
     const data = portionData();
     data.translations = [];

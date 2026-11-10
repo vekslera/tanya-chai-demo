@@ -1,0 +1,9 @@
+.dedication {
+  /* The full width, also in a grid of buttons. */
+  grid-column: 1 / -1;
+  margin: 0;
+  text-align: center;
+  text-wrap: balance;
+  font-size: var(--fs-small);
+  color: var(--navy-muted);
+}

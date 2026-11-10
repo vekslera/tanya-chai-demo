@@ -1,4 +1,5 @@
 import { useMemo, useRef, useState } from 'react';
+import { Dedication } from '../../components/Dedication';
 import { GlossarySheet } from '../../components/GlossarySheet';
 import { TopBar } from '../../components/TopBar';
 import { config } from '../../config';
@@ -75,6 +76,7 @@ export function ReadScreen() {
         >
           {he.read.toQuestions}
         </button>
+        <Dedication />
       </div>
 
       <GlossarySheet entry={term} onClose={() => setTerm(null)} />

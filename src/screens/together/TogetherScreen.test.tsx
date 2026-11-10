@@ -4,6 +4,7 @@ import { memoryStorage } from '../../adapters/memoryStorage';
 import { config } from '../../config';
 import { ROUTES } from '../../routes';
 import { he } from '../../strings/he';
+import { portionData } from '../../test/fixtures';
 import { button, click, hash, renderApp } from '../../test/renderApp';
 
 describe('TogetherScreen', () => {
@@ -27,6 +28,16 @@ describe('TogetherScreen', () => {
     await click(button(he.common.prev));
     await click(button(he.common.prev));
     expect(screen.getByText(he.together.intro)).toBeTruthy();
+  });
+
+  it('shows the dedication on the cards only', async () => {
+    const data = portionData();
+    data.portion.dedication = { kind: 'partner', name: 'שותף' };
+    const line = he.dedication.partner('שותף');
+    await renderApp(ROUTES.together, { data });
+    expect(screen.queryByText(line)).toBeNull();
+    await click(button(he.together.start));
+    expect(screen.getByText(line)).toBeTruthy();
   });
 
   it('starts the son’s questions', async () => {

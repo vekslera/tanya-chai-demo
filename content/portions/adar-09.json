@@ -4,6 +4,7 @@
   "label": { "he": "שיעור לדוגמה: ט׳ אדר", "en": "Sample lesson: 9 Adar" },
   "location": { "he": "ליקוטי אמרים, פרק ל״ב", "en": "Likkutei Amarim, chapter 32" },
   "boundariesConfirmed": true,
+  "dedication": { "kind": "leiluiNishmas", "name": "ישראל בן משה זוכמיר" },
   "sources": [
     {
       "id": "he-resource",

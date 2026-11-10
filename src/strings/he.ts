@@ -1,7 +1,7 @@
 // All UI strings (SPEC §4.4), in one place for review. Chabad terminology: ביאור, שיעור, לימוד.
 // The name is written חי, without gershayim.
 
-import type { Source } from '../domain/types.ts';
+import type { Dedication, Source } from '../domain/types.ts';
 
 const days = (n: number) => (n === 1 ? 'יום אחד' : `${n} ימים`);
 
@@ -55,6 +55,13 @@ export const he = {
     footnote: (n: string) => `הערה ${n}`,
     footnoteTitle: 'הערה',
   },
+
+  /** The day's dedication line, by kind (SPEC §4.4). */
+  dedication: {
+    leiluiNishmas: (name: string) => `הלימוד היומי מוקדש לעילוי נשמת ${name}`,
+    lizchus: (name: string) => `הלימוד היומי מוקדש לזכות ${name}`,
+    partner: (name: string) => `השותף שלך בלימוד היומי: ${name}`,
+  } satisfies Record<Dedication['kind'], (name: string) => string>,
 
   glossary: {
     source: 'מקור',

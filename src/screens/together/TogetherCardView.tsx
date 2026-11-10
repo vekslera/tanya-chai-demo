@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Dedication } from '../../components/Dedication';
 import { GlossarySheet } from '../../components/GlossarySheet';
 import { ProgressDots } from '../../components/ProgressDots';
 import { SentenceText } from '../../components/Sentence';
@@ -59,6 +60,7 @@ export function TogetherCardView({
         <button type="button" className="btn btn-primary btn-big" onClick={() => onGo(index + 1)}>
           {he.common.next}
         </button>
+        <Dedication />
       </nav>
 
       <GlossarySheet entry={term} onClose={() => setTerm(null)} />

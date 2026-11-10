@@ -1,5 +1,7 @@
-// Checks of the portion file itself: its day in the schedule, its sources, its ביאור coverage.
+// Checks of the portion file itself: its day in the schedule, its sources, its ביאור coverage,
+// its dedication.
 import type { Portion, Unit } from '../../../src/domain/types.ts';
+import { he } from '../../../src/strings/he.ts';
 import { pathOf } from '../config.ts';
 import type { Context } from './context.ts';
 
@@ -27,7 +29,18 @@ export function checkPortion(ctx: Context): { p: Portion; units: Unit[] } | null
     }
   }
   checkSources(ctx, p);
+  checkDedication(ctx, p);
   return { p, units };
+}
+
+/** A dedication needs a kind the strings know, and a name. */
+function checkDedication(ctx: Context, p: Portion) {
+  const d = p.dedication;
+  if (!d) return;
+  if (!Object.hasOwn(he.dedication, d.kind)) {
+    ctx.errors.push(`portion: unknown dedication kind "${d.kind}"`);
+  }
+  if (!d.name?.trim()) ctx.errors.push('portion: the dedication has no name');
 }
 
 /** Every source needs a license and an attribution; every shown English needs its source. */

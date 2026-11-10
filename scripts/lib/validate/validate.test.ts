@@ -169,6 +169,18 @@ describe('portion', () => {
       errorsAfter((a) => delete (portion(a) as Partial<ReturnType<typeof portion>>).sources),
     ).toMatch('has no attribution');
   });
+
+  it('checks the dedication', () => {
+    const dedicate = (a: Parameters<typeof portion>[0], kind: string, name: string) =>
+      (portion(a).dedication = { kind: kind as 'lizchus', name });
+    expect(after((a) => dedicate(a, 'lizchus', 'פלוני')).errors).toEqual([]);
+    expect(after((a) => delete portion(a).dedication).errors).toEqual([]);
+    expect(errorsAfter((a) => dedicate(a, 'toString', 'פלוני'))).toMatch(
+      'unknown dedication kind "toString"',
+    );
+    expect(errorsAfter((a) => dedicate(a, 'partner', ' '))).toMatch('has no name');
+    expect(errorsAfter((a) => dedicate(a, 'partner', undefined as never))).toMatch('has no name');
+  });
 });
 
 describe('questions', () => {

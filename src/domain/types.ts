@@ -82,6 +82,9 @@ export type Question = {
   fixedOrder?: boolean;
 };
 
+/** Who the day's learning is dedicated to; its wording is in the strings, by kind. */
+export type Dedication = { kind: 'leiluiNishmas' | 'lizchus' | 'partner'; name: string };
+
 export type Portion = {
   dateKey: DateKey;
   yearType: YearType;
@@ -92,4 +95,5 @@ export type Portion = {
   questions: Question[];
   together: TogetherCard[];
   shinun?: { unitId: UnitId; rounds: number[][] };
+  dedication?: Dedication;
 };

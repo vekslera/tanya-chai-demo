@@ -109,6 +109,7 @@ The last choice is remembered. The default selection is level 2.
 - **Glossary terms:** marked with a dotted gold underline. Tapping one opens a bottom sheet with the term, a 1–3 line ביאור, and (if present) a source line. At least these terms: `נבזה ונמאס`, `נפש` / `הנפש והרוח`, `באלקים חיים`, `אחים ממש`, `אב אחד`. Final list per §8.3.
 - **English toggle:** each paragraph has a small `EN` chip. Tapping it reveals the English translation of that paragraph below the Hebrew (LTR, `lang="en"`, serif, smaller). The toggle is per paragraph, not global. A global "show all English" action is in the overflow menu.
 - **Bottom bar:** a sticky primary button, `לשאלות` (enabled once the user has scrolled to the end, or after 20 seconds).
+- **Dedication:** when the portion has a `dedication`, a quiet line under the button (small, muted navy, centered). It appears on the reading screens of every learning path (S3 and the S8 cards), not on the finish screen. Its wording comes from `src/strings/he.ts` by kind: `הלימוד היומי מוקדש לעילוי נשמת …` (`leiluiNishmas`), `הלימוד היומי מוקדש לזכות …` (`lizchus`), or `השותף שלך בלימוד היומי: …` (`partner`).
 
 #### S4: Questions (`#/quiz`)
 
@@ -170,6 +171,7 @@ A father learns the portion with his son on one device. The screen gives the fat
   - `לומר לילד`: ready-made words the father can read aloud as they are, in simple Hebrew (1–3 short sentences), in a warm gold-tinted card;
   - `שאלה לשיחה`: on some cards only, an open question for the conversation. It is not scored.
 - The glossary terms work here too.
+- The day's dedication (S3) appears under the `הקודם` / `הבא` buttons of each card.
 - **After the last card:** `עכשיו תורו של הילד`, and then S9.
 - Large text and large buttons: the phone is passed between father and son, often in a noisy place, such as a full beis midrash. Nothing depends on sound.
 - No names or other personal details are entered.
@@ -459,6 +461,7 @@ type Portion = {                       // content/portions/adar-09.json
   questions: Question[];
   together: TogetherCard[];            // 6–8 cards, in order
   shinun?: { unitId: UnitId; rounds: number[][] }; // word indices hidden per round
+  dedication?: { kind: "leiluiNishmas" | "lizchus" | "partner"; name: string }; // S3, S8
 };
 
 type Source = {
