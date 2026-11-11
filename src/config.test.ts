@@ -1,6 +1,7 @@
 // app.config.json reaches the app untyped (virtual:app-config); this checks its shape, so a typo
 // in the file fails here rather than at runtime.
 import { describe, expect, it } from 'vitest';
+import { memoryStorage } from './adapters/memoryStorage';
 import { createDeps, browserAdapters } from './composition';
 import { config } from './config';
 import { he } from './strings/he';
@@ -46,5 +47,14 @@ describe('composition', () => {
     const deps = createDeps(browserAdapters());
     expect((await deps.loadPortion()).units.length).toBeGreaterThan(0);
     expect(deps.store.persistence.load().level).toBe(config.defaultLevel);
+  });
+
+  it('keeps a build under a sub-path apart from the root build', () => {
+    const storage = memoryStorage();
+    const adapters = { ...browserAdapters(), storage };
+    createDeps(adapters, config, '/dev/').store.persistence.save({ points: 7 } as never);
+    expect(storage.get(`${config.storage.key}@/dev/`)).toMatch('"points":7');
+    expect(storage.get(config.storage.key)).toBeNull();
+    expect(createDeps(adapters, config, '/').store.persistence.load().points).not.toBe(7);
   });
 });

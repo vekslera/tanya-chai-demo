@@ -1,2 +1,5 @@
+# Unix line endings in the working copy too, as Prettier expects, whatever core.autocrlf says.
+* text=auto eol=lf
+
 # Keep the raw texts byte-for-byte as supplied.
 resources/** -text

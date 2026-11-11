@@ -4,6 +4,10 @@ import type { DemoState } from './state';
 
 export type Persistence = { load(): DemoState; save(state: DemoState): void };
 
+/** A build's storage key: the key itself at the site's root, and its own key under a sub-path (the
+ * dev build at /dev/), so two builds on one domain never share their state (SPEC §10). */
+export const storageKeyFor = (key: string, base: string) => (base === '/' ? key : `${key}@${base}`);
+
 export function createPersistence(
   storage: KeyValueStorage,
   key: string,
