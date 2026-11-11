@@ -153,6 +153,18 @@
   background: linear-gradient(to top, var(--bg) 75%, rgba(251, 250, 246, 0));
 }
 
+/* The question after a section: set apart from the text as a card. */
+.read-question {
+  margin-block: 8px 24px;
+  padding: 4px 16px 18px;
+  border-radius: var(--radius);
+  background: var(--bg-alt);
+}
+
+.read-question > .btn {
+  margin-block-start: 18px;
+}
+
 .bottom-bar .dedication {
   margin-block-start: 8px;
 }

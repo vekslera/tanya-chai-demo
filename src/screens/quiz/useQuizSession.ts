@@ -10,15 +10,15 @@ import { useStore } from '../../store/StoreProvider';
 
 /**
  * The current question of the quiz in progress on `track`, and the actions on it. Returns null
- * while there is nothing to show; without a quiz, it leaves `route` for `fallback`.
+ * while there is nothing to show; without a quiz, it leaves `route` for `fallback`, if given.
  */
-export function useQuizSession(track: Track, route: Route, fallback: Route) {
+export function useQuizSession(track: Track, route: Route, fallback?: Route) {
   const { state, dispatch } = useStore();
   const portion = usePortion();
   const quiz = state.quiz?.track === track ? state.quiz : null;
 
   useEffect(() => {
-    if (!quiz) redirectFrom(route, fallback);
+    if (!quiz && fallback) redirectFrom(route, fallback);
   }, [quiz, route, fallback]);
 
   const question = quiz && portion.portion.questions.find((x) => x.id === currentQuestionId(quiz));
@@ -35,6 +35,8 @@ export function useQuizSession(track: Track, route: Route, fallback: Route) {
     chosen,
     phase,
     isLast,
+    /** After which section the question is asked. */
+    section: portion.questionSection(question),
     /** The unit the question relies on, and its whole sentence. */
     unit: portion.unit(question.unitRef)!,
     sentence: portion.sentenceOf(question.unitRef)!,
@@ -51,7 +53,6 @@ export function useQuizSession(track: Track, route: Route, fallback: Route) {
         navigate(ROUTES.done);
       } else {
         dispatch({ type: 'nextQuestion' });
-        window.scrollTo(0, 0);
       }
     },
   };

@@ -46,11 +46,22 @@ export function sentenceChoices(
   return unitIds.slice(start, start + size);
 }
 
-/** The questions of a track, and of a level on the solo track, in their order. */
-export function questionIdsFor(questions: readonly Question[], track: Track, level?: Level) {
+/**
+ * The questions of a track, and of a level on the solo track, in the order they are asked: after
+ * their section (`sectionOf`), the summary question last.
+ */
+export function questionIdsFor(
+  questions: readonly Question[],
+  sectionOf: (q: Question) => number,
+  track: Track,
+  level?: Level,
+) {
+  const rank = (q: Question) => [sectionOf(q), q.summary ? 1 : 0] as const;
   return questions
     .filter((q) => q.track === track && (track === 'together' || q.level === level))
-    .map((q) => q.id);
+    .map((q) => ({ q, r: rank(q) }))
+    .sort((a, b) => a.r[0] - b.r[0] || a.r[1] - b.r[1])
+    .map(({ q }) => q.id);
 }
 
 /** How many answers a question accepts before the correct one is revealed. */

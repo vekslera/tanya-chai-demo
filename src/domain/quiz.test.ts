@@ -64,10 +64,14 @@ describe('optionsOf', () => {
 });
 
 describe('questionIdsFor', () => {
-  it('selects by track, and by level on the solo track', () => {
-    expect(questionIdsFor(questions, 'solo', 1)).toEqual(['q-choice', 'q-find', 'q-tf']);
-    expect(questionIdsFor(questions, 'solo', 2)).toEqual(['q-l2']);
-    expect(questionIdsFor(questions, 'together')).toEqual(['q-child', 'q-child-tf']);
+  // The fixture's two sections: LA.1.001–002 and LA.1.003–004; the summary follows the last.
+  const sectionOf = (q: Question) => (q.summary || q.unitRef > 'LA.1.002' ? 1 : 0);
+
+  it('selects by track, and by level on the solo track, in the order they are asked', () => {
+    const reversed = [...questions].reverse();
+    expect(questionIdsFor(reversed, sectionOf, 'solo', 1)).toEqual(['q-choice', 'q-find', 'q-tf']);
+    expect(questionIdsFor(reversed, sectionOf, 'solo', 2)).toEqual(['q-l2']);
+    expect(questionIdsFor(questions, sectionOf, 'together')).toEqual(['q-child-tf', 'q-child']);
   });
 });
 

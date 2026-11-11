@@ -68,12 +68,14 @@ The ביאור follows their meaning: how they understand each unit. It is writt
 ## 3. User flow
 
 ```
-Home ──► Choose level ──► Read ──► Questions ──► Completion
-  │                        ▲  │                     │
-  │                        └──┘ (back to text)      └──► (flag, off) Shinun taste
-  ├──► Avos uBanim ──► Son's questions ──► Completion (shared)
+Home ──► Choose level ──► Read: section ► question ► section ► … ► summary question ──► Completion
+  │                                                                                      │
+  │                                                                      (flag, off) Shinun taste
+  ├──► Avos uBanim: card ► son's question ► card ► … ► summary question ──► Completion (shared)
   └──► About & credits
 ```
+
+The questions are part of the learning, as in a story: each comes right after the section it asks about, and a summary question about the whole lesson comes after the last section.
 
 ### 3.1 Screens
 
@@ -108,21 +110,21 @@ The last choice is remembered. The default selection is level 2.
 - **Level 2:** the short ביאור (1–2 lines) appears after each sentence. Rubik, smaller, muted navy, with a thin gold rule on the right edge.
 - **Glossary terms:** marked with a dotted gold underline. Tapping one opens a bottom sheet with the term, a 1–3 line ביאור, and (if present) a source line. At least these terms: `נבזה ונמאס`, `נפש` / `הנפש והרוח`, `באלקים חיים`, `אחים ממש`, `אב אחד`. Final list per §8.3.
 - **English toggle:** each section has a small `EN` chip. Tapping it reveals the English translation of that section right after its Hebrew (LTR, `lang="en"`, serif, smaller), so the English is never far from the text it translates. The toggle is per section, not global. A global "show all English" action is in the overflow menu.
-- **Bottom bar:** a sticky primary button, `לשאלות` (enabled once the user has scrolled to the end, or after 20 seconds).
+- **Sections and questions:** the screen shows the sections read so far. After a section comes its question (S4), in a card under the text; once it is answered, `להמשך הלימוד` opens the next section, scrolled into view. After the last section comes the summary question, and then `לסיום השיעור` leads to the completion screen (S5). The progress bar shows the questions answered.
+- **Bottom bar:** sticky, with the dedication.
 - **Dedication:** when the portion has a `dedication`, a short line under the button, centered: small (15px, `--fs-dedication`) but clearly visible, in navy, medium weight, on a light gold band (`--gold-soft`). It appears on the reading screens of every learning path (S3 and the S8 cards), not on the finish screen. Its wording comes from `src/strings/he.ts` by kind: `הלימוד היומי מוקדש לעילוי נשמת …` (`leiluiNishmas`), `הלימוד היומי מוקדש לזכות …` (`lizchus`), or `השותף שלך בלימוד היומי: …` (`partner`).
 
-#### S4: Questions (`#/quiz`)
+#### S4: Questions (on the reading screen, S3)
 
-- One question per screen, with a progress dots header (●●○).
+- Each level has its own questions, on the same sections: one after each section but the last, and a summary question (`summary: true`) after the last (7 in the demo portion: 6 + 1). A question follows the section that holds its `unitRef`. The card shows `שאלה 3 מתוך 7`, or `שאלת סיכום`.
 - **Question types:**
   - `choice`: 3–4 options. Options are shuffled per session, except options marked `fixedOrder`.
   - `trueFalse`: `נכון` / `לא נכון`.
-  - `findSentence`: "tap the sentence in the text that says …". Three consecutive sentences of the portion are shown in compact form, the right one among them, and the user taps a sentence. Where the right one falls among the three changes from session to session; the number of sentences is `quiz.findSentence.choices` in `app.config.json`.
+  - `findSentence`: "tap the sentence in the text that says …". Three consecutive sentences already read are shown in compact form, the right one among them, and the user taps a sentence. Where the right one falls among the three changes from session to session; the number of sentences is `quiz.findSentence.choices` in `app.config.json`.
 - **Feedback** appears immediately after answering:
   - **Correct:** the option turns gold, a short positive line appears (`יפה מאוד` / `בדיוק` and similar, rotating), plus the explanation, and the source sentence from the text is shown in a quote card with a gold highlight.
   - **Wrong (first attempt):** a gentle shake (none under reduced motion) and a hint line. The relevant sentence is highlighted, and the user may try once more.
   - **Wrong (second attempt):** the correct answer is revealed, with its explanation and the highlighted sentence.
-- A `חזרה לטקסט` link opens the text in a bottom sheet scrolled to the relevant sentence, without losing the quiz state.
 - **Points:** 10 for a correct first attempt, 5 for a correct second attempt, 0 otherwise.
 
 #### S5: Completion (`#/done`)
@@ -172,13 +174,13 @@ A father learns the portion with his son on one device. The screen gives the fat
   - `שאלה לשיחה`: on some cards only, an open question for the conversation. It is not scored.
 - The glossary terms work here too.
 - The day's dedication (S3) appears under the `הקודם` / `הבא` buttons of each card.
-- **After the last card:** `עכשיו תורו של הילד`, and then S9.
+- **After each card:** its son's question (S9), when the father taps `הבא`. After the last card comes the son's summary question, and then the shared completion (S5).
 - Large text and large buttons: the phone is passed between father and son, often in a noisy place, such as a full beis midrash. Nothing depends on sound.
 - No names or other personal details are entered.
 
-#### S9: The son's questions (`#/together/quiz`)
+#### S9: The son's questions (in S8)
 
-- 3 simple questions with 2–3 answer options each, large buttons, one question per screen.
+- One simple question after each card but the last, and a summary question after the last (7 in the demo portion), with 2–3 answer options each and large buttons. The screen is headed `עכשיו תורו של הילד` (`שאלת סיכום לילד` for the summary), with a link back to the card; after the answer, `למחשבה הבאה`.
 - Gentle feedback: a correct answer turns gold with a short warm line. After a wrong answer there is no red: the line `ננסה שוב?` appears, with the sentence from the text and the words the father said about it. The son may try again.
 - The son sees points (`+10`); children may see points and ranks, unlike the adult screens.
 - **Completion (shared):** the same completion screen (S5), worded for both: `סיימתם את השיעור יחד!`, a family streak (`רצף משפחתי`), the heart advancing, and the community counter.
@@ -494,6 +496,7 @@ type Question = {
   hint: Reviewed<string>;
   explanation: Reviewed<string>;
   fixedOrder?: boolean;
+  summary?: true;                             // asked after the last section, about the whole lesson
 };
 
 type Reviewed<T> = { value: T; reviewed: boolean; note?: string };
@@ -509,8 +512,8 @@ type Reviewed<T> = { value: T; reviewed: boolean; note?: string };
 - Every `Range`, `TranslationSpan`, `unitRef`, unit-ID answer and `UnitContent.id` refers to existing units, with `from` not after `to`.
 - The translation spans of a chapter cover each of its units exactly once.
 - Every `glossary.match` occurs in its unit's text. Every `entryId` exists.
-- In the solo track, level 1 has 3 `literal` questions, and level 2 has 2 `understanding` questions and 1 `concept` question.
-- The Avos uBanim cards cover the portion's units exactly once, in order, with 6–8 cards. The together track has exactly 3 questions, all `category: "child"`, `kind` `choice` or `trueFalse`, with 2–3 options.
+- In each level of the solo track, and in the together track: `contentRules.questions.perSection` (1) questions after each section but the last, by the section of their `unitRef`, none after the last, and exactly one `summary` question. Level 1 questions are `literal`; level 2 questions are `understanding` or `concept` (`levelCategories`).
+- The sections cover the portion's units exactly once, in order, each from a sentence's start. There are 6–8 Avos uBanim cards, one per section. The together track's questions are all `category: "child"`, `kind` `choice` or `trueFalse`, with 2–3 options.
 - Every solo `choice` question has exactly one correct option and 3–4 options in total.
 - The validator prints a **summary of unreviewed items**. It fails the build only when `CONTENT_STRICT=1` is set. The deploy validates `main` with `CONTENT_STRICT=1`, and `dev` without it (§10).
 
@@ -583,7 +586,7 @@ These are drafted by Claude (in the claude.ai conversation or in Claude Code) an
   - **For the father (`forParent`):** at most 30 words per card; what the thought says and why, so the father understands before explaining.
   - **To the child (`toChild`):** 1–3 short sentences, at most 35 words, that the father can read aloud as they are. Simple words and examples from a child's world (family, friends, class), always faithful to the text. No invented stories attributed to anyone.
   - **Conversation (`talk`):** on 2–3 cards only; an open question about the child's own life, with no right answer.
-  - **The son's questions:** 3 questions with 2–3 options, about the main idea, never about wording.
+  - **The son's questions:** one after each card but the last, and a summary question, with 2–3 options, about the main idea, never about wording.
 - **Hebrew register:** modern Hebrew that is clear and respectful, using Chabad terms.
 
 ### 8.4 Review and sign-off

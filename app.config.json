@@ -26,10 +26,6 @@
     "findSentence": { "choices": 3 },
     "together": { "retryUntilCorrect": true }
   },
-  "read": {
-    "unlockAfterMs": 20000,
-    "seenMargin": "0px 0px -15% 0px"
-  },
   "motion": {
     "heartContourMs": 1200,
     "countUpMs": 900,
@@ -49,8 +45,12 @@
   "contentRules": {
     "biurMaxWords": { "he": 25, "en": 35 },
     "overlapRunWords": 5,
-    "levelQuestions": { "1": { "literal": 3 }, "2": { "understanding": 2, "concept": 1 } },
-    "togetherQuestions": { "count": 3, "category": "child", "kinds": ["choice", "trueFalse"] },
+    "questions": {
+      "$comment": "In each level and in Avos uBanim: this many questions after each section but the last, then one summary question. The categories each level's questions may have, and the son's.",
+      "perSection": 1,
+      "levelCategories": { "1": ["literal"], "2": ["understanding", "concept"] },
+      "together": { "category": "child", "kinds": ["choice", "trueFalse"] }
+    },
     "optionCount": { "solo": [3, 4], "together": [2, 3] },
     "cards": { "count": [6, 8], "talks": [2, 3], "maxWords": { "forParent": 30, "toChild": 35 } }
   },

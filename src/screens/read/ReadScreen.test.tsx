@@ -1,4 +1,4 @@
-import { act, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { memoryStorage } from '../../adapters/memoryStorage';
 import { config } from '../../config';
@@ -8,25 +8,108 @@ import { he } from '../../strings/he';
 import { portionData } from '../../test/fixtures';
 import { button, click, hash, renderApp } from '../../test/renderApp';
 
-const atLevel = (level: number) =>
-  memoryStorage({ [config.storage.key]: JSON.stringify({ level }) });
+/** Storage with the questions of a level under way, at question `index`. */
+const reading = (questionIds = ['q-choice', 'q-find', 'q-tf'], level = 1, index = 0) =>
+  memoryStorage({
+    [config.storage.key]: JSON.stringify({
+      level,
+      quiz: { ...startSession('solo', level, questionIds, 1), index },
+    }),
+  });
+const option = (text: string) => button(new RegExp(text));
+const sentence = (id: string) => document.querySelector(`button[data-unit="${id}"]`)!;
+const shownSections = () =>
+  [...document.querySelectorAll('.read-section')].map((s) => s.getAttribute('data-section'));
+/** The sentences offered by a findSentence question, other than the answer (LA.1.003). */
+const wrongSentences = () =>
+  [...document.querySelectorAll<HTMLElement>('button[data-unit]')].filter(
+    (b) => b.dataset.unit !== 'LA.1.003',
+  );
 
 afterEach(() => {
-  vi.useRealTimers();
-  delete (window as { IntersectionObserver?: unknown }).IntersectionObserver;
+  delete (Element.prototype as { scrollIntoView?: unknown }).scrollIntoView;
 });
 
 describe('ReadScreen', () => {
+  it('leaves for the level screen without questions under way', async () => {
+    await renderApp(ROUTES.read);
+    expect(hash()).toBe(ROUTES.level);
+  });
+
   it('shows the ביאור on level 2 only', async () => {
-    const { unmount } = await renderApp(ROUTES.read, { storage: atLevel(2) });
+    const { unmount } = await renderApp(ROUTES.read, { storage: reading(['q-l2'], 2) });
     expect(screen.getByText('ביאור ראשון')).toBeTruthy();
     unmount();
-    await renderApp(ROUTES.read, { storage: atLevel(1) });
+    await renderApp(ROUTES.read, { storage: reading(['q-choice'], 1) });
     expect(screen.queryByText('ביאור ראשון')).toBeNull();
   });
 
-  it('shows the English of a paragraph, and its footnote', async () => {
-    await renderApp(ROUTES.read);
+  it('opens each section after the question before it, to the summary and the finish', async () => {
+    Element.prototype.scrollIntoView = vi.fn();
+    const { storage } = await renderApp(ROUTES.read, { storage: reading() });
+    expect(shownSections()).toEqual(['LA.1.001']);
+    expect(screen.getByText(he.quiz.progress(1, 3))).toBeTruthy();
+    expect(screen.getByRole('progressbar').getAttribute('aria-valuenow')).toBe('0');
+
+    // A wrong answer: a hint; the same answer twice counts once; then the answer is revealed.
+    await click(option('תשובה שנייה'));
+    expect(screen.getByText(he.quiz.tryAgain)).toBeTruthy();
+    expect(screen.getByText('hint q-choice')).toBeTruthy();
+    expect(document.querySelector('.option--shake')).toBeTruthy();
+    await click(option('תשובה שנייה'));
+    await click(option('תשובה שלישית'));
+    expect(screen.getByText(he.quiz.revealed)).toBeTruthy();
+    expect(screen.getByText('תשובה נכונה', { selector: 'strong' })).toBeTruthy();
+    expect(screen.getByText('explanation q-choice')).toBeTruthy();
+
+    // The next section opens, scrolled into view, with its question among the sentences read.
+    await click(button(he.quiz.next));
+    expect(shownSections()).toEqual(['LA.1.001', 'LA.1.003']);
+    expect(Element.prototype.scrollIntoView).toHaveBeenCalled();
+    expect(screen.getByText(he.quiz.findSentenceHelp)).toBeTruthy();
+    expect(document.querySelectorAll('button[data-unit]')).toHaveLength(
+      config.quiz.findSentence.choices,
+    );
+    await click(wrongSentences()[0]!);
+    expect(document.querySelector('.compact-paragraph--hint')).toBeTruthy();
+    await click(sentence('LA.1.003'));
+    expect(screen.getByText(he.quiz.praise[1]!)).toBeTruthy();
+
+    // The summary question follows the last section; true and false are labelled.
+    await click(button(he.quiz.next));
+    expect(shownSections()).toEqual(['LA.1.001', 'LA.1.003']);
+    expect(screen.getByText(he.quiz.summary)).toBeTruthy();
+    await click(button(he.quiz.true));
+    expect(button(`${he.quiz.true} (${he.quiz.chosenWrong})`)).toBeTruthy();
+    await click(button(he.quiz.false));
+    expect(screen.getByText(he.quiz.points(config.scoring.pointsByAttempt[1]!))).toBeTruthy();
+    await click(button(he.quiz.finish));
+    expect(hash()).toBe(ROUTES.done);
+    expect(JSON.parse(storage.get(config.storage.key)!).completedLevels).toEqual([1]);
+  });
+
+  it('praises a correct answer with its points', async () => {
+    await renderApp(ROUTES.read, { storage: reading() });
+    await click(option('תשובה נכונה'));
+    expect(screen.getByText(he.quiz.praise[0]!)).toBeTruthy();
+    expect(screen.getByText(he.quiz.points(config.scoring.pointsByAttempt[0]!))).toBeTruthy();
+    expect(document.querySelector('.option--shake')).toBeNull();
+  });
+
+  it('reveals a findSentence answer among the sentences themselves', async () => {
+    await renderApp(ROUTES.read, { storage: reading(['q-find']) });
+    const [first, second] = wrongSentences();
+    await click(first!);
+    await click(second!);
+    expect(screen.getByText(he.quiz.revealed)).toBeTruthy();
+    expect(sentence('LA.1.003').className).toContain('compact-sentence--correct');
+    // The question is done: the sentences take no more answers.
+    await click(sentence('LA.1.003'));
+    expect(screen.getByText(he.quiz.revealed)).toBeTruthy();
+  });
+
+  it('shows the English of a section, and its footnote', async () => {
+    await renderApp(ROUTES.read, { storage: reading() });
     await click(screen.getAllByRole('button', { name: he.read.englishShow })[0]!);
     expect(screen.getByText(/Love/)).toBeTruthy();
     await click(button(he.read.footnote('1')));
@@ -39,7 +122,7 @@ describe('ReadScreen', () => {
   });
 
   it('shows or hides all the English from the menu', async () => {
-    await renderApp(ROUTES.read);
+    await renderApp(ROUTES.read, { storage: reading(['q-find']) });
     await click(button(he.common.menu));
     await click(screen.getByRole('menuitem', { name: he.read.englishAllShow }));
     expect(screen.getByText('Brothers.')).toBeTruthy();
@@ -49,18 +132,6 @@ describe('ReadScreen', () => {
     await click(button(he.common.menu));
     await click(document.querySelector('.menu-scrim')!);
     expect(screen.queryByRole('menu')).toBeNull();
-  });
-
-  it('shows the dedication under the button, when the day has one', async () => {
-    for (const kind of Object.keys(he.dedication) as (keyof typeof he.dedication)[]) {
-      const data = portionData();
-      data.portion.dedication = { kind, name: 'פלוני בן פלוני' };
-      const { unmount } = await renderApp(ROUTES.read, { data });
-      expect(screen.getByText(he.dedication[kind]('פלוני בן פלוני'))).toBeTruthy();
-      unmount();
-    }
-    await renderApp(ROUTES.read);
-    expect(document.querySelector('.dedication')).toBeNull();
   });
 
   it('shows a section’s English after its text, whole', async () => {
@@ -73,7 +144,7 @@ describe('ReadScreen', () => {
       { ...first!, from: 'LA.1.002', text: '[and soul][1].' },
       second!,
     ];
-    await renderApp(ROUTES.read, { data });
+    await renderApp(ROUTES.read, { data, storage: reading() });
     expect(screen.getAllByRole('button', { name: he.read.englishShow })).toHaveLength(1);
     await click(button(he.read.englishShow));
     expect(document.querySelector('.english')!.textContent).toBe('Love [and soul]1. Brothers.');
@@ -82,45 +153,26 @@ describe('ReadScreen', () => {
   it('has no menu without English', async () => {
     const data = portionData();
     data.translations = [];
-    await renderApp(ROUTES.read, { data });
+    await renderApp(ROUTES.read, { data, storage: reading() });
     expect(screen.queryByRole('button', { name: he.common.menu })).toBeNull();
   });
 
   it('opens a glossary term', async () => {
-    await renderApp(ROUTES.read);
+    await renderApp(ROUTES.read, { storage: reading() });
     await click(button('אַהֲבָה'));
     expect(screen.getByRole('dialog', { name: 'אהבה' })).toBeTruthy();
     await click(button(he.common.close));
   });
 
-  it('opens the questions once the reading time has passed', async () => {
-    vi.useFakeTimers();
-    // An observer that never reports: only the time unlocks.
-    window.IntersectionObserver = vi.fn(function () {
-      return { observe() {}, unobserve() {}, disconnect() {} };
-    }) as never;
-    await renderApp(ROUTES.read);
-    const toQuestions = button(he.read.toQuestions) as HTMLButtonElement;
-    expect(toQuestions.disabled).toBe(true);
-    await act(async () => void vi.advanceTimersByTime(config.read.unlockAfterMs));
-    expect(toQuestions.disabled).toBe(false);
-    expect(screen.getByRole('progressbar').getAttribute('aria-valuenow')).toBe('0');
-  });
-
-  it('starts the quiz of the chosen level, and resumes it', async () => {
-    const { storage } = await renderApp(ROUTES.read, { storage: atLevel(1) });
-    expect(screen.getByRole('progressbar').getAttribute('aria-valuenow')).toBe('100');
-    await click(button(he.read.toQuestions));
-    expect(hash()).toBe(ROUTES.quiz);
-    const saved = JSON.parse(storage.get(config.storage.key)!);
-    expect(saved.quiz.questionIds).toEqual(['q-choice', 'q-find', 'q-tf']);
-  });
-
-  it('resumes a quiz in progress for the same level', async () => {
-    const quiz = { ...startSession('solo', 1, ['q-choice', 'q-tf'], 1), index: 1 };
-    const storage = memoryStorage({ [config.storage.key]: JSON.stringify({ level: 1, quiz }) });
-    await renderApp(ROUTES.read, { storage });
-    await click(button(he.read.toQuestions));
-    expect(JSON.parse(storage.get(config.storage.key)!).quiz.index).toBe(1);
+  it('shows the dedication under the text, when the day has one', async () => {
+    for (const kind of Object.keys(he.dedication) as (keyof typeof he.dedication)[]) {
+      const data = portionData();
+      data.portion.dedication = { kind, name: 'פלוני בן פלוני' };
+      const { unmount } = await renderApp(ROUTES.read, { data, storage: reading() });
+      expect(screen.getByText(he.dedication[kind]('פלוני בן פלוני'))).toBeTruthy();
+      unmount();
+    }
+    await renderApp(ROUTES.read, { storage: reading() });
+    expect(document.querySelector('.dedication')).toBeNull();
   });
 });

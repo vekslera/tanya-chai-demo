@@ -1,6 +1,7 @@
 // The three sections of the review document: the text with its ביאור and glossary, the
 // questions, and the Avos uBanim cards.
-import type { Portion, Question, Unit } from '../../../src/domain/types.ts';
+import { questionIdsFor } from '../../../src/domain/quiz.ts';
+import type { Level, Portion, Question, Track, Unit } from '../../../src/domain/types.ts';
 import { sentenceOf, unitsIn } from '../../../src/domain/units.ts';
 import { he } from '../../../src/strings/he.ts';
 import { appLanguage, type ContentRules } from '../config.ts';
@@ -64,21 +65,26 @@ function answerLines(q: Question, all: ChapterLayers): string[] {
 
 export function questionsSection(all: ChapterLayers, p: Portion, rules: ContentRules): string[] {
   const out = ['## 2. Questions', ''];
-  const levels = Object.entries(rules.levelQuestions).map(([level, categories]) => {
-    const counts = Object.entries(categories)
-      .map(([cat, n]) => `${n} ${cat}`)
-      .join(', ');
-    const title = `Level ${level}: ${he.level.options[Number(level)]?.title ?? ''} (${counts})`;
-    return [title, (q: Question) => q.track === 'solo' && String(q.level) === level] as const;
-  });
-  const sections = [
-    ...levels,
-    [`Avos uBanim: ${he.togetherQuiz.title}`, (q: Question) => q.track === 'together'] as const,
+  const sections = p.sections.map((r) => new Set(unitsIn(all.units, r).map((u) => u.id)));
+  const sectionOf = (q: Question) =>
+    q.summary ? sections.length - 1 : sections.findIndex((s) => s.has(q.unitRef));
+  const groups: [string, Track, Level | undefined][] = [
+    ...Object.entries(rules.questions.levelCategories).map(
+      ([level, categories]): [string, Track, Level] => [
+        `Level ${level}: ${he.level.options[Number(level)]?.title ?? ''} (${categories.join(', ')})`,
+        'solo',
+        Number(level),
+      ],
+    ),
+    [`Avos uBanim: ${he.together.title}`, 'together', undefined],
   ];
-  for (const [title, belongs] of sections) {
+  const byId = new Map(p.questions.map((q) => [q.id, q]));
+  for (const [title, track, level] of groups) {
     out.push(`### ${title}`, '');
-    for (const q of p.questions.filter(belongs)) {
-      out.push(`#### ${q.id} (${q.kind}, ${q.category}), relies on ${q.unitRef}`, '');
+    for (const id of questionIdsFor(p.questions, sectionOf, track, level)) {
+      const q = byId.get(id)!;
+      const where = q.summary ? 'summary' : `after section ${sectionOf(q) + 1}`;
+      out.push(`#### ${q.id} (${q.kind}, ${q.category}, ${where}), relies on ${q.unitRef}`, '');
       out.push(item('prompt', q.prompt), ...answerLines(q, all));
       out.push(item('hint', q.hint), item('explanation', q.explanation), '');
     }
@@ -90,7 +96,12 @@ export function cardsSection(all: ChapterLayers, p: Portion): string[] {
   const out = ['## 3. Avos uBanim cards', ''];
   p.together.forEach((c, i) => {
     const s = p.sections[i]!;
-    out.push(`### ${c.id} (${s.from}–${s.to})`, '', quote(unitsIn(all.units, s)), '');
+    out.push(
+      `### ${c.id}: section ${i + 1} (${s.from}–${s.to})`,
+      '',
+      quote(unitsIn(all.units, s)),
+      '',
+    );
     out.push(item(`${he.together.forParent} (forParent)`, c.forParent));
     out.push(item(`${he.together.toChild} (toChild)`, c.toChild));
     if (c.talk) out.push(item(`${he.together.talk} (talk)`, c.talk));

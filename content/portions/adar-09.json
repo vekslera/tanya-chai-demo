@@ -231,6 +231,304 @@
         "value": "נכון! הלל אמר שאהבת ישראל היא כל התורה, וכל השאר הוא פירוש שלה.",
         "reviewed": true
       }
+    },
+    {
+      "id": "q-l1-greatness",
+      "track": "solo",
+      "level": 1,
+      "kind": "choice",
+      "category": "literal",
+      "prompt": {
+        "value": "לפי התניא, מי יודע את גדולתן ומעלתן של הנפש והרוח בשורשן?",
+        "reviewed": false
+      },
+      "options": [
+        { "id": "a", "text": "אין מי שיודע: שורשן ומקורן באלקים חיים" },
+        { "id": "b", "text": "רק האדם עצמו יודע את מעלת נשמתו" },
+        { "id": "c", "text": "החכמים יודעים זאת מתוך הספרים" }
+      ],
+      "answer": "a",
+      "unitRef": "LA.32.004",
+      "hint": {
+        "value": "קראו שוב את ״והנפש והרוח מי יודע גדולתן...״: איפה נמצא שורשן?",
+        "reviewed": false
+      },
+      "explanation": {
+        "value": "״והנפש והרוח, מי יודע גדולתן ומעלתן בשרשן ומקורן באלקים חיים״: שורש כל נשמה בה׳, ולכן אין מי שיודע כמה היא גדולה.",
+        "reviewed": false
+      }
+    },
+    {
+      "id": "q-l1-hillel",
+      "track": "solo",
+      "level": 1,
+      "kind": "choice",
+      "category": "literal",
+      "prompt": {
+        "value": "מה אמר הלל הזקן על מצוות ״ואהבת לרעך כמוך״?",
+        "reviewed": false
+      },
+      "options": [
+        { "id": "a", "text": "״זהו כל התורה כולה, ואידך פירושא הוא״" },
+        { "id": "b", "text": "שזו המצווה הקלה ביותר בתורה" },
+        { "id": "c", "text": "שרק חכמים יכולים לקיים אותה" }
+      ],
+      "answer": "a",
+      "unitRef": "LA.32.011",
+      "hint": {
+        "value": "קראו את תחילת הפסקה השלישית: ״וזהו שאמר הלל הזקן...״.",
+        "reviewed": false
+      },
+      "explanation": {
+        "value": "הלל אמר על מצווה זו: ״זהו כל התורה כולה, ואידך פירושא הוא״. היא כל התורה, ושאר התורה הוא פירוש שלה.",
+        "reviewed": false
+      }
+    },
+    {
+      "id": "q-l1-imperfect",
+      "track": "solo",
+      "level": 1,
+      "kind": "trueFalse",
+      "category": "literal",
+      "prompt": {
+        "value": "לפי התניא, הקב״ה שורה גם במקום שיש בו פירוד בין הנשמות.",
+        "reviewed": false
+      },
+      "answer": "false",
+      "unitRef": "LA.32.016",
+      "hint": {
+        "value": "מה כתוב על ״אתר פגים״, מקום שיש בו פגם?",
+        "reviewed": false
+      },
+      "explanation": {
+        "value": "״קודשא בריך הוא לא שריא באתר פגים״: ה׳ אינו שורה במקום פגום. לכן אורו נמשך רק כשהנשמות מאוחדות.",
+        "reviewed": false
+      }
+    },
+    {
+      "id": "q-l1-summary",
+      "track": "solo",
+      "level": 1,
+      "kind": "choice",
+      "category": "literal",
+      "prompt": {
+        "value": "לפי השיעור כולו, ממה באה אהבה אמיתית בין יהודים?",
+        "reviewed": false
+      },
+      "options": [
+        { "id": "a", "text": "מכך שהנשמה עיקר, ולכל הנשמות שורש אחד ואב אחד" },
+        { "id": "b", "text": "ממתנות ומטובות שנותנים זה לזה" },
+        { "id": "c", "text": "מכך שגרים קרוב זה לזה" }
+      ],
+      "answer": "a",
+      "unitRef": "LA.32.008",
+      "hint": {
+        "value": "חשבו על ״אחים ממש״: ממה באה האחווה, מהגוף או מהנשמה?",
+        "reviewed": false
+      },
+      "explanation": {
+        "value": "כשהנשמה עיקר, רואים שכל ישראל אחים ממש, כי לכולם אב אחד. אהבה שבאה מהגוף תלויה בדבר, ונגמרת.",
+        "reviewed": false
+      },
+      "summary": true
+    },
+    {
+      "id": "q-l2-joy",
+      "track": "solo",
+      "level": 2,
+      "kind": "choice",
+      "category": "understanding",
+      "prompt": {
+        "value": "על איזו שמחה מדבר התניא כשהוא אומר ״שמחת הנפש לבדה״?",
+        "reviewed": false
+      },
+      "options": [
+        { "id": "a", "text": "השמחה שהנשמה מתקרבת לה׳, בתורה ובמצוות" },
+        { "id": "b", "text": "השמחה בדברים טובים שקונים ונהנים מהם" },
+        { "id": "c", "text": "השמחה כשמצליחים יותר מאחרים" }
+      ],
+      "answer": "a",
+      "unitRef": "LA.32.001",
+      "hint": {
+        "value": "הנשמה היא חלק מה׳. ממה היא שמחה באמת?",
+        "reviewed": false
+      },
+      "explanation": {
+        "value": "הנשמה שמחה כשהיא קרובה למקורה, לה׳: בתורה ובמצוות. מי ששמח רק בזה, ולא בהנאות הגוף, מגיע בקלות לאהבת ישראל.",
+        "reviewed": false
+      }
+    },
+    {
+      "id": "q-l2-greater",
+      "track": "solo",
+      "level": 2,
+      "kind": "trueFalse",
+      "category": "understanding",
+      "prompt": {
+        "value": "לפי התניא, אדם יכול לדעת שהנשמה שלו גדולה יותר מהנשמה של חברו.",
+        "reviewed": false
+      },
+      "answer": "false",
+      "unitRef": "LA.32.004",
+      "hint": {
+        "value": "״מי יודע גדולתן ומעלתן״: האם מישהו יודע?",
+        "reviewed": false
+      },
+      "explanation": {
+        "value": "שורש כל נשמה ״באלקים חיים״, ואין אדם יודע את גדולתה. לכן אין סיבה להרגיש חשוב מחברו; אולי דווקא נשמתו של חברו גדולה יותר.",
+        "reviewed": false
+      }
+    },
+    {
+      "id": "q-l2-one-in-one",
+      "track": "solo",
+      "level": 2,
+      "kind": "choice",
+      "category": "concept",
+      "prompt": {
+        "value": "מדוע אור ה׳ אינו נמשך אל ״כנסת ישראל״ כשיש פירוד בין הנשמות?",
+        "reviewed": false
+      },
+      "options": [
+        { "id": "a", "text": "כי ה׳, שהוא אחד, שורה רק כשגם הנשמות מאוחדות, ״אחד באחד״" },
+        { "id": "b", "text": "כי בזמן פירוד אין מתפללים בציבור" },
+        { "id": "c", "text": "כי האור נמשך רק אל מי שלומד תורה לבדו" }
+      ],
+      "answer": "a",
+      "unitRef": "LA.32.014",
+      "hint": {
+        "value": "מה פירוש ״לא שריא באתר פגים״, ומה הפגם כאן?",
+        "reviewed": false
+      },
+      "explanation": {
+        "value": "האור נמשך ״אחד באחד״: ה׳ האחד אל נשמות ישראל כשהן אחד. פירוד הוא פגם, ו״קודשא בריך הוא לא שריא באתר פגים״.",
+        "reviewed": false
+      }
+    },
+    {
+      "id": "q-l2-summary",
+      "track": "solo",
+      "level": 2,
+      "kind": "choice",
+      "category": "concept",
+      "prompt": {
+        "value": "מה מחבר את חלקי השיעור: הגוף והנשמה, ״אחים ממש״, דברי הלל, ו״ברכנו אבינו כולנו כאחד״?",
+        "reviewed": false
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": "כשהנשמה עיקר, כולנו אחד; וזו גם מטרת התורה: שאור ה׳ ישרה בנו כשאנו מאוחדים"
+        },
+        { "id": "b", "text": "כולם מלמדים על חשיבות התפילה בציבור" },
+        { "id": "c", "text": "כולם מלמדים להתרחק מהגוף בצומות ובסיגופים" }
+      ],
+      "answer": "a",
+      "unitRef": "LA.32.013",
+      "hint": {
+        "value": "חשבו מה משותף לאהבת ישראל ולמטרת התורה כולה.",
+        "reviewed": false
+      },
+      "explanation": {
+        "value": "השיעור מתחיל בנשמה שהיא העיקר, ממשיך בכך שכל ישראל אחים מצד שורשם, ומסיים במטרת התורה: להמשיך את אור ה׳, שמאיר כשכולנו ״כאחד״.",
+        "reviewed": false
+      },
+      "summary": true
+    },
+    {
+      "id": "q-c-soul-first",
+      "track": "together",
+      "kind": "choice",
+      "category": "child",
+      "prompt": {
+        "value": "מה התניא מלמד שחשוב יותר?",
+        "reviewed": false
+      },
+      "options": [
+        { "id": "a", "text": "הנשמה" },
+        { "id": "b", "text": "הגוף" }
+      ],
+      "answer": "a",
+      "unitRef": "LA.32.001",
+      "hint": {
+        "value": "על מה אבא אמר שהוא חשוב הרבה יותר?",
+        "reviewed": false
+      },
+      "explanation": {
+        "value": "הנשמה, חלק מה׳, חשובה הרבה יותר מהגוף. מי שזוכר את זה, קל לו לאהוב כל יהודי.",
+        "reviewed": false
+      }
+    },
+    {
+      "id": "q-c-hidden",
+      "track": "together",
+      "kind": "trueFalse",
+      "category": "child",
+      "prompt": {
+        "value": "אפשר לראות בעיניים כמה גדולה הנשמה של חבר.",
+        "reviewed": false
+      },
+      "answer": "false",
+      "unitRef": "LA.32.004",
+      "hint": {
+        "value": "מה אבא אמר: מה רואים מבחוץ?",
+        "reviewed": false
+      },
+      "explanation": {
+        "value": "רואים רק את הגוף. הנשמה גדולה מאוד, ורק ה׳ יודע כמה.",
+        "reviewed": false
+      }
+    },
+    {
+      "id": "q-c-together",
+      "track": "together",
+      "kind": "choice",
+      "category": "child",
+      "prompt": {
+        "value": "מתי ה׳ שמח לשרות בתוך עם ישראל?",
+        "reviewed": false
+      },
+      "options": [
+        { "id": "a", "text": "כשכולנו מאוחדים, כמו בית שלם" },
+        { "id": "b", "text": "כשכל אחד לבד" },
+        { "id": "c", "text": "כשרבים מי יותר חשוב" }
+      ],
+      "answer": "a",
+      "unitRef": "LA.32.016",
+      "hint": {
+        "value": "נזכור את הבית השלם שאבא סיפר עליו.",
+        "reviewed": false
+      },
+      "explanation": {
+        "value": "כשכולנו מאוחדים, זה כמו בית שלם ויפה, וה׳ שמח לשרות בו. מריבות הן כמו סדקים בבית.",
+        "reviewed": false
+      }
+    },
+    {
+      "id": "q-c-summary",
+      "track": "together",
+      "kind": "choice",
+      "category": "child",
+      "prompt": {
+        "value": "מה למדנו היום?",
+        "reviewed": false
+      },
+      "options": [
+        { "id": "a", "text": "שכל היהודים הם משפחה אחת, ואוהבים זה את זה בגלל הנשמה" },
+        { "id": "b", "text": "שאוהבים רק את מי שנותן לנו מתנות" },
+        { "id": "c", "text": "שהגוף חשוב יותר מהנשמה" }
+      ],
+      "answer": "a",
+      "unitRef": "LA.32.018",
+      "hint": {
+        "value": "חשבו על כל המחשבות שלמדנו עם אבא.",
+        "reviewed": false
+      },
+      "explanation": {
+        "value": "לכל היהודים יש אבא אחד, הקב״ה, ולכן כולנו משפחה אחת. כשאוהבים את הנשמה, האהבה נשארת תמיד, וה׳ מברך אותנו כשאנחנו יחד.",
+        "reviewed": false
+      },
+      "summary": true
     }
   ],
   "together": [

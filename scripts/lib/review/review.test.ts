@@ -33,10 +33,17 @@ describe('reviewDocument', () => {
     delete all.portion!.questions[0]!.options;
     delete all.unitContent[0]!.biur;
     all.unitContent.splice(1, 1);
-    const rules = { ...contentRules, levelQuestions: { ...contentRules.levelQuestions, 9: {} } };
+    const { levelCategories } = contentRules.questions;
+    const rules = {
+      ...contentRules,
+      questions: { ...contentRules.questions, levelCategories: { ...levelCategories, 9: [] } },
+    };
     const { text } = reviewDocument(all, all.portion!, rules);
     expect(text).not.toMatch('Source line');
     expect(text).toMatch('### Level 9:  ()');
+    // Each question with where it is asked.
+    expect(text).toMatch('(choice, literal, after section 1)');
+    expect(text).toMatch('(choice, literal, summary)');
   });
 
   it('quotes the text of each other language before its ביאור', () => {

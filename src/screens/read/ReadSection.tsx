@@ -32,7 +32,7 @@ export function ReadSection({
       ? ' '
       : '';
   return (
-    <section className="read-section">
+    <section className="read-section" data-section={section.id}>
       {hasEnglish && (
         <div className="section-tools">
           <button

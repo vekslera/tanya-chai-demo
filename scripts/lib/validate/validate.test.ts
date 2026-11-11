@@ -236,17 +236,30 @@ describe('questions', () => {
     );
   });
 
-  it('checks the set of each level and of Avos uBanim', () => {
+  it('checks the set of each level and of Avos uBanim: one after each section, then a summary', () => {
     expect(errorsAfter((a) => (q(a, 'q-l1-easy-way').category = 'concept'))).toMatch(
-      'level 1 needs exactly 3 literal question(s)',
+      'question q-l1-easy-way: level 1 questions are literal',
     );
-    expect(errorsAfter((a) => (q(a, 'q-l2-why-easy').level = 1))).toMatch('level 2 needs exactly');
+    const moved = errorsAfter((a) => (q(a, 'q-l2-why-easy').level = 1));
+    expect(moved).toMatch('level 1: 2 questions after section 3 (expected 1)');
+    expect(moved).toMatch('level 2: 0 questions after section 3 (expected 1)');
+    expect(errorsAfter((a) => delete q(a, 'q-l1-summary').summary)).toMatch(
+      'level 1: 0 summary questions (expected 1)',
+    );
+    expect(errorsAfter((a) => (q(a, 'q-l1-imperfect').unitRef = 'LA.32.018'))).toMatch(
+      'level 1: 1 questions after section 7 (expected 0)',
+    );
+    expect(errorsAfter((a) => (q(a, 'q-l1-imperfect').unitRef = 'LA.32.040'))).toMatch(
+      'level 1: 0 questions after section 6 (expected 1)',
+    );
     const child = (a: ChapterLayers) => q(a, 'q-c-hillel');
     expect(errorsAfter((a) => (child(a).category = 'literal'))).toMatch(
       'together questions are category "child"',
     );
     expect(errorsAfter((a) => (child(a).kind = 'findSentence'))).toMatch('choice or trueFalse');
-    expect(errorsAfter((a) => (child(a).track = 'solo'))).toMatch('together track has 2 questions');
+    expect(errorsAfter((a) => (child(a).track = 'solo'))).toMatch(
+      'together: 0 questions after section 5 (expected 1)',
+    );
   });
 });
 

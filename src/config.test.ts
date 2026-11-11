@@ -29,8 +29,6 @@ describe('app config', () => {
     expect(isNumber(config.quiz.solo.maxAttempts)).toBe(true);
     expect(isNumber(config.quiz.findSentence.choices)).toBe(true);
     expect(typeof config.quiz.together.retryUntilCorrect).toBe('boolean');
-    expect(isNumber(config.read.unlockAfterMs)).toBe(true);
-    expect(typeof config.read.seenMargin).toBe('string');
     expect(isNumber(config.motion.heartContourMs)).toBe(true);
     expect(isNumber(config.motion.countUpMs)).toBe(true);
     expect(Object.values(config.motion.done).every(isNumber)).toBe(true);

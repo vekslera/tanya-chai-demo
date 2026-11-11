@@ -6,10 +6,8 @@ import { AboutScreen } from './screens/about/AboutScreen';
 import { DoneScreen } from './screens/done/DoneScreen';
 import { HomeScreen } from './screens/home/HomeScreen';
 import { LevelScreen } from './screens/level/LevelScreen';
-import { QuizScreen } from './screens/quiz/QuizScreen';
 import { ReadScreen } from './screens/read/ReadScreen';
 import { ShinunScreen } from './screens/shinun/ShinunScreen';
-import { TogetherQuizScreen } from './screens/together/TogetherQuizScreen';
 import { TogetherScreen } from './screens/together/TogetherScreen';
 
 /** The screen of each route. With the Shinun flag off its route does not exist. */
@@ -18,10 +16,8 @@ export function screensFor(shinun: boolean): Partial<Record<Route, ComponentType
     [ROUTES.home]: HomeScreen,
     [ROUTES.level]: LevelScreen,
     [ROUTES.read]: ReadScreen,
-    [ROUTES.quiz]: QuizScreen,
     [ROUTES.done]: DoneScreen,
     [ROUTES.together]: TogetherScreen,
-    [ROUTES.togetherQuiz]: TogetherQuizScreen,
     [ROUTES.about]: AboutScreen,
     ...(shinun ? { [ROUTES.shinun]: ShinunScreen } : {}),
   };

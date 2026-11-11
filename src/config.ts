@@ -25,7 +25,6 @@ export type AppConfig = {
   };
   scoring: ScoringRules;
   quiz: QuizRules;
-  read: { unlockAfterMs: number; seenMargin: string };
   motion: { heartContourMs: number; countUpMs: number; done: DoneTimeline };
   format: { numberLocale: string };
   text: { bidiNowrapMaxChars: number };

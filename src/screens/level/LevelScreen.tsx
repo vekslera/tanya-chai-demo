@@ -2,17 +2,18 @@ import { CheckIcon } from '../../components/Icons';
 import { TopBar } from '../../components/TopBar';
 import { config } from '../../config';
 import type { Level } from '../../domain/types';
-import { navigate } from '../../router';
 import { ROUTES } from '../../routes';
 import { useStore } from '../../store/StoreProvider';
+import { useStartQuiz } from '../../store/useStartQuiz';
 import { he } from '../../strings/he';
 import './Level.css';
 
 export function LevelScreen() {
   const { state, dispatch } = useStore();
+  const startQuiz = useStartQuiz();
   const choose = (level: Level) => {
     dispatch({ type: 'setLevel', level });
-    navigate(ROUTES.read);
+    startQuiz('solo', level);
   };
   return (
     <main className="screen">

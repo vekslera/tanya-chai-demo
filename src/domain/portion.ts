@@ -5,6 +5,7 @@ import type {
   DailySchedule,
   GlossaryEntry,
   Portion,
+  Question,
   Range,
   Reviewed,
   TranslationSpan,
@@ -69,6 +70,8 @@ export type AssembledPortion = {
   sentences: PortionSentence[];
   paragraphs: PortionParagraph[];
   sections: PortionSection[];
+  /** After which section a question is asked: its unit's, or the last for the summary. */
+  questionSection: (q: Question) => number;
   unit: (id: UnitId) => PortionUnit | undefined;
   /** The sentence a unit belongs to. */
   sentenceOf: (id: UnitId) => PortionSentence | undefined;
@@ -161,6 +164,8 @@ export function assemblePortion(data: PortionData): AssembledPortion {
     };
   });
 
+  const sectionIndex = new Map(sections.flatMap((s, i) => s.units.map((u) => [u.id, i] as const)));
+
   const byId = new Map(portionUnits.map((u) => [u.id, u]));
   const sentenceById = new Map(sentences.flatMap((s) => s.units.map((u) => [u.id, s] as const)));
   return {
@@ -169,6 +174,7 @@ export function assemblePortion(data: PortionData): AssembledPortion {
     sentences,
     paragraphs,
     sections,
+    questionSection: (q) => (q.summary ? sections.length - 1 : sectionIndex.get(q.unitRef)!),
     unit: (id) => byId.get(id),
     sentenceOf: (id) => sentenceById.get(id),
     unitsOf: (range) => unitsIn(portionUnits, range),

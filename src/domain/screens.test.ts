@@ -4,7 +4,7 @@ import { portionData } from '../test/fixtures';
 import { completionView, doneDelays } from './completion';
 import { assemblePortion } from './portion';
 import type { Completion, Progress } from './progress';
-import { englishSectionIds, isUnlocked, readingProgress, showsBiur } from './reading';
+import { englishSectionIds, readingProgress, showsBiur } from './reading';
 import { cardOfUnit, togetherStep } from './together';
 
 const before: Progress = {
@@ -64,10 +64,14 @@ describe('completion', () => {
 
 describe('together', () => {
   it('maps the stored index to a step', () => {
-    expect(togetherStep(-1, 2)).toEqual({ kind: 'intro' });
-    expect(togetherStep(-5, 2)).toEqual({ kind: 'intro' });
-    expect(togetherStep(1, 2)).toEqual({ kind: 'card', index: 1 });
-    expect(togetherStep(2, 2)).toEqual({ kind: 'childTurn' });
+    // Without questions under way, the intro; before the cards too.
+    expect(togetherStep(1, 2)).toEqual({ kind: 'intro' });
+    expect(togetherStep(-1, 2, 0)).toEqual({ kind: 'intro' });
+    expect(togetherStep(-5, 2, 0)).toEqual({ kind: 'intro' });
+    // A card up to the one the current question follows, then the question.
+    expect(togetherStep(0, 2, 0)).toEqual({ kind: 'card', index: 0 });
+    expect(togetherStep(1, 2, 0)).toEqual({ kind: 'question' });
+    expect(togetherStep(5, 2, 9)).toEqual({ kind: 'card', index: 1 });
   });
 
   it('finds the card that covers a unit', () => {
@@ -89,9 +93,6 @@ describe('reading', () => {
   it('computes the progress and the unlock', () => {
     expect(readingProgress(1, 3)).toBe(33);
     expect(readingProgress(0, 0)).toBe(100);
-    expect(isUnlocked(false, new Set(['a']), 'b')).toBe(false);
-    expect(isUnlocked(false, new Set(['b']), 'b')).toBe(true);
-    expect(isUnlocked(true, new Set(), 'b')).toBe(true);
   });
 
   it('lists the sections that have English', () => {

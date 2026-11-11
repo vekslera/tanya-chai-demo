@@ -1,17 +1,20 @@
-// Avos uBanim (S8): the intro, one card per thought, then the son's turn.
+// Avos uBanim (S8, S9): the intro, then one card per thought, each followed by the son's question.
 import type { PortionSection } from './portion.ts';
 import type { TogetherCard, UnitId } from './types.ts';
 
 export const INTRO_INDEX = -1;
 
 export type TogetherStep =
-  { kind: 'intro' } | { kind: 'card'; index: number } | { kind: 'childTurn' };
+  { kind: 'intro' } | { kind: 'card'; index: number } | { kind: 'question' };
 
-/** The step for a stored index: below the cards is the intro, past them is the son's turn. */
-export function togetherStep(index: number, cardCount: number): TogetherStep {
-  if (index <= INTRO_INDEX) return { kind: 'intro' };
-  if (index >= cardCount) return { kind: 'childTurn' };
-  return { kind: 'card', index };
+/**
+ * The step for a stored card index. `questionAt` is the card the current question follows, with
+ * the questions under way: once the father moves past that card, the son answers it.
+ */
+export function togetherStep(index: number, cardCount: number, questionAt?: number): TogetherStep {
+  if (questionAt === undefined || index <= INTRO_INDEX) return { kind: 'intro' };
+  if (index > questionAt) return { kind: 'question' };
+  return { kind: 'card', index: Math.min(index, cardCount - 1) };
 }
 
 /** The card that covers a unit: the card of the unit's section. */

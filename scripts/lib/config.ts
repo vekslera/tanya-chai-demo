@@ -24,9 +24,13 @@ export type ContentRules = {
   biurMaxWords: Record<string, number>;
   /** Runs of this many words shared with a reference text are flagged (SPEC §8.3). */
   overlapRunWords: number;
-  /** By level: how many questions of each category. */
-  levelQuestions: Record<string, Record<string, number>>;
-  togetherQuestions: { count: number; category: string; kinds: string[] };
+  questions: {
+    /** Questions after each section but the last; a summary question follows the last. */
+    perSection: number;
+    /** By level: the categories its questions may have. */
+    levelCategories: Record<string, string[]>;
+    together: { category: string; kinds: string[] };
+  };
   optionCount: Record<string, Range>;
   cards: { count: Range; talks: Range; maxWords: Record<string, number> };
 };

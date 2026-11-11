@@ -52,7 +52,7 @@ export const questions: Question[] = [
     fixedOrder: true,
   }),
   q({ id: 'q-find', kind: 'findSentence', answer: 'LA.1.003', unitRef: 'LA.1.003' }),
-  q({ id: 'q-tf', kind: 'trueFalse', answer: 'false' }),
+  q({ id: 'q-tf', kind: 'trueFalse', answer: 'false', summary: true }),
   q({
     id: 'q-l2',
     level: 2,

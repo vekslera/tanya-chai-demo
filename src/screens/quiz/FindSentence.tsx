@@ -6,7 +6,7 @@ import { answerState, canAnswer, sentenceChoices } from '../../domain/quiz';
 import { he } from '../../strings/he';
 import type { QuizSessionView } from './useQuizSession';
 
-/** A findSentence question: a few consecutive sentences of the text, one button per sentence. */
+/** A findSentence question: a few consecutive sentences already read, one button per sentence. */
 export function FindSentence({
   session,
   onAnswer,
@@ -14,11 +14,14 @@ export function FindSentence({
   session: QuizSessionView;
   onAnswer: (unitId: string) => void;
 }) {
-  const { paragraphs, sentences } = usePortion();
-  const { question: q, chosen, phase, unit, quiz } = session;
+  const { paragraphs, sections } = usePortion();
+  const { question: q, chosen, phase, unit, quiz, section } = session;
   const choices = new Set(
     sentenceChoices(
-      sentences.map((s) => s.id),
+      sections
+        .slice(0, section + 1)
+        .flatMap((s) => s.sentences)
+        .map((s) => s.id),
       q,
       config.quiz.findSentence.choices,
       quiz.seed,

@@ -74,6 +74,11 @@ describe('assemblePortion', () => {
     expect(p.unreviewed).toBe(2 + 2 + 18 + 5);
   });
 
+  it('places each question after its section, the summary after the last', () => {
+    const at = (id: string) => p.questionSection(p.portion.questions.find((q) => q.id === id)!);
+    expect(['q-choice', 'q-find', 'q-tf', 'q-child'].map(at)).toEqual([0, 1, 1, 1]);
+  });
+
   it('keeps a section without English', () => {
     const data = portionData();
     data.translations = [];

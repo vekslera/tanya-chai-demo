@@ -83,6 +83,8 @@ export type Question = {
   hint: Reviewed<string>;
   explanation: Reviewed<string>;
   fixedOrder?: boolean;
+  /** Asked once the whole portion was read, about all of it; the others follow their section. */
+  summary?: true;
 };
 
 /** Who the day's learning is dedicated to; its wording is in the strings, by kind. */
