@@ -1,0 +1,67 @@
+name: Deploy to GitHub Pages
+# One site, two builds (SPEC §10): main, the stable demo, at the root (demo.tanyachai.app), and dev,
+# the current state, under /dev/. A push to either branch rebuilds both from their latest commits.
+on:
+  push:
+    branches: [main, dev]
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: true
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          path: main
+      - uses: actions/checkout@v4
+        with:
+          ref: dev
+          path: dev
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22 # 22.18+ runs the TypeScript scripts directly
+          cache: npm
+          cache-dependency-path: '*/package-lock.json'
+      # Every check, with 100% coverage; main also needs every item approved (§8.4).
+      - name: main
+        if: hashFiles('main/package.json') != '' # main has no app until dev first reaches it
+        working-directory: main
+        run: |
+          npm ci
+          npm run lint
+          npm run coverage
+          CONTENT_STRICT=1 npm run validate-content
+          VITE_BASE=/ npm run build
+      - name: dev
+        working-directory: dev
+        run: |
+          npm ci
+          npm run lint
+          npm run coverage
+          npm run validate-content
+          VITE_BASE=/dev/ npm run build
+      - name: Assemble the site
+        run: |
+          mkdir site
+          if [ -d main/dist ]; then cp -r main/dist/. site/; fi
+          cp -r dev/dist site/dev
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

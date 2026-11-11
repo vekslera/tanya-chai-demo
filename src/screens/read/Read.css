@@ -1,0 +1,199 @@
+.read {
+  padding-block-end: 0;
+}
+
+.read-progress {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 3px;
+  background: var(--track);
+}
+
+.read-progress-bar {
+  height: 100%;
+  background: var(--gold);
+  transform-origin: right;
+  transition: transform 0.4s var(--ease);
+}
+
+[dir='ltr'] .read-progress-bar {
+  transform-origin: left;
+}
+
+.read-location {
+  margin-block: 16px 4px;
+  font-size: 14px;
+  color: var(--navy-muted);
+}
+
+.read-body {
+  flex: 1;
+  padding-block-end: 24px;
+}
+
+.paragraph {
+  padding-block: 12px;
+}
+
+.paragraph + .paragraph {
+  border-block-start: 1px solid var(--track);
+}
+
+.paragraph-tools {
+  display: flex;
+  justify-content: flex-end;
+  margin-block-end: 4px;
+}
+
+.en-chip {
+  min-width: 44px;
+  min-height: 32px;
+  padding-inline: 10px;
+  border-radius: 999px;
+  border: 1px solid var(--tint);
+  background: transparent;
+  color: var(--navy-muted);
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  /* A larger hit area than the chip itself. */
+  position: relative;
+}
+
+.en-chip::after {
+  content: '';
+  position: absolute;
+  inset: -6px 0;
+}
+
+.en-chip--open {
+  background: var(--navy);
+  border-color: var(--navy);
+  color: var(--white);
+}
+
+.sentence-block {
+  padding-block: 6px;
+}
+
+.sentence {
+  font-family: var(--font-text);
+  font-size: var(--fs-tanya);
+  line-height: 2;
+  color: var(--navy);
+}
+
+.biur {
+  margin-block: 2px 8px;
+  padding-inline-start: 12px;
+  border-inline-start: 2px solid var(--gold);
+  font-family: var(--font-ui);
+  font-size: var(--fs-biur);
+  line-height: 1.6;
+  color: var(--navy-muted);
+}
+
+.english {
+  margin-block: 8px 4px;
+  padding: 12px 14px;
+  background: var(--bg-alt);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-text);
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--navy);
+  text-align: left;
+}
+
+.english--note {
+  background: transparent;
+  padding: 0;
+}
+
+.english sup {
+  line-height: 0;
+}
+
+.footnote-mark {
+  position: relative;
+  padding: 1px 4px;
+  margin-inline-start: 1px;
+  border: 0;
+  border-radius: 5px;
+  background: var(--gold-soft);
+  color: var(--gold-deep);
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.2;
+  vertical-align: baseline;
+  cursor: pointer;
+}
+
+/* A 44px tap target without changing the line. */
+.footnote-mark::after {
+  content: '';
+  position: absolute;
+  inset: -14px -12px;
+}
+
+.bottom-bar {
+  position: sticky;
+  bottom: 0;
+  z-index: 5;
+  margin-inline: calc(-1 * var(--gutter));
+  padding: 12px var(--gutter) calc(12px + env(safe-area-inset-bottom));
+  background: linear-gradient(to top, var(--bg) 75%, rgba(251, 250, 246, 0));
+}
+
+.bottom-bar .dedication {
+  margin-block-start: 8px;
+}
+
+/* Overflow menu */
+.menu {
+  position: relative;
+}
+
+.menu-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+}
+
+.menu-popover {
+  position: absolute;
+  inset-inline-end: 4px;
+  top: 44px;
+  z-index: 21;
+  min-width: 240px;
+  padding: 6px;
+  background: var(--white);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 8px 28px rgba(30, 42, 90, 0.18);
+}
+
+.menu-popover button {
+  display: block;
+  width: 100%;
+  min-height: 44px;
+  padding-inline: 12px;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  text-align: start;
+  cursor: pointer;
+}
+
+.menu-popover button:hover {
+  background: var(--navy-soft);
+}
+
+@media (min-width: 600px) {
+  .sentence {
+    font-size: 22px;
+  }
+}

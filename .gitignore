@@ -1,1 +1,7 @@
 data/units/
+node_modules/
+dist/
+*.tsbuildinfo
+.vite/
+coverage
+out/

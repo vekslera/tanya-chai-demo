@@ -1,0 +1,24 @@
+.term-group {
+  white-space: nowrap;
+}
+
+/* Glossary term: dotted gold underline, opens a bottom sheet. */
+.term {
+  display: inline;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  line-height: inherit;
+  text-decoration: underline dotted var(--gold);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 6px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.term:hover {
+  background: var(--gold-soft);
+}

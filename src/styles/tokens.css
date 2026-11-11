@@ -1,0 +1,42 @@
+/* Design tokens (SPEC §4.1). */
+:root {
+  --navy: #1e2a5a;
+  --gold: #e8a317;
+  --gold-deep: #b47a00;
+  --tint: #c9cedb;
+  --track: #eeece6;
+  --bg: #fbfaf6;
+  --bg-alt: #f3f0e7;
+  --purify: #f3dda2;
+  --success: var(--gold);
+  --error: #b4463c;
+
+  /* Derived, used for secondary text and soft fills. */
+  --navy-muted: #4a5478;
+  --navy-soft: rgba(30, 42, 90, 0.08);
+  --gold-soft: rgba(232, 163, 23, 0.14);
+  --white: #ffffff;
+
+  --font-text: 'Frank Ruhl Libre', 'David', 'Times New Roman', serif;
+  --font-ui: 'Rubik', 'Arial Hebrew', Arial, sans-serif;
+
+  --fs-tanya: 21px;
+  --fs-biur: 16px;
+  --fs-ui: 16px;
+  --fs-small: 14px;
+  --fs-title: 24px;
+  --fs-headline: 28px;
+
+  --radius: 14px;
+  --radius-sm: 10px;
+  --gutter: 20px;
+  --max-width: 680px;
+  --tap: 48px;
+  /* The heart's default size; a screen sets its own --heart-size around it. */
+  --heart-size: 156px;
+  --icon: 24px;
+  --icon-sm: 20px;
+
+  --shadow: 0 1px 2px rgba(30, 42, 90, 0.06), 0 4px 16px rgba(30, 42, 90, 0.06);
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+}

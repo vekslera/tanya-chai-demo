@@ -1,0 +1,226 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--navy);
+  font-family: var(--font-ui);
+  font-size: var(--fs-ui);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-text);
+  font-weight: 700;
+  line-height: 1.3;
+  margin: 0;
+}
+
+p {
+  margin: 0;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+a {
+  color: var(--gold-deep);
+}
+
+:focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* One centered column (SPEC §3.2). */
+.screen {
+  min-height: 100dvh;
+  max-width: var(--max-width);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  padding-block: 16px 32px;
+  display: flex;
+  flex-direction: column;
+}
+
+.screen-title {
+  font-size: var(--fs-title);
+  margin-block: 8px 20px;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: var(--tap);
+  padding-inline: 22px;
+  border-radius: 999px;
+  border: 2px solid transparent;
+  font-family: var(--font-ui);
+  font-weight: 500;
+  font-size: 17px;
+  cursor: pointer;
+  text-decoration: none;
+  transition:
+    background-color 0.2s var(--ease),
+    opacity 0.2s var(--ease),
+    transform 0.1s var(--ease);
+}
+
+.btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.btn-primary {
+  background: var(--navy);
+  color: var(--white);
+}
+
+.btn-gold {
+  background: var(--gold);
+  color: var(--navy);
+}
+
+.btn-secondary {
+  background: transparent;
+  border-color: var(--navy);
+  color: var(--navy);
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.link-btn {
+  background: none;
+  border: 0;
+  padding: 8px 4px;
+  min-height: 44px;
+  color: var(--gold-deep);
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  cursor: pointer;
+}
+
+.card {
+  background: var(--bg-alt);
+  border-radius: var(--radius);
+  padding: 18px;
+}
+
+.muted {
+  color: var(--navy-muted);
+}
+
+.small {
+  font-size: var(--fs-small);
+}
+
+/* Shared top bar with a back arrow (it points right in RTL). */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 56px;
+  margin-inline: calc(-1 * var(--gutter));
+  padding-inline: 8px;
+  background: var(--bg);
+}
+
+.topbar-title {
+  flex: 1;
+  font-family: var(--font-ui);
+  font-weight: 500;
+  font-size: 16px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--navy);
+  cursor: pointer;
+}
+
+.icon-btn:hover {
+  background: var(--navy-soft);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.icon {
+  inline-size: var(--icon);
+  block-size: var(--icon);
+}
+
+.icon--sm {
+  inline-size: var(--icon-sm);
+  block-size: var(--icon-sm);
+}
+
+/* The calm full-screen message of the error boundary (SPEC §7). */
+.error-screen {
+  justify-content: center;
+  text-align: center;
+  gap: 16px;
+}

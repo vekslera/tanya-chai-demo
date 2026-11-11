@@ -44,11 +44,24 @@ It is **not** the MVP. There are no accounts, no backend and no analytics. Every
 | Calendar | Regular year, chosen for the narrative: it is a demo, so the year does not need to match the current one (5787 is a leap year). |
 | Start | `וְהִנֵּה, עַל יְדֵי קִיּוּם הַדְּבָרִים הַנִּזְכָּרִים לְעֵיל` (beginning of chapter 32, unit `LA.32.001`) |
 | End | `וּכְמוֹ שֶׁנִּתְבָּאֵר בְּמָקוֹם אַחֵר בַּאֲרִיכוּת:` (end of the third paragraph, unit `LA.32.019`). Confirmed by Alex; see `data/schedules/daily.json`, `regular["adar-09"]`. |
-| Hebrew text | `resources/texts/HE/tanya/LA/32`, supplied by Alex: the whole chapter with nikud and punctuation, one paragraph per line, abbreviations written out. This file is the source of truth for the Hebrew. |
-| English text | `resources/texts/ENG/tanya/LA/32` if Alex adds it; otherwise Sefaria's English version of Tanya (Kehot translation), fetched once (§8.1). Check its license. |
-| ביאור, glossary, questions, Avos uBanim tools | Original content written for this demo (§8.3), reviewed by Alex |
+| Hebrew text | `resources/texts/he/tanya/LA/32`, fetched from Sefaria (Kehot edition, §8.1): the whole chapter with nikud and punctuation, one paragraph per line, abbreviations written out. This file is the source of truth for the Hebrew. |
+| English text | `resources/texts/en/tanya/LA/32`: Sefaria's English version of Tanya (Kehot translation), fetched once (§8.1), license CC-BY-NC. |
+| ביאור, glossary, questions, Avos uBanim tools | Original content, drafted with AI for this demo (§8.3), reviewed by Alex and approved by a rav or a recognized educator (§8.4) |
 
-**Lessons in Tanya (Shiurim) is a local reference only.** Alex keeps the Hebrew Shiurim for chapter 32 in `resources/texts/HE/shiurim/`, excluded from Git (`.git/info/exclude`). It may be read to check the meaning of the text. It must never be quoted, paraphrased, reworded or followed in its order of explanation, and nothing from it may be committed or published. The same applies to any other copyrighted commentary.
+**Approved commentaries are references for the meaning only.** Alex has approved these commentaries:
+
+- **Lessons in Tanya (Shiurim).** Alex keeps the Hebrew for chapter 32 in `resources/texts/he/shiurim/`, excluded from Git (`.git/info/exclude`). The English is on Chabad.org.
+- **Rabbi Adin Steinsaltz's commentary** on the Steinsaltz Center site, in Hebrew and English.
+- **Chassidus Mevu'eres**, from Heichel Menachem.
+- **The Chabad.org rendering of Tanya**, by Rabbi Tzvi Freeman.
+
+The ביאור follows their meaning: how they understand each unit. It is written in our own words, short and simple. These commentaries are copyrighted, so they are never quoted, their sentences are never rewritten one by one, and nothing from them is committed or published. Any other commentary needs Alex's approval first.
+
+**Content sources.** All content in Tanya Chai comes from three sources, and only from them:
+
+1. **The raw text**, Hebrew and translation, from Sefaria, under the license recorded for each version (§8.1, §9).
+2. **Chassidus books**, such as Lessons in Tanya, used only with the publisher's written permission. Until permission is given, they serve only as a local reference, as above.
+3. **Level-adapted content generated with AI** (ביאור, glossary, questions, Avos uBanim tools), published only after review and approval by a rav or a recognized educator (§8.4).
 
 ---
 
@@ -96,6 +109,7 @@ The last choice is remembered. The default selection is level 2.
 - **Glossary terms:** marked with a dotted gold underline. Tapping one opens a bottom sheet with the term, a 1–3 line ביאור, and (if present) a source line. At least these terms: `נבזה ונמאס`, `נפש` / `הנפש והרוח`, `באלקים חיים`, `אחים ממש`, `אב אחד`. Final list per §8.3.
 - **English toggle:** each paragraph has a small `EN` chip. Tapping it reveals the English translation of that paragraph below the Hebrew (LTR, `lang="en"`, serif, smaller). The toggle is per paragraph, not global. A global "show all English" action is in the overflow menu.
 - **Bottom bar:** a sticky primary button, `לשאלות` (enabled once the user has scrolled to the end, or after 20 seconds).
+- **Dedication:** when the portion has a `dedication`, a quiet line under the button (small, muted navy, centered). It appears on the reading screens of every learning path (S3 and the S8 cards), not on the finish screen. Its wording comes from `src/strings/he.ts` by kind: `הלימוד היומי מוקדש לעילוי נשמת …` (`leiluiNishmas`), `הלימוד היומי מוקדש לזכות …` (`lizchus`), or `השותף שלך בלימוד היומי: …` (`partner`).
 
 #### S4: Questions (`#/quiz`)
 
@@ -157,6 +171,7 @@ A father learns the portion with his son on one device. The screen gives the fat
   - `לומר לילד`: ready-made words the father can read aloud as they are, in simple Hebrew (1–3 short sentences), in a warm gold-tinted card;
   - `שאלה לשיחה`: on some cards only, an open question for the conversation. It is not scored.
 - The glossary terms work here too.
+- The day's dedication (S3) appears under the `הקודם` / `הבא` buttons of each card.
 - **After the last card:** `עכשיו תורו של הילד`, and then S9.
 - Large text and large buttons: the phone is passed between father and son, often in a noisy place, such as a full beis midrash. Nothing depends on sound.
 - No names or other personal details are entered.
@@ -174,6 +189,7 @@ A father learns the portion with his son on one device. The screen gives the fat
 - Mobile first, designed for 360–430px width. On larger screens the layout is a single centered column with a max width of 680px.
 - **Navigation:** hash-based (`#/read`) so GitHub Pages needs no SPA fallback. The browser back button works.
 - **State:** the current level, progress and answers survive a reload. They are kept in `localStorage`, with every access wrapped in try/catch; the demo works without storage.
+- **No chat:** no chat or free text between users, and no direct conversation with an AI model. The app never calls an AI model at runtime; AI is used only offline, to draft content before review, so the learner sees only approved content.
 - **No external requests:** no Google Fonts, CDNs, embeds or analytics. Fonts are self-hosted.
 - **Motion:** all animation respects `prefers-reduced-motion: reduce`, replacing motion with instant state changes.
 - **Accessibility:** visible focus rings (gold), tap targets ≥ 44px, contrast AA, `aria-live="polite"` for feedback text, and buttons that are real `<button>` elements.
@@ -233,8 +249,8 @@ The logo source files are in `resources/brand/logo/`, and `resources/brand/logo/
 - **Styling:** plain CSS with custom properties (one CSS file per component or CSS modules). No CSS framework.
 - **No state library:** use a `useReducer` app store plus context.
 - **Lint and format:** ESLint (typescript-eslint, react-hooks) and Prettier.
-- **Tests:** Vitest for content validation and the pure logic (scoring, streak, shuffling); Playwright smoke test (optional, milestone M7).
-- **Node:** 20 LTS.
+- **Tests:** Vitest with jsdom and Testing Library, covering all the code (§5.4); Playwright smoke test (optional, milestone M7).
+- **Node:** 22.18 or later, which runs the TypeScript scripts directly.
 
 ### 5.2 Folder layout
 
@@ -244,17 +260,19 @@ tanya-chai-demo/
 ├─ CLAUDE.md                  ← working rules for Claude Code
 ├─ README.md
 ├─ LICENSE                    ← Apache-2.0 (code)
-├─ resources/                 ← supplied by Alex; never edited by code
-│  ├─ brand/logo/             ← source logo files
+├─ texts.config.json          ← the only place that names the texts and every file the code reads
+├─ app.config.json            ← the only place for the app's parameters (§5.4)
+├─ virtual.vite.ts            ← serves virtual:texts, virtual:app-config and virtual:brand
+├─ resources/                 ← source material; texts change only through fetch-sefaria (§8.1)
+│  ├─ brand/logo/             ← source logo files; HeartMark draws their paths (virtual:brand)
 │  └─ texts/
-│     ├─ HE/tanya/LA/32    ← Hebrew, with nikud, one paragraph per line
-│     └─ ENG/tanya/LA/     ← English, if Alex adds it; else the Sefaria raw file (§8.1)
+│     ├─ he/tanya/LA/32       ← Hebrew, with nikud, one paragraph per line (+ 32.sefaria.json)
+│     └─ en/tanya/LA/32       ← English, footnote marks [n], footnotes at the end (+ 32.sefaria.json)
 ├─ public/
-│  ├─ favicon.svg
-│  └─ CNAME                   ← "demo.tanyachai.app" (milestone M7)
+│  └─ favicon.svg
 ├─ data/                      ← the text layer (§6.1–6.4)
-│  ├─ splits/LA/32.json           ← hand-maintained: where each unit starts
-│  ├─ units/he/LA/32.json         ← GENERATED by scripts/build-units.mjs; never edited, not committed
+│  ├─ splits/{he,en}/LA/32.json   ← hand-maintained: where each unit starts, in each language
+│  ├─ units/{he,en}/LA/32.json    ← GENERATED by scripts/build-units.ts; never edited, not committed
 │  ├─ translations/en/LA/32.json  ← English, as spans over unit ranges
 │  └─ schedules/daily.json        ← dates → unit ranges, per year type
 ├─ content/                   ← the learning layer, keyed by unit ID (§6.5)
@@ -263,43 +281,79 @@ tanya-chai-demo/
 │  ├─ portions/adar-09.json       ← the demo portion: date key, label, questions, Avos uBanim cards
 │  ├─ REVIEW.md                   ← generated for Alex's review (§8.4)
 │  └─ CONTENT-LICENSE.md          ← terms for the texts (§9)
-├─ scripts/
-│  ├─ fetch-sefaria.mjs       ← downloads the English once, if needed (§8.1)
-│  ├─ build-units.mjs         ← raw text + splits → units (§8.2); runs before dev and build
-│  └─ validate-content.mjs    ← schema and integrity checks (§8.4)
+├─ scripts/                   ← TypeScript, run by Node; each a thin entry over scripts/lib/
+│  ├─ fetch-sefaria.ts        ← downloads the Hebrew and English once (§8.1)
+│  ├─ build-units.ts          ← raw text + splits → units (§8.2); runs before dev, build and tests
+│  ├─ build-translations.ts   ← English resource → translation spans
+│  ├─ resolve-matches.ts      ← glossary matches written without nikud → exact text
+│  ├─ build-review.ts         ← content/REVIEW.md (§8.4)
+│  ├─ check-overlap.ts        ← overlap check against the local Shiurim (§8.3)
+│  ├─ validate-content.ts     ← schema and integrity checks (§6.5, §8.4)
+│  ├─ lib/                    ← config, env (ports), load, validate/, review/, text libraries
+│  └─ test/                   ← in-memory script environment for the tests
 ├─ src/
-│  ├─ main.tsx, App.tsx, router.ts
-│  ├─ store/        (reducer, actions, persistence)
-│  ├─ screens/      (Home, Level, Read, Quiz, Done, Together, TogetherQuiz, Shinun, About)
-│  ├─ components/   (HeartMark, Sentence, Bilur, GlossarySheet, QuestionCard, TogetherCard, …)
-│  ├─ content/      (types.ts, loader.ts: assembles a portion from schedule, units, translations and content)
+│  ├─ main.tsx                ← entry: createDeps(browserAdapters())
+│  ├─ composition.ts          ← the one place that chooses the sources and the storage
+│  ├─ App.tsx, Screens.tsx    ← providers; route → screen
+│  ├─ config.ts               ← app.config.json, typed (served as virtual:app-config)
+│  ├─ ports.ts                ← TextSource, LearningContentSource, KeyValueStorage
+│  ├─ routes.ts, router.ts    ← every route named once; hash routing
+│  ├─ domain/                 ← pure logic: no React, no DOM (shared with the scripts)
+│  ├─ adapters/               ← bundledSources (virtual:texts), browserStorage, memoryStorage
+│  ├─ content/                ← loadPortion (through the ports), PortionProvider
+│  ├─ store/                  ← state and reducer, persistence, StoreProvider, useStartQuiz
+│  ├─ hooks/                  ← one hook per file (timeline, count-up, seen units, …)
+│  ├─ components/             ← HeartMark, Sentence, BottomSheet, GlossarySheet, …
+│  ├─ screens/<screen>/       ← one folder per screen, split into small views
 │  ├─ strings/he.ts
-│  └─ styles/       (tokens.css, base.css)
+│  ├─ styles/                 ← tokens.css (design parameters), base.css, fonts.css
+│  └─ test/                   ← fixtures and renderApp for the tests
 └─ .github/workflows/deploy.yml
 ```
 
-### 5.3 State (persisted under one `localStorage` key, `tanyachai.demo.v1`)
+### 5.3 State (persisted under one storage key, `storage.key` in `app.config.json`)
+
+The build at the site's root uses the key as it is; the `dev` build under `/dev/` adds its path (`tanyachai.demo.v1@/dev/`), so the two builds on one domain never share their state (§10).
 
 ```ts
 type DemoState = {
-  level: 1 | 2;
-  streak: number;                 // seeded 12
-  points: number;                 // seeded 340
-  heartProgress: number;          // seeded 62, 0..100
-  completedLevels: (1 | 2)[];     // prevents double awarding
+  level: number;                  // one of the levels in app.config.json
+  streak: number;                 // seeded from demo.initialProgress
+  points: number;                 // seeded from demo.initialProgress
+  heartProgress: number;          // seeded from demo.initialProgress, 0..scoring.heartMax
+  completedLevels: number[];      // prevents double awarding
   completedTogether: boolean;     // Avos uBanim done once (awards like a level)
-  familyStreak: number;           // seeded 5, shown only in the Avos uBanim completion
+  familyStreak: number;           // seeded from demo.initialProgress; shown only in the Avos uBanim completion
   togetherIndex: number;          // current card in S8
   quiz: { track: "solo" | "together"; questionIds: string[]; index: number; attempts: Record<string, number>; earned: number } | null;
   englishOpen: Record<string, boolean>; // per translation span (by its first unit ID)
   seenShinun: boolean;
+  lastCompletion: Completion | null; // what the completion screen shows and animates
 };
 ```
 
 **Rules:**
 
-- Completing a level, or Avos uBanim, for the first time awards the points, increments the streak once per session (not per level), and advances `heartProgress` by 3, capped at 100. Completing Avos uBanim also increments `familyStreak`.
+- Completing a level, or Avos uBanim, for the first time awards the points and the completion bonus, increments the streak once per session (not per level), and advances `heartProgress` by `scoring.heartStep`, capped at `scoring.heartMax`. Completing Avos uBanim also increments `familyStreak`. The demo's values: 10 and 5 points for a correct answer on the first and second attempt, a bonus of 20, and a step of 3 up to 100.
 - The streak is a demo value. The Shabbos rule is displayed but not computed.
+
+### 5.4 Architecture and code rules
+
+The demo is the first step toward the full app. Its code follows four rules.
+
+1. **No hardcoded parameters.** Each parameter is defined once, and changing it there changes it everywhere:
+   - `app.config.json`: the app's behavior (storage key, levels, demo values, scoring, attempts, timings, number format) and the content rules the validator checks (§6.5). The app reads it through `src/config.ts` (served as `virtual:app-config`), the scripts through `scripts/lib/config.ts`.
+   - `texts.config.json`: the chapters, every file path the code reads, and the Sefaria refs and versions.
+   - `src/styles/tokens.css`: colors, type, spacing and sizes. A value both the CSS and the code need (the heart's contour duration) comes from `app.config.json` and reaches the CSS as a custom property.
+   - `src/strings/he.ts`: every UI string. `src/routes.ts`: every route.
+   - The logo file: the heart's paths, read at build time (`virtual:brand`).
+2. **Single responsibility and dependency inversion.**
+   - `src/domain/` holds the pure logic: units and ranges, portion assembly, the quiz and its session, scoring and progress, the segmenting of text (glossary terms, footnote marks, Latin runs), the completion timeline. It has no React and no DOM, takes its rules as parameters, and is shared with the scripts.
+   - The app depends on the interfaces in `src/ports.ts`, never on where its data comes from. The bundled files and `localStorage` are adapters (`src/adapters/`), chosen in one place, `src/composition.ts`. Taking the text from the Sefaria API means writing a `TextSource` adapter and changing that one file.
+   - The scripts work the same way: each takes a `ScriptEnv` (files, log, network, clock), so its logic runs the same on disk and in the tests.
+   - Screens are composed of small views; each hook has its own file.
+3. **Small files.** Code files stay small to moderate; most are well under 100 lines. Separation of responsibilities comes first.
+4. **Tests cover all the code.** `npm run coverage` requires 100% of lines and branches in `src/`, `scripts/` and the Vite plugin, and runs in CI. Screens are tested through the real app over in-memory adapters.
 
 ---
 
@@ -307,7 +361,7 @@ type DemoState = {
 
 The Tanya text is stored **once**, untouched, in `resources/`. Everything else (the daily schedule, the English, the ביאור, the questions) points into it through **unit IDs**. A daily portion is never a copy of the text; it is a range of units, assembled at runtime. This is the same idea as the printed daily-Tanya markers in Hayom Yom: the book is printed once, and the division into days marks where each day starts.
 
-All files are JSON, validated against the TypeScript types below and by `scripts/validate-content.mjs`.
+All files are JSON, validated against the TypeScript types below (`src/domain/types.ts`) and by `scripts/validate-content.ts`.
 
 ### 6.1 Unit IDs
 
@@ -318,17 +372,19 @@ All files are JSON, validated against the TypeScript types below and by `scripts
 
 ### 6.2 Splits (hand-maintained) and units (generated)
 
-`data/splits/LA/32.json` is the only place where units are defined. Each entry gives the unit's ID and the words it starts with, copied from the raw text **without nikud** (2–4 words are enough):
+`data/splits/he/LA/32.json` is the only place where units are defined. Each entry gives the unit's ID and the words it starts with, copied from the raw text **without nikud** (2–4 words are enough):
 
 ```ts
 type Split = {
   id: UnitId;            // "LA.32.004"
   startsWith: string;    // "כי מאחר שגופו נמאס" — the raw file's words, unvocalized
 };
-// data/splits/LA/32.json: Split[] in reading order
+// data/splits/he/LA/32.json: Split[] in reading order
 ```
 
-`scripts/build-units.mjs` reads the raw file and the splits and writes `data/units/he/LA/32.json`:
+**Other languages.** The same units are anchored in each other language's text, so that language can be read unit by unit too. `data/splits/en/LA/32.json` gives, for each Hebrew unit ID, in the same order, the words its English starts with. The validator checks that the IDs match the Hebrew. Matching works the same way, on letters only: in English, case, punctuation, quotes and footnote numbers are ignored, and an em dash counts as a space, as the maqaf does in Hebrew. The languages are the keys of `paths.splits` in `texts.config.json`; the app's own language is `language` in `app.config.json`.
+
+`scripts/build-units.ts` reads the raw file and the splits of each language and writes `data/units/he/LA/32.json` and `data/units/en/LA/32.json`:
 
 ```ts
 type Unit = {
@@ -380,7 +436,7 @@ The per-paragraph `EN` toggle (S3) opens one span.
 ```ts
 type UnitContent = {
   id: UnitId;
-  biur?: { short?: Reviewed<string> };              // the demo has one ביאור level (§3.1, S2)
+  biur?: Record<string, { short?: Reviewed<string> }>;  // by language: "he", "en"; one level in the demo (§3.1, S2)
   glossary?: { entryId: string; match: string }[];   // exact substring of the unit's text to underline
 };
 // content/LA/32.json: UnitContent[]
@@ -399,13 +455,14 @@ type TogetherCard = {                  // Avos uBanim (S8): one thought
 type Portion = {                       // content/portions/adar-09.json
   dateKey: "adar-09";
   yearType: "regular";
-  label: { he: "שיעור לדוגמה: ט׳ אדר" };
+  label: { he: "שיעור לדוגמה: ט׳ אדר"; en: "Sample lesson: 9 Adar" };
   location: { he: "ליקוטי אמרים, פרק ל״ב"; en: "Likkutei Amarim, chapter 32" };
   boundariesConfirmed: boolean;        // false until Alex confirms the daily division
   sources: Source[];                   // see §8.1
   questions: Question[];
   together: TogetherCard[];            // 6–8 cards, in order
   shinun?: { unitId: UnitId; rounds: number[][] }; // word indices hidden per round
+  dedication?: { kind: "leiluiNishmas" | "lizchus" | "partner"; name: string }; // S3, S8
 };
 
 type Source = {
@@ -436,9 +493,9 @@ type Question = {
 type Reviewed<T> = { value: T; reviewed: boolean; note?: string };
 ```
 
-**Assembling a portion** (`src/content/loader.ts`): read the portion's `dateKey` and `yearType`, look up its ranges in the schedule, take the units from the `seq` of `from` to the `seq` of `to`, group them by paragraph, attach the translation spans and the unit content, and hand the result to the screens. All of this happens at build time or on load; there is no server.
+**Assembling a portion** (`src/domain/portion.ts`, loaded through the ports by `src/content/loadPortion.ts`): read the portion's `dateKey` and `yearType`, look up its ranges in the schedule, take the units from the `seq` of `from` to the `seq` of `to`, group them by paragraph, attach the translation spans and the unit content, and hand the result to the screens. All of this happens at build time or on load; there is no server.
 
-**Integrity rules** (enforced by the validator, and run in CI):
+**Integrity rules** (enforced by the validator, and run in CI). The numbers below are the demo's values of `contentRules` in `app.config.json`, where they are defined:
 
 - Every `startsWith` anchor is found, letters only and in order (§6.2), and the first unit of each paragraph starts at the beginning of its line.
 - The units of each paragraph, joined, equal that line of the raw file exactly (apart from trailing whitespace and line endings). In other words, the text is never edited, only split.
@@ -449,7 +506,7 @@ type Reviewed<T> = { value: T; reviewed: boolean; note?: string };
 - In the solo track, level 1 has 3 `literal` questions, and level 2 has 2 `understanding` questions and 1 `concept` question.
 - The Avos uBanim cards cover the portion's units exactly once, in order, with 6–8 cards. The together track has exactly 3 questions, all `category: "child"`, `kind` `choice` or `trueFalse`, with 2–3 options.
 - Every solo `choice` question has exactly one correct option and 3–4 options in total.
-- The validator prints a **summary of unreviewed items**. It fails the build only when `CONTENT_STRICT=1` is set. The production deploy sets `CONTENT_STRICT=1` once Alex has signed off (§8.4).
+- The validator prints a **summary of unreviewed items**. It fails the build only when `CONTENT_STRICT=1` is set. The deploy validates `main` with `CONTENT_STRICT=1`, and `dev` without it (§10).
 
 ---
 
@@ -469,18 +526,23 @@ type Reviewed<T> = { value: T; reviewed: boolean; note?: string };
 
 ### 8.1 The texts
 
-**Hebrew.** Read `resources/texts/HE/tanya/LA/32`. Each line is one paragraph. Never change this file. Its source and terms are recorded in `resources/texts/HE/SOURCE.md`: Kehot's vocalized edition, digitized by Sefaria, CC BY-NC 4.0.
+**Hebrew.** Read `resources/texts/he/tanya/LA/32`. Each line is one paragraph. Never change this file by hand. Its source and terms are recorded in `resources/texts/he/SOURCE.md`: Kehot's vocalized edition, digitized by Sefaria, CC-BY-NC.
 
-**English.** If Alex has added `resources/texts/ENG/tanya/LA/32`, use it. Otherwise `scripts/fetch-sefaria.mjs` fetches it once, on Alex's machine:
+**English.** `resources/texts/en/tanya/LA/32`, with its source and terms in `resources/texts/en/SOURCE.md`.
+
+Both files are written by `scripts/fetch-sefaria.ts` (`npm run fetch-sefaria`), once, on Alex's machine. All file paths, refs and expected versions are in `texts.config.json`. For each language the script does the following:
 
 1. Find the exact ref for Likkutei Amarim chapter 32 on Sefaria. Open the chapter on sefaria.org and copy the ref from the URL. It is expected to be similar to `Tanya, Part I; Likkutei Amarim 32`.
-2. Call the v3 texts API for the English version. For example:
-   `https://www.sefaria.org/api/v3/texts/<url-encoded ref>?version=english`
-3. Save the **full, unmodified response** to `resources/texts/ENG/tanya/LA/32.sefaria.json`, together with the fetch date.
+2. Call the v3 texts API for the version. For example:
+   `https://www.sefaria.org/api/v3/texts/<url-encoded ref>?version=english|<versionTitle>`
+3. Save the **full, unmodified response** next to the text file (`32.sefaria.json`), together with the fetch date.
 4. Print the version's `versionTitle`, `license` and `versionSource`.
-5. **Stop and report to Alex** in either case:
+5. **Stop and report to Alex**, writing nothing, in either case:
    - the license is not public domain, CC0, CC-BY or CC-BY-NC;
-   - the version is anything other than the Kehot translation of the Tanya text itself (for example, a commentary).
+   - the version is anything other than the Kehot edition of the Tanya text itself, or its Kehot translation (for example, a commentary).
+6. Write the plain text file: one paragraph per segment, HTML removed and the words kept exactly. In the English, each footnote becomes a mark `[n]` where it applies, and the footnotes follow after a blank line as `[n] text`.
+
+The Hebrew segments also carry the daily-portion markers (`[פ: ט אדר]` for a regular year, `[מ: …]` for a leap year); the script prints them so the schedule can be checked against them.
 
 **Alignment.** Sefaria's English segments may not match the lines of the Hebrew file. Write one translation span per Hebrew paragraph (§6.4), joining or dividing English segments only at sentence boundaries, and record the segments used in `sourceSegments`. If a paragraph cannot be matched cleanly, ask Alex.
 
@@ -490,8 +552,8 @@ Runtime code never calls Sefaria. The app only reads the files in `data/` and `c
 
 Claude Code prepares, for chapter 32:
 
-1. **Splits:** `data/splits/LA/32.json` already exists: 48 units for the whole chapter, prepared by Alex and Claude (§6.1, §7). Do not change the existing IDs. The text itself is never changed.
-2. **Units:** `scripts/build-units.mjs` generates `data/units/he/LA/32.json`. Add it as `predev` and `prebuild` steps in `package.json`, so the units are always fresh.
+1. **Splits:** `data/splits/he/LA/32.json` already exists: 48 units for the whole chapter, prepared by Alex and Claude (§6.1, §7), and `data/splits/en/LA/32.json` anchors the same units in the English (§6.2). Do not change the existing IDs. The text itself is never changed.
+2. **Units:** `scripts/build-units.ts` generates `data/units/he/LA/32.json` and `data/units/en/LA/32.json`. It runs as the `predev`, `prebuild`, `pretest` and `precoverage` steps in `package.json`, so the units are always fresh.
 3. **Translations:** `data/translations/en/LA/32.json`, one span per paragraph, verbatim from the English source.
 4. **Schedule:** `data/schedules/daily.json` already exists; do not change it. If a future portion boundary falls inside a unit, split that unit (§6.1).
 5. **Portion:** `content/portions/adar-09.json` with the date key, label, sources, questions and Avos uBanim cards.
@@ -503,9 +565,9 @@ These are drafted by Claude (in the claude.ai conversation or in Claude Code) an
 **Guidelines for the drafter:**
 
 - Stay strictly within the plain meaning of the text, as it is learned in Chabad. No novel interpretations, no stories, no attributions to the Rebbe or other sources unless Alex supplies them.
-- Lessons in Tanya may be read to check the meaning (§2), but the ביאור is written from scratch: own words, own examples, own order. **Never** copy, paraphrase or reword it, or any other copyrighted commentary.
-- **Overlap check:** before review, a script compares every draft item with the local Shiurim file and flags any run of 5 or more words in common (letters only, nikud ignored). Flagged items are rewritten. The check runs only where the file exists, that is on Alex's machine, never in CI.
-- **Short ביאור:** at most 25 words per unit; it explains words and the flow, so simply that a child of about 10, or someone opening Tanya for the first time, understands it. No unexplained terms. The third paragraph (`LA.32.011`–`LA.32.019`) is the hardest at this level and needs the most care. There is no extended ביאור in the demo.
+- The ביאור follows the meaning of the approved commentaries (§2), so it carries the inner, Chassidic point of each unit and not only its literal sense. It is written in our own words with our own examples. **Never** quote a commentary or rewrite its sentences one by one.
+- **Overlap check:** before review, a script compares every draft item with the local Shiurim file and flags any run of 5 or more words in common (letters only, nikud ignored). Flagged items are rewritten. The check runs only where the file exists, that is on Alex's machine, never in CI. The English ביאור is checked the same way against the English commentaries it follows.
+- **Short ביאור:** written in each language (Hebrew and English), at most 25 words per unit in Hebrew and 35 in English (`contentRules.biurMaxWords`). Each language explains its own text of the unit, with the same meaning, and is written from the commentaries in that language: the English ביאור follows Lessons in Tanya and Steinsaltz in English, and is not a translation of the Hebrew ביאור. (The English ביאור of `LA.32.001`–`LA.32.019` was carried over from the Hebrew; it is to be rewritten this way.) It explains words and the flow, so simply that a child of about 10, or someone opening Tanya for the first time, understands it. No unexplained terms. The third paragraph (`LA.32.011`–`LA.32.019`) is the hardest at this level and needs the most care. There is no extended ביאור in the demo.
 - **Questions** test the text, not trivia.
   - **Literal:** what does the text say.
   - **Understanding:** why does it say so.
@@ -522,7 +584,7 @@ These are drafted by Claude (in the claude.ai conversation or in Claude Code) an
 
 1. Claude Code generates `content/REVIEW.md` from the JSON: every reviewable item in reading order, with its id. Alex can read it in one pass.
 2. Alex marks corrections, either in REVIEW.md or directly in the JSON. Claude Code applies them and flips `reviewed: true` only for items Alex approved.
-3. Before showing the demo publicly, all items must be `reviewed: true`. The deploy workflow then runs with `CONTENT_STRICT=1`.
+3. Before showing the demo publicly, all items must be `reviewed: true`. Alex's review is the first pass; an item becomes `reviewed: true` only after a rav or a recognized educator has also approved it (moderation). The deploy workflow validates `main` with `CONTENT_STRICT=1`.
 4. While items are unreviewed, a small `טיוטה` badge appears in the About screen. This is development mode only, never in the strict build.
 
 ---
@@ -530,7 +592,7 @@ These are drafted by Claude (in the claude.ai conversation or in Claude Code) an
 ## 9. Licensing and attribution
 
 - **Code:** Apache-2.0 (the existing `LICENSE`).
-- **Tanya Hebrew text:** the words are public domain, but the nikud and punctuation of a modern edition may be protected. The About screen credits the edition named in `resources/texts/HE/SOURCE.md`, under the terms recorded there.
+- **Tanya Hebrew text:** the words are public domain, but the nikud and punctuation of a modern edition may be protected. The About screen credits the edition named in `resources/texts/he/SOURCE.md`, under the terms recorded there.
 - **English translation:** use the license and attribution exactly as given in the Sefaria metadata. If it is CC-BY-NC (expected), the demo is non-commercial and free, which is compatible, and the attribution line is shown in About.
 - **ביאור, glossary, questions, Avos uBanim tools:** © Tanya Chai, all rights reserved. They are not covered by the Apache license.
 - `content/CONTENT-LICENSE.md` states all of the above. `README.md` gets a short "Content license" section linking to it.
@@ -539,63 +601,31 @@ These are drafted by Claude (in the claude.ai conversation or in Claude Code) an
 
 ## 10. Deployment: GitHub Pages, step by step
 
-### 10.1 First deployment (project URL)
+GitHub Pages serves one site per repository, so both long-lived branches are built into one site:
 
-1. In the repository on GitHub: **Settings → Pages → Build and deployment → Source: GitHub Actions**.
-2. In `vite.config.ts`, set `base: process.env.VITE_BASE ?? '/'`.
-3. Add `.github/workflows/deploy.yml`:
+| Branch | Address | Content check |
+| --- | --- | --- |
+| `main` (stable) | `https://demo.tanyachai.app/` | `CONTENT_STRICT=1`: every item approved |
+| `dev` (current) | `https://demo.tanyachai.app/dev/` | unreviewed items allowed |
 
-```yaml
-name: Deploy to GitHub Pages
-on:
-  push:
-    branches: [main]
-  workflow_dispatch:
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-concurrency:
-  group: pages
-  cancel-in-progress: true
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: npm
-      - run: npm ci
-      - run: npm run validate-content
-      - run: npm run build
-        env:
-          VITE_BASE: /tanya-chai-demo/   # change to "/" once the custom domain is live (10.2)
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
-```
+`.github/workflows/deploy.yml` runs on every push to `main` or `dev` (and by hand, from **Actions**). It checks out both branches, runs every check on each (lint, coverage, content validation), builds `main` with `VITE_BASE=/` and `dev` with `VITE_BASE=/dev/`, puts the `dev` build under `dev/` in the site, and publishes it. If either branch fails a check, nothing is published and the site stays as it was. Until `main` contains the app, the workflow publishes `dev` alone.
 
-4. Push to `main`. Open **Actions** to watch the run. The site appears at `https://vekslera.github.io/tanya-chai-demo/`.
+The two builds share one domain, so each keeps its saved state under its own storage key (§5.3).
 
-### 10.2 Custom domain (once `tanyachai.app` is registered)
+### 10.1 Repository settings (once)
 
-1. **DNS:** at the domain registrar, add a CNAME record `demo` → `vekslera.github.io`.
-2. **Verify the domain on GitHub** (recommended, to prevent takeover): **Profile → Settings → Pages → Add a domain**, then add the TXT record GitHub shows.
-3. **Repository settings:** in **Settings → Pages → Custom domain**, enter `demo.tanyachai.app` and save. Wait for the DNS check to pass.
-4. **HTTPS:** tick **Enforce HTTPS** once it becomes available; this can take up to about an hour. The `.app` domains require HTTPS in every browser, so the site will not load until the certificate is issued. That is expected.
-5. **Repository files:** add `public/CNAME` containing `demo.tanyachai.app`, and change `VITE_BASE` in the workflow to `/`.
+1. **Settings → Pages → Build and deployment → Source: GitHub Actions.**
+2. **Settings → Environments → `github-pages` → Deployment branches:** add `dev` next to `main`. Without it, the runs started by a push to `dev` are refused.
+3. Push to `dev` (or merge a pull request into `main`). Open **Actions** to watch the run.
+
+### 10.2 Custom domain `demo.tanyachai.app` (Namecheap)
+
+1. **Verify the domain on GitHub**, to prevent takeover: **profile picture → Settings → Pages → Add a domain**, enter `tanyachai.app`. GitHub shows a TXT record. In Namecheap, **Domain List → Manage → Advanced DNS → Add New Record**: type **TXT Record**, host `_github-pages-challenge-vekslera` (Namecheap adds the domain itself), value as shown. Then press **Verify** on GitHub. (If there is no Advanced DNS tab, first set **Nameservers** to **Namecheap BasicDNS**.)
+2. **DNS:** in **Advanced DNS**, add a **CNAME Record**: host `demo`, value `vekslera.github.io.`, TTL Automatic.
+3. **Repository:** **Settings → Pages → Custom domain**, enter `demo.tanyachai.app`, **Save**, and wait for the DNS check to pass.
+4. **HTTPS:** tick **Enforce HTTPS** once it becomes available; this can take up to about an hour. The `.app` domains require HTTPS in every browser, so the site does not load until the certificate is issued. That is expected.
+
+No `CNAME` file is needed: with a GitHub Actions deployment, the custom domain is set only in the repository settings.
 
 ### 10.3 Kosher internet filters
 
@@ -614,13 +644,13 @@ Each milestone is a small, reviewable step. Work on a branch per milestone, and 
 | # | Milestone | Done when |
 | --- | --- | --- |
 | M0 | **Scaffold and pipeline:** Vite + React + TS, ESLint/Prettier, tokens, self-hosted fonts, `HeartMark` component, a placeholder Home screen, the deploy workflow | The placeholder page is live on the project URL, RTL is correct, and the heart renders at 62% |
-| M1 | **Text layer:** splits for chapter 32, `build-units.mjs`, the English (from `resources/` or fetched with `fetch-sefaria.mjs`, license reported) as translation spans, the schedule entry, the portion file, the loader and the validator | The validator passes the integrity rules of §6.5, and Alex has confirmed the portion boundaries |
+| M1 | **Text layer:** splits for chapter 32, `build-units`, the English (from `resources/` or fetched with `fetch-sefaria`, license reported) as translation spans, the schedule entry, the portion file, the loader and the validator | The validator passes the integrity rules of §6.5, and Alex has confirmed the portion boundaries |
 | M2 | **Content drafts:** short ביאור for the 19 units, glossary, 6 solo questions with hints and explanations, 6–8 Avos uBanim cards and 3 questions for the son, all `reviewed: false`; `REVIEW.md` generated | REVIEW.md is ready for Alex |
 | M3 | **Read screen:** levels, glossary sheet, per-paragraph English, reading progress | Works on a 360px phone and on desktop; no RTL glitches |
 | M4 | **Quiz:** three question types, feedback with sentence highlight, retry, points, back-to-text sheet | All 6 questions are playable, and state survives a reload |
 | M5 | **Completion:** streak, heart contour animation, purify effect, community counter, points line, level replay | Smooth on a mid-range Android; reduced motion respected |
 | M6 | **Avos uBanim** (S8, S9, shared completion) and the About & credits screen | A father can go through all cards and his son's questions on one phone; attribution lines are exact; reset works |
-| M7 | **Polish and launch:** review fixes applied, `CONTENT_STRICT=1`, Lighthouse, custom domain, CNAME, filter submissions; optional Playwright smoke test | The demo runs at `https://demo.tanyachai.app` on Alex's phone, and the QR code for slide 7 is generated |
+| M7 | **Polish and launch:** review fixes applied, `CONTENT_STRICT=1`, Lighthouse, custom domain, filter submissions; optional Playwright smoke test | The demo runs at `https://demo.tanyachai.app` on Alex's phone, and the QR code for slide 7 is generated |
 | Optional | **Shinun taste** (S6), behind the flag, off by default | Works when the flag is on; invisible when it is off |
 
 ---
@@ -644,7 +674,7 @@ All of these are covered in the product blueprint, not here.
 ## 13. Open items for Alex
 
 1. Done: the portion boundaries for chapter 32 are in `data/schedules/daily.json`.
-2. Done: the source of the Hebrew text is recorded in `resources/texts/HE/SOURCE.md`.
+2. Done: the source of the Hebrew text is recorded in `resources/texts/he/SOURCE.md`.
 3. Review all content in `content/REVIEW.md` (§8.4), including the Avos uBanim tools.
 4. Fill in the contact line on the About screen.
 5. Register `tanyachai.app` and set the DNS record (§10.2).

@@ -1,0 +1,58 @@
+{
+  "name": "tanya-chai-demo",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=22.18"
+  },
+  "scripts": {
+    "build-units": "node scripts/build-units.ts",
+    "predev": "npm run build-units",
+    "dev": "vite",
+    "prebuild": "npm run build-units",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "lint": "eslint . && prettier --check .",
+    "format": "prettier --write .",
+    "pretest": "npm run build-units",
+    "test": "vitest run",
+    "validate-content": "node scripts/validate-content.ts",
+    "review": "node scripts/build-review.ts",
+    "print": "npm run build-units && node scripts/build-print.ts",
+    "check-overlap": "node scripts/check-overlap.ts",
+    "fetch-sefaria": "node scripts/fetch-sefaria.ts",
+    "precoverage": "npm run build-units",
+    "coverage": "vitest run --coverage",
+    "resolve-matches": "node scripts/resolve-matches.ts",
+    "build-translations": "node scripts/build-translations.ts"
+  },
+  "dependencies": {
+    "@fontsource/frank-ruhl-libre": "^5.3.0",
+    "@fontsource/rubik": "^5.3.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.5",
+    "@testing-library/dom": "^10.4.2",
+    "@testing-library/react": "^16.3.3",
+    "@types/node": "^22.20.5",
+    "@types/react": "^18.3.31",
+    "@types/react-dom": "^18.3.7",
+    "@vitejs/plugin-react": "^6.2.1",
+    "@vitest/coverage-v8": "^5.1.0",
+    "docx": "^9.15.3",
+    "eslint": "^9.39.5",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "fflate": "^0.8.3",
+    "globals": "^17.14.0",
+    "jsdom": "^29.1.1",
+    "prettier": "^3.9.10",
+    "typescript": "5.9",
+    "typescript-eslint": "^8.72.1",
+    "vite": "^8.3.5",
+    "vitest": "^5.1.0"
+  }
+}
