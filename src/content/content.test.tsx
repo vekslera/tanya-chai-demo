@@ -25,7 +25,8 @@ describe('loadPortion', () => {
     // The app's language's ביאור, for every sentence of the portion.
     expect(p.sentences.every((s) => /[א-ת]/.test(s.biur?.value ?? ''))).toBe(true);
     expect(p.sentences.length).toBeLessThan(p.units.length);
-    expect(p.paragraphs.every((x) => x.translation)).toBe(true);
+    expect(p.sections).toHaveLength(7);
+    expect(p.sections.every((s) => s.english.length === s.units.length)).toBe(true);
   });
 });
 

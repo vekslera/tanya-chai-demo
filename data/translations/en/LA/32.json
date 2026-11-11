@@ -1,8 +1,20 @@
 [
   {
     "from": "LA.32.001",
+    "to": "LA.32.001",
+    "text": "Acting on the suggestion mentioned above—to view one’s body with scorn and contempt ",
+    "sourceId": "en-resource"
+  },
+  {
+    "from": "LA.32.002",
+    "to": "LA.32.002",
+    "text": "and finding joy only in the joy of the soul alone—",
+    "sourceId": "en-resource"
+  },
+  {
+    "from": "LA.32.003",
     "to": "LA.32.003",
-    "text": "Acting on the suggestion mentioned above—to view one’s body with scorn and contempt and finding joy only in the joy of the soul alone—is a direct and easy way to attain the fulfillment of the commandment “You shall love your fellow as yourself”[1] toward every soul of Israel, both great and small.",
+    "text": "is a direct and easy way to attain the fulfillment of the commandment “You shall love your fellow as yourself”[1] toward every soul of Israel, both great and small.",
     "sourceId": "en-resource",
     "footnotes": {
       "1": "Leviticus 19:18."
@@ -10,8 +22,44 @@
   },
   {
     "from": "LA.32.004",
+    "to": "LA.32.004",
+    "text": "For, whereas one despises and loathes one’s body, ",
+    "sourceId": "en-resource"
+  },
+  {
+    "from": "LA.32.005",
+    "to": "LA.32.005",
+    "text": "while as for the soul and spirit, who can know their greatness and excellence in their root and source in the living G–d? ",
+    "sourceId": "en-resource"
+  },
+  {
+    "from": "LA.32.006",
+    "to": "LA.32.006",
+    "text": "Being, moreover, all of a kind ",
+    "sourceId": "en-resource"
+  },
+  {
+    "from": "LA.32.007",
+    "to": "LA.32.007",
+    "text": "and all having one Father—",
+    "sourceId": "en-resource"
+  },
+  {
+    "from": "LA.32.008",
+    "to": "LA.32.008",
+    "text": "therefore, all Israelites are called real brothers by virtue of the source of their souls in the One G–d; ",
+    "sourceId": "en-resource"
+  },
+  {
+    "from": "LA.32.009",
+    "to": "LA.32.009",
+    "text": "only the bodies are separated. Hence in the case of those who give major consideration to their bodies while regarding their souls as of secondary importance, there can be no true love and brotherhood among them, ",
+    "sourceId": "en-resource"
+  },
+  {
+    "from": "LA.32.010",
     "to": "LA.32.010",
-    "text": "For, whereas one despises and loathes one’s body, while as for the soul and spirit, who can know their greatness and excellence in their root and source in the living G–d? Being, moreover, all of a kind and all having one Father—therefore, all Israelites are called real brothers by virtue of the source of their souls in the One G–d; only the bodies are separated. Hence in the case of those who give major consideration to their bodies while regarding their souls as of secondary importance, there can be no true love and brotherhood among them, but only [a love] which is dependent on a [transitory] thing.[2]",
+    "text": "but only [a love] which is dependent on a [transitory] thing.[2]",
     "sourceId": "en-resource",
     "footnotes": {
       "2": "Avot 5:16."
@@ -19,42 +67,242 @@
   },
   {
     "from": "LA.32.011",
-    "to": "LA.32.019",
-    "text": "This is what Hillel the Elder meant when he said in regard to the fulfillment of this commandment, “This is the whole Torah, while the rest is but commentary,”[3] and so on. For the basis and root of the entire Torah are to raise and exalt the soul high above the body, reaching to the Source and Root of all the worlds, and also to bring down the Light of the En Sof, blessed is He, upon the community of Israel, as will be explained later,[4] i.e., into the fountainhead of the souls of all Israel, to become “One into One.”[5] This is impossible if there is, G–d forbid, disunity among the souls, for the Holy One, blessed is He, does not dwell in an imperfect place,[6] as we pray, “Bless us, our Father, all of us as one, with the light of Your Countenance,”[7] as has been explained at great length elsewhere.",
+    "to": "LA.32.011",
+    "text": "This is what Hillel the Elder meant when he said in regard to the fulfillment of this commandment, “This is the whole Torah, ",
+    "sourceId": "en-resource"
+  },
+  {
+    "from": "LA.32.012",
+    "to": "LA.32.012",
+    "text": "while the rest is but commentary,”[3] and so on. ",
     "sourceId": "en-resource",
     "footnotes": {
-      "3": "Shabbat 31a.",
-      "4": "Ch. 41.",
-      "5": "Zohar II:135a.",
-      "6": "Zohar I:216b.",
+      "3": "Shabbat 31a."
+    }
+  },
+  {
+    "from": "LA.32.013",
+    "to": "LA.32.013",
+    "text": "For the basis and root of the entire Torah are to raise and exalt the soul high above the body, reaching to the Source and Root of all the worlds, ",
+    "sourceId": "en-resource"
+  },
+  {
+    "from": "LA.32.014",
+    "to": "LA.32.014",
+    "text": "and also to bring down the Light of the En Sof, blessed is He, upon the community of Israel, as will be explained later,[4] i.e., ",
+    "sourceId": "en-resource",
+    "footnotes": {
+      "4": "Ch. 41."
+    }
+  },
+  {
+    "from": "LA.32.015",
+    "to": "LA.32.015",
+    "text": "into the fountainhead of the souls of all Israel, to become “One into One.”[5] ",
+    "sourceId": "en-resource",
+    "footnotes": {
+      "5": "Zohar II:135a."
+    }
+  },
+  {
+    "from": "LA.32.016",
+    "to": "LA.32.016",
+    "text": "This is impossible if there is, G–d forbid, disunity among the souls, ",
+    "sourceId": "en-resource"
+  },
+  {
+    "from": "LA.32.017",
+    "to": "LA.32.017",
+    "text": "for the Holy One, blessed is He, does not dwell in an imperfect place,[6] ",
+    "sourceId": "en-resource",
+    "footnotes": {
+      "6": "Zohar I:216b."
+    }
+  },
+  {
+    "from": "LA.32.018",
+    "to": "LA.32.018",
+    "text": "as we pray, “Bless us, our Father, all of us as one, with the light of Your Countenance,”[7] ",
+    "sourceId": "en-resource",
+    "footnotes": {
       "7": "Liturgy, Amidah."
     }
   },
   {
+    "from": "LA.32.019",
+    "to": "LA.32.019",
+    "text": "as has been explained at great length elsewhere.",
+    "sourceId": "en-resource"
+  },
+  {
     "from": "LA.32.020",
-    "to": "LA.32.025",
-    "text": "As for the Talmudic statement[8] to the effect that one who sees his friend sinning should hate him and should tell his teacher to hate him also, this applies to a companion in Torah and precepts, having already applied to him the injunction, “You shall repeatedly rebuke your friend (amitecha),”[9] meaning “He who is with you in Torah and precepts,”[10] and who, nevertheless, has not repented of his sin, as stated in Sefer Charedim.[11]",
+    "to": "LA.32.020",
+    "text": "As for the Talmudic statement[8] to the effect that one who sees his friend sinning should hate him and should tell his teacher to hate him also, ",
     "sourceId": "en-resource",
     "footnotes": {
-      "8": "Shevuot 30a.",
-      "9": "Leviticus 19:17.",
-      "10": "A play on the word עמיתך: עם-אתך. See Kitzurim V’Hearot, p. 36.",
+      "8": "Shevuot 30a."
+    }
+  },
+  {
+    "from": "LA.32.021",
+    "to": "LA.32.021",
+    "text": "this applies to a companion in Torah and precepts, ",
+    "sourceId": "en-resource"
+  },
+  {
+    "from": "LA.32.022",
+    "to": "LA.32.022",
+    "text": "having already applied to him the injunction, “You shall repeatedly rebuke your friend (amitecha),”[9] ",
+    "sourceId": "en-resource",
+    "footnotes": {
+      "9": "Leviticus 19:17."
+    }
+  },
+  {
+    "from": "LA.32.023",
+    "to": "LA.32.023",
+    "text": "meaning “He who is with you in Torah and precepts,”[10] ",
+    "sourceId": "en-resource",
+    "footnotes": {
+      "10": "A play on the word עמיתך: עם-אתך. See Kitzurim V’Hearot, p. 36."
+    }
+  },
+  {
+    "from": "LA.32.024",
+    "to": "LA.32.024",
+    "text": "and who, nevertheless, has not repented of his sin, ",
+    "sourceId": "en-resource"
+  },
+  {
+    "from": "LA.32.025",
+    "to": "LA.32.025",
+    "text": "as stated in Sefer Charedim.[11]",
+    "sourceId": "en-resource",
+    "footnotes": {
       "11": "By Rabbi Eliezer Azkari (16th century)."
     }
   },
   {
     "from": "LA.32.026",
-    "to": "LA.32.034",
-    "text": "But as for the person who is not one’s colleague and is not on intimate terms with him, Hillel the Elder said, “Be of the disciples of Aaron, loving peace and pursuing peace, loving the creatures and drawing them near to the Torah.”[12] This means that even in the case of those who are removed from G–d’s Torah and His service and are therefore classified simply as “creatures,” one must attract them with strong cords of love, perchance one might succeed in drawing them near to the Torah and Divine service. Even if one fails, one has not forfeited the merit of the precept of neighborly love.",
+    "to": "LA.32.026",
+    "text": "But as for the person who is not one’s colleague ",
+    "sourceId": "en-resource"
+  },
+  {
+    "from": "LA.32.027",
+    "to": "LA.32.027",
+    "text": "and is not on intimate terms with him, ",
+    "sourceId": "en-resource"
+  },
+  {
+    "from": "LA.32.028",
+    "to": "LA.32.028",
+    "text": "Hillel the Elder said, “Be of the disciples of Aaron, loving peace and pursuing peace, ",
+    "sourceId": "en-resource"
+  },
+  {
+    "from": "LA.32.029",
+    "to": "LA.32.029",
+    "text": "loving the creatures and drawing them near to the Torah.”[12] ",
     "sourceId": "en-resource",
     "footnotes": {
       "12": "Avot 1:12."
     }
   },
   {
+    "from": "LA.32.030",
+    "to": "LA.32.030",
+    "text": "This means that even in the case of those who are removed from G–d’s Torah and His service and are therefore classified simply as “creatures,” ",
+    "sourceId": "en-resource"
+  },
+  {
+    "from": "LA.32.031",
+    "to": "LA.32.031",
+    "text": "one must attract them ",
+    "sourceId": "en-resource"
+  },
+  {
+    "from": "LA.32.032",
+    "to": "LA.32.032",
+    "text": "with strong cords of love, ",
+    "sourceId": "en-resource"
+  },
+  {
+    "from": "LA.32.033",
+    "to": "LA.32.033",
+    "text": "perchance one might succeed in drawing them near to the Torah and Divine service. Even if one fails, ",
+    "sourceId": "en-resource"
+  },
+  {
+    "from": "LA.32.034",
+    "to": "LA.32.034",
+    "text": "one has not forfeited the merit of the precept of neighborly love.",
+    "sourceId": "en-resource"
+  },
+  {
     "from": "LA.32.035",
+    "to": "LA.32.035",
+    "text": "Even with regard to those who are close to him, and whom he has rebuked, ",
+    "sourceId": "en-resource"
+  },
+  {
+    "from": "LA.32.036",
+    "to": "LA.32.036",
+    "text": "yet they had not repented of their sins, ",
+    "sourceId": "en-resource"
+  },
+  {
+    "from": "LA.32.037",
+    "to": "LA.32.037",
+    "text": "when he is enjoined to hate them, ",
+    "sourceId": "en-resource"
+  },
+  {
+    "from": "LA.32.038",
+    "to": "LA.32.038",
+    "text": "there still remains the duty to love them also, ",
+    "sourceId": "en-resource"
+  },
+  {
+    "from": "LA.32.039",
+    "to": "LA.32.039",
+    "text": "and both are right: ",
+    "sourceId": "en-resource"
+  },
+  {
+    "from": "LA.32.040",
+    "to": "LA.32.040",
+    "text": "hatred because of the wickedness in them, ",
+    "sourceId": "en-resource"
+  },
+  {
+    "from": "LA.32.041",
+    "to": "LA.32.041",
+    "text": "and love on account of the aspect of the hidden good in them, ",
+    "sourceId": "en-resource"
+  },
+  {
+    "from": "LA.32.042",
+    "to": "LA.32.042",
+    "text": "which is the Divine spark in them, which animates their divine soul. ",
+    "sourceId": "en-resource"
+  },
+  {
+    "from": "LA.32.043",
+    "to": "LA.32.043",
+    "text": "He should also awaken pity in his heart for [the divine soul], ",
+    "sourceId": "en-resource"
+  },
+  {
+    "from": "LA.32.044",
+    "to": "LA.32.044",
+    "text": "for she is held captive, as it were, in the evil of the sitra achara that triumphs over her in wicked people. Compassion destroys hatred and awakens love, ",
+    "sourceId": "en-resource"
+  },
+  {
+    "from": "LA.32.045",
     "to": "LA.32.045",
-    "text": "Even with regard to those who are close to him, and whom he has rebuked, yet they had not repented of their sins, when he is enjoined to hate them, there still remains the duty to love them also, and both are right: hatred because of the wickedness in them, and love on account of the aspect of the hidden good in them, which is the Divine spark in them, which animates their divine soul. He should also awaken pity in his heart for [the divine soul], for she is held captive, as it were, in the evil of the sitra achara that triumphs over her in wicked people. Compassion destroys hatred and awakens love, as is known from the [interpretation of the] text, “To [the house of] Jacob who redeemed Abraham.”[13]",
+    "text": "as is known from the [interpretation of the] text, “To [the house of] Jacob who redeemed Abraham.”[13]",
     "sourceId": "en-resource",
     "footnotes": {
       "13": "Isaiah 29:22. See Torah Or 51a-b."
@@ -62,11 +310,23 @@
   },
   {
     "from": "LA.32.046",
-    "to": "LA.32.048",
-    "text": "[As for King David, peace unto him, who said, “I hate them with a consummate hatred,”[14] he was referring to [Jewish] heretics and atheists who have no portion in the G–d of Israel, as stated in the Talmud, Tractate Shabbat, beginning of ch. 16.]",
+    "to": "LA.32.046",
+    "text": "[As for King David, peace unto him, who said, “I hate them with a consummate hatred,”[14] ",
     "sourceId": "en-resource",
     "footnotes": {
       "14": "Psalms 139:22."
     }
+  },
+  {
+    "from": "LA.32.047",
+    "to": "LA.32.047",
+    "text": "he was referring to [Jewish] heretics and atheists who have no portion in the G–d of Israel, ",
+    "sourceId": "en-resource"
+  },
+  {
+    "from": "LA.32.048",
+    "to": "LA.32.048",
+    "text": "as stated in the Talmud, Tractate Shabbat, beginning of ch. 16.]",
+    "sourceId": "en-resource"
   }
 ]

@@ -63,6 +63,22 @@ describe('ReadScreen', () => {
     expect(document.querySelector('.dedication')).toBeNull();
   });
 
+  it('shows a section’s English after its text, whole', async () => {
+    const data = portionData();
+    data.portion.sections = [{ from: 'LA.1.001', to: 'LA.1.004' }];
+    // One span per unit in the first paragraph: they join as written, a new paragraph after a space.
+    const [first, second] = data.translations;
+    data.translations = [
+      { ...first!, to: 'LA.1.001', text: 'Love ', footnotes: {} },
+      { ...first!, from: 'LA.1.002', text: '[and soul][1].' },
+      second!,
+    ];
+    await renderApp(ROUTES.read, { data });
+    expect(screen.getAllByRole('button', { name: he.read.englishShow })).toHaveLength(1);
+    await click(button(he.read.englishShow));
+    expect(document.querySelector('.english')!.textContent).toBe('Love [and soul]1. Brothers.');
+  });
+
   it('has no menu without English', async () => {
     const data = portionData();
     data.translations = [];

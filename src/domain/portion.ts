@@ -37,7 +37,18 @@ export type PortionParagraph = {
   paragraph: number;
   units: PortionUnit[];
   sentences: PortionSentence[];
-  translation?: TranslationSpan;
+};
+
+/** A short section of the portion: its text, sentence by sentence, and its English. */
+export type PortionSection = {
+  /** Its first unit's ID. */
+  id: UnitId;
+  units: PortionUnit[];
+  /** Its part of each paragraph it touches. */
+  paragraphs: PortionParagraph[];
+  sentences: PortionSentence[];
+  /** The English of its units, in order; empty without a translation. */
+  english: TranslationSpan[];
 };
 
 /** Everything a portion is assembled from. `units` and `translations` cover its chapters. */
@@ -57,6 +68,7 @@ export type AssembledPortion = {
   units: PortionUnit[];
   sentences: PortionSentence[];
   paragraphs: PortionParagraph[];
+  sections: PortionSection[];
   unit: (id: UnitId) => PortionUnit | undefined;
   /** The sentence a unit belongs to. */
   sentenceOf: (id: UnitId) => PortionSentence | undefined;
@@ -66,8 +78,15 @@ export type AssembledPortion = {
   unreviewed: number;
 };
 
-/** A sentence's text: its units' text, joined. */
-export const sentenceText = (s: PortionSentence) => s.units.map((u) => u.display).join(' ');
+/** What separates a unit from the next one in its paragraph: a space, or nothing (after "—"). */
+export const spaceAfter = (u: Unit) => (/\s$/.test(u.text) ? ' ' : '');
+
+/** A sentence's text, exactly as in the resource. */
+export const sentenceText = (s: PortionSentence) =>
+  s.units
+    .map((u) => u.text)
+    .join('')
+    .trim();
 
 /** The key of a unit's paragraph, unique across chapters. */
 export const paragraphKey = (u: Unit) => `${chapterKey(u)}.${u.paragraph}`;
@@ -108,13 +127,7 @@ export function assemblePortion(data: PortionData): AssembledPortion {
     const key = paragraphKey(u);
     let p = paragraphs[paragraphs.length - 1];
     if (p?.key !== key) {
-      p = {
-        key,
-        paragraph: u.paragraph,
-        units: [],
-        sentences: [],
-        translation: translationOf.get(u.id),
-      };
+      p = { key, paragraph: u.paragraph, units: [], sentences: [] };
       paragraphs.push(p);
     }
     p.units.push(u);
@@ -128,6 +141,26 @@ export function assemblePortion(data: PortionData): AssembledPortion {
     s.units.push(u);
   }
 
+  const sections = portion.sections.map((range): PortionSection => {
+    const units = unitsIn(portionUnits, range);
+    const inSection = new Set(units.map((u) => u.id));
+    const parts = paragraphs
+      .map((x) => ({
+        ...x,
+        units: x.units.filter((u) => inSection.has(u.id)),
+        sentences: x.sentences.filter((s) => inSection.has(s.id)),
+      }))
+      .filter((x) => x.units.length > 0);
+    const english = [...new Set(units.flatMap((u) => translationOf.get(u.id) ?? []))];
+    return {
+      id: units[0]!.id,
+      units,
+      paragraphs: parts,
+      sentences: parts.flatMap((x) => x.sentences),
+      english,
+    };
+  });
+
   const byId = new Map(portionUnits.map((u) => [u.id, u]));
   const sentenceById = new Map(sentences.flatMap((s) => s.units.map((u) => [u.id, s] as const)));
   return {
@@ -135,6 +168,7 @@ export function assemblePortion(data: PortionData): AssembledPortion {
     units: portionUnits,
     sentences,
     paragraphs,
+    sections,
     unit: (id) => byId.get(id),
     sentenceOf: (id) => sentenceById.get(id),
     unitsOf: (range) => unitsIn(portionUnits, range),

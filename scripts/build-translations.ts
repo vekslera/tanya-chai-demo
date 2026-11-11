@@ -1,4 +1,5 @@
-// English resource → translation spans (SPEC §6.4, §8.1), for every chapter in texts.config.json.
+// English text → translation spans, one per unit (SPEC §6.4, §8.1), for every chapter in
+// texts.config.json.
 // Run when the English file is added or changed; the output is committed.
 import { config, pathOf } from './lib/config.ts';
 import { runMain, type ScriptEnv } from './lib/env.ts';
@@ -16,13 +17,18 @@ export function run({ files, log }: ScriptEnv): number {
       fail(`${pathOf('text.en', ch)} not found`);
       continue;
     }
-    const { units, lines, errors, enResource } = loadChapter(files, ch);
-    const problems = [...errors, ...enResource!.errors];
+    const { units, errors, enResource, texts } = loadChapter(files, ch);
+    const english = texts.en;
+    if (!english) {
+      fail(`${pathOf('splits.en', ch)} not found`);
+      continue;
+    }
+    const problems = [...errors, ...enResource!.errors, ...english.errors];
     if (problems.length) {
       problems.forEach(fail);
       continue;
     }
-    const result = translationSpans(units, lines.length, enResource!);
+    const result = translationSpans(units, english);
     if ('error' in result) {
       fail(result.error);
       continue;

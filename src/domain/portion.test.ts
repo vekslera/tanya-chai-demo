@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { portionData } from '../test/fixtures';
-import { assemblePortion, paragraphKey, portionRanges, sentenceText } from './portion';
+import { assemblePortion, paragraphKey, portionRanges, sentenceText, spaceAfter } from './portion';
 
 describe('assemblePortion', () => {
   const p = assemblePortion(portionData());
@@ -21,6 +21,10 @@ describe('assemblePortion', () => {
     expect(p.sentenceOf('LA.1.004')!.id).toBe('LA.1.003');
     expect(sentenceText(p.sentenceOf('LA.1.004')!)).toBe('אַחִים מַמָּשׁ אָב אֶחָד.');
     expect(p.sentenceOf('nope')).toBeUndefined();
+    // Units join as written: with a space, or none after a dash.
+    expect(
+      [p.unit('LA.1.003')!, { ...p.unit('LA.1.003')!, text: 'אחים—' }].map(spaceAfter),
+    ).toEqual([' ', '']);
     expect(p.sentenceOf('LA.1.001')!.biur?.value).toBe('ביאור ראשון');
     expect(p.sentenceOf('LA.1.003')!.biur).toBeUndefined();
   });
@@ -37,11 +41,31 @@ describe('assemblePortion', () => {
     expect(english.sentenceOf('LA.1.002')!.biur).toBeUndefined();
   });
 
-  it('groups units into paragraphs with their English', () => {
-    expect(p.paragraphs.map((x) => [x.key, x.units.length, x.translation?.text])).toEqual([
-      ['LA.1.1', 2, 'Love [and soul][1].'],
-      ['LA.1.2', 2, 'Brothers.'],
+  it('groups units into paragraphs', () => {
+    expect(p.paragraphs.map((x) => [x.key, x.units.length])).toEqual([
+      ['LA.1.1', 2],
+      ['LA.1.2', 2],
     ]);
+  });
+
+  it('divides the portion into its sections, each with its sentences and English', () => {
+    expect(
+      p.sections.map((s) => [
+        s.id,
+        s.units.length,
+        s.sentences.map((x) => x.id),
+        s.english.map((e) => e.text),
+      ]),
+    ).toEqual([
+      ['LA.1.001', 2, ['LA.1.001', 'LA.1.002'], ['Love [and soul][1].']],
+      ['LA.1.003', 2, ['LA.1.003'], ['Brothers.']],
+    ]);
+    // A section may span paragraphs: it keeps its part of each.
+    const data = portionData();
+    data.portion.sections = [{ from: 'LA.1.001', to: 'LA.1.004' }];
+    const [whole] = assemblePortion(data).sections;
+    expect(whole!.paragraphs.map((x) => x.units.length)).toEqual([2, 2]);
+    expect(whole!.english).toHaveLength(2);
   });
 
   it('gives the units of a range and counts the unreviewed items', () => {
@@ -50,10 +74,10 @@ describe('assemblePortion', () => {
     expect(p.unreviewed).toBe(2 + 2 + 18 + 5);
   });
 
-  it('keeps a paragraph without English', () => {
+  it('keeps a section without English', () => {
     const data = portionData();
     data.translations = [];
-    expect(assemblePortion(data).paragraphs[0]!.translation).toBeUndefined();
+    expect(assemblePortion(data).sections[0]!.english).toEqual([]);
   });
 });
 

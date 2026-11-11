@@ -38,8 +38,3 @@ export function unitsIn<U extends Unit>(units: readonly U[], range: Range): U[] 
   }
   return units.filter((u) => u.seq >= lo && u.seq <= hi);
 }
-
-/** Whether a unit lies within a range of the given units. */
-export function isInRange(units: readonly Unit[], range: Range, id: UnitId): boolean {
-  return unitsIn(units, range).some((u) => u.id === id);
-}

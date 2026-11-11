@@ -4,7 +4,7 @@ import { GlossarySheet } from '../../components/GlossarySheet';
 import { TopBar } from '../../components/TopBar';
 import { config } from '../../config';
 import { usePortion } from '../../content/PortionProvider';
-import { englishSpanIds, isUnlocked, readingProgress, showsBiur } from '../../domain/reading';
+import { englishSectionIds, isUnlocked, readingProgress, showsBiur } from '../../domain/reading';
 import type { GlossaryEntry } from '../../domain/types';
 import { useElapsed } from '../../hooks/useElapsed';
 import { useSeen } from '../../hooks/useSeen';
@@ -14,14 +14,14 @@ import { useStartQuiz } from '../../store/useStartQuiz';
 import { he } from '../../strings/he';
 import { EnglishMenu } from './EnglishMenu';
 import { FootnoteSheet, type Footnote } from './FootnoteSheet';
-import { ReadParagraph } from './ReadParagraph';
+import { ReadSection } from './ReadSection';
 import { ReadProgress } from './ReadProgress';
 import './Read.css';
 
-/** The portion's text, with the ביאור on level 2 and the English on demand (S3). */
+/** The portion's text in short sections, with the ביאור on level 2 and the English on demand (S3). */
 export function ReadScreen() {
   const { state, dispatch } = useStore();
-  const { portion, paragraphs, sentences } = usePortion();
+  const { portion, sections, sentences } = usePortion();
   const startQuiz = useStartQuiz();
   const [term, setTerm] = useState<GlossaryEntry | null>(null);
   const [footnote, setFootnote] = useState<Footnote | null>(null);
@@ -31,8 +31,8 @@ export function ReadScreen() {
   const seen = useSeen(body, sentenceIds, config.read.seenMargin, [sentences, state.level]);
   const timeUp = useElapsed(config.read.unlockAfterMs);
   const unlocked = isUnlocked(timeUp, seen, sentenceIds[sentenceIds.length - 1]!);
-  const spanIds = englishSpanIds(paragraphs);
-  const allEnglishOpen = spanIds.length > 0 && spanIds.every((id) => state.englishOpen[id]);
+  const sectionIds = englishSectionIds(sections);
+  const allEnglishOpen = sectionIds.length > 0 && sectionIds.every((id) => state.englishOpen[id]);
 
   return (
     <main className="screen read">
@@ -42,9 +42,9 @@ export function ReadScreen() {
         title={portion.label.he}
         end={
           <EnglishMenu
-            hasEnglish={spanIds.length > 0}
+            hasEnglish={sectionIds.length > 0}
             allOpen={allEnglishOpen}
-            onSetAll={(open) => dispatch({ type: 'setAllEnglish', spanIds, open })}
+            onSetAll={(open) => dispatch({ type: 'setAllEnglish', sectionIds, open })}
           />
         }
       >
@@ -54,13 +54,13 @@ export function ReadScreen() {
       <p className="read-location">{portion.location.he}</p>
 
       <div ref={body} className="read-body">
-        {paragraphs.map((p) => (
-          <ReadParagraph
-            key={p.key}
-            paragraph={p}
+        {sections.map((s) => (
+          <ReadSection
+            key={s.id}
+            section={s}
             showBiur={showsBiur(config.levels, state.level)}
-            englishOpen={!!p.translation && !!state.englishOpen[p.translation.from]}
-            onToggleEnglish={(spanId) => dispatch({ type: 'toggleEnglish', spanId })}
+            englishOpen={!!state.englishOpen[s.id]}
+            onToggleEnglish={(sectionId) => dispatch({ type: 'toggleEnglish', sectionId })}
             onTerm={setTerm}
             onFootnote={(span, n) => setFootnote({ span, n })}
           />

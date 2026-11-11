@@ -75,6 +75,13 @@ describe('loadChapter', () => {
 });
 
 describe('build-translations', () => {
+  /** The English splits, with the last unit's ID changed. */
+  function renamedLast() {
+    const splits = JSON.parse(disk.read(pathOf('splits.en', ch)));
+    splits[splits.length - 1].id = 'LA.32.099';
+    return JSON.stringify(splits);
+  }
+
   it('rewrites the committed spans exactly', () => {
     const { files, written } = repoWith();
     expect(buildTranslations(memoryEnv(files).env)).toBe(0);
@@ -85,7 +92,8 @@ describe('build-translations', () => {
     ['no English', { [pathOf('text.en', ch)]: null }, 'not found'],
     ['bad units', { [pathOf('splits.he', ch)]: '[]' }, 'has no unit'],
     ['a bad footnote', { [pathOf('text.en', ch)]: 'One.\n\nbad\n' }, 'footnote line'],
-    ['misaligned English', { [pathOf('text.en', ch)]: 'One.\n' }, 'Ask Alex'],
+    ['no English splits', { [pathOf('splits.en', ch)]: null }, 'not found'],
+    ['misaligned English', { [pathOf('splits.en', ch)]: renamedLast() }, 'not have the same IDs'],
   ])('fails with %s', (_, replace, message) => {
     const { env, lines } = memoryEnv(repoWith(replace).files);
     expect(buildTranslations(env)).toBe(1);

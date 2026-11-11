@@ -71,8 +71,9 @@ describe('translations', () => {
   });
 
   it('checks each span', () => {
-    const span = (a: ChapterLayers) => a.translations![0]!;
-    expect(errorsAfter((a) => (span(a).text = ' '))).toMatch('translation[0]: empty text');
+    // LA.32.003's span marks footnote [1].
+    const span = (a: ChapterLayers) => a.translations![2]!;
+    expect(errorsAfter((a) => (span(a).text = ' '))).toMatch('translation[2]: empty text');
     expect(errorsAfter((a) => ((span(a).text as unknown) = undefined))).toMatch('empty text');
     expect(errorsAfter((a) => (span(a).text = '<b>x</b>'))).toMatch('contains HTML tags');
     expect(errorsAfter((a) => (span(a).text += '!'))).toMatch(
@@ -268,12 +269,30 @@ describe('cards and Shinun', () => {
     );
   });
 
-  it('checks the number of cards, their coverage and their talks', () => {
-    expect(errorsAfter((a) => (portion(a).together = portion(a).together.slice(0, 5)))).toMatch(
-      '5 cards',
+  it('checks the sections: the whole portion, in order, each from a sentence’s start', () => {
+    const section = (a: ChapterLayers, i = 0) => portion(a).sections[i]!;
+    expect(errorsAfter((a) => (section(a).to = section(a).from))).toMatch(
+      'the sections do not cover its units exactly once',
     );
-    expect(errorsAfter((a) => (card(a).to = card(a).from))).toMatch('do not cover the portion');
-    expect(errorsAfter((a) => (card(a).to = 'LA.99.001'))).toMatch('unknown unit');
+    expect(errorsAfter((a) => (section(a).to = 'LA.99.001'))).toMatch('section 1: unknown unit');
+    expect(
+      errorsAfter((a) => {
+        section(a).to = 'LA.32.001';
+        section(a, 1).from = 'LA.32.002';
+      }),
+    ).toBe("section 2: starts inside LA.32.001's sentence");
+    expect(
+      errorsAfter((a) => delete (portion(a) as Partial<ReturnType<typeof portion>>).sections),
+    ).toMatch('7 cards for 0 sections');
+  });
+
+  it('checks the number of cards, one per section, and their talks', () => {
+    expect(errorsAfter((a) => (portion(a).together = portion(a).together.slice(0, 5)))).toMatch(
+      'together: 5 cards for 7 sections',
+    );
+    expect(errorsAfter((a) => (portion(a).together = portion(a).together.slice(0, 4)))).toMatch(
+      '4 cards (expected',
+    );
     expect(warningsAfter((a) => portion(a).together.forEach((c) => delete c.talk))).toMatch(
       '0 cards with a talk',
     );

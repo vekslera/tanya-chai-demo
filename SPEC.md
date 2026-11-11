@@ -103,11 +103,11 @@ The last choice is remembered. The default selection is level 2.
 #### S3: Read (`#/read`)
 
 - **Header:** a back arrow (pointing right, as in RTL), the portion label, and a thin reading-progress bar (sentences scrolled into view).
-- **Body:** the text, split into **sentences**, each a block with a little breathing room. Frank Ruhl Libre 400, 20–22px on phones, line-height 2.0, since the text carries nikud.
+- **Body:** the text in **short sections** (`sections` in the portion file: 7 in the demo portion, the same parts as the Avos uBanim cards, S8), separated by a thin rule. Each section is split into **sentences** (§6.2), each a block with a little breathing room. Frank Ruhl Libre 400, 20–22px on phones, line-height 2.0, since the text carries nikud.
 - **Level 1:** text only.
 - **Level 2:** the short ביאור (1–2 lines) appears after each sentence. Rubik, smaller, muted navy, with a thin gold rule on the right edge.
 - **Glossary terms:** marked with a dotted gold underline. Tapping one opens a bottom sheet with the term, a 1–3 line ביאור, and (if present) a source line. At least these terms: `נבזה ונמאס`, `נפש` / `הנפש והרוח`, `באלקים חיים`, `אחים ממש`, `אב אחד`. Final list per §8.3.
-- **English toggle:** each paragraph has a small `EN` chip. Tapping it reveals the English translation of that paragraph below the Hebrew (LTR, `lang="en"`, serif, smaller). The toggle is per paragraph, not global. A global "show all English" action is in the overflow menu.
+- **English toggle:** each section has a small `EN` chip. Tapping it reveals the English translation of that section right after its Hebrew (LTR, `lang="en"`, serif, smaller), so the English is never far from the text it translates. The toggle is per section, not global. A global "show all English" action is in the overflow menu.
 - **Bottom bar:** a sticky primary button, `לשאלות` (enabled once the user has scrolled to the end, or after 20 seconds).
 - **Dedication:** when the portion has a `dedication`, a short line under the button, centered: small (15px, `--fs-dedication`) but clearly visible, in navy, medium weight, on a light gold band (`--gold-soft`). It appears on the reading screens of every learning path (S3 and the S8 cards), not on the finish screen. Its wording comes from `src/strings/he.ts` by kind: `הלימוד היומי מוקדש לעילוי נשמת …` (`leiluiNishmas`), `הלימוד היומי מוקדש לזכות …` (`lizchus`), or `השותף שלך בלימוד היומי: …` (`partner`).
 
@@ -165,7 +165,7 @@ Memorization is a secondary path, so this screen is built last and stays hidden 
 A father learns the portion with his son on one device. The screen gives the father everything to say, so the session does not depend on the father's own skill in explaining Tanya.
 
 - **Intro card:** the title `לימוד אבות ובנים`, and one line: `האב קורא, מסביר ושואל, והילד עונה. כל מה שצריך לומר כתוב כאן.` A button `מתחילים`.
-- **One thought per card:** 6–8 cards for the portion, each covering one or more consecutive units. Moving forward with `הבא` and back with `הקודם`. Each card shows:
+- **One thought per card:** 6–8 cards for the portion, one per section of the portion (S3): the card at each position covers the section at that position. Moving forward with `הבא` and back with `הקודם`. Each card shows:
   - the Tanya words of that thought, large;
   - `לאבא`: a short ביאור for the father (1–2 lines);
   - `לומר לילד`: ready-made words the father can read aloud as they are, in simple Hebrew (1–3 short sentences), in a warm gold-tinted card;
@@ -425,15 +425,16 @@ The file already holds chapter 32 for both year types, as given by Alex: in a re
 
 ```ts
 type TranslationSpan = {
-  from: UnitId; to: UnitId;              // the Hebrew units this English covers, usually one paragraph
-  text: string;                          // verbatim from the English source
+  from: UnitId; to: UnitId;              // the Hebrew unit this English covers (from = to)
+  text: string;                          // verbatim from the English source: the unit's English
+  footnotes?: Record<string, string>;    // the footnotes its text marks, "[n]"
   sourceId: "en-resource" | "sefaria-en";
   sourceSegments?: number[];             // Sefaria English segment numbers used (§8.1)
 };
 // data/translations/en/LA/32.json: TranslationSpan[] in order
 ```
 
-The per-paragraph `EN` toggle (S3) opens one span.
+`npm run build-translations` makes one span per unit, from the English units (`data/splits/en/`, §6.2), with the footnotes each marks. The per-section `EN` toggle (S3) shows the spans of the section's units, in order.
 
 ### 6.5 Learning content (keyed by unit ID)
 
@@ -448,9 +449,8 @@ type UnitContent = {
 type GlossaryEntry = { id: string; term: string; body: Reviewed<string> };
 // content/glossary.json: GlossaryEntry[]
 
-type TogetherCard = {                  // Avos uBanim (S8): one thought
+type TogetherCard = {                  // Avos uBanim (S8): one thought, on the section at its position
   id: string;
-  from: UnitId; to: UnitId;            // consecutive units covered by this card
   forParent: Reviewed<string>;         // short ביאור for the father
   toChild: Reviewed<string>;           // words the father reads aloud to his son
   talk?: Reviewed<string>;             // open question for the conversation, unscored
@@ -462,9 +462,11 @@ type Portion = {                       // content/portions/adar-09.json
   label: { he: "שיעור לדוגמה: ט׳ אדר"; en: "Sample lesson: 9 Adar" };
   location: { he: "ליקוטי אמרים, פרק ל״ב"; en: "Likkutei Amarim, chapter 32" };
   boundariesConfirmed: boolean;        // false until Alex confirms the daily division
+  sections: { from: UnitId; to: UnitId }[]; // the short sections, in order: they cover the portion
+                                       // exactly once, each starting a sentence (S3, S8)
   sources: Source[];                   // see §8.1
   questions: Question[];
-  together: TogetherCard[];            // 6–8 cards, in order
+  together: TogetherCard[];            // 6–8 cards, one per section, in order
   shinun?: { unitId: UnitId; rounds: number[][] }; // word indices hidden per round
   dedication?: { kind: "leiluiNishmas" | "lizchus" | "partner"; name: string }; // S3, S8
 };
@@ -558,7 +560,7 @@ Claude Code prepares, for chapter 32:
 
 1. **Splits:** `data/splits/he/LA/32.json` already exists: 48 units for the whole chapter, prepared by Alex and Claude (§6.1, §7), and `data/splits/en/LA/32.json` anchors the same units in the English (§6.2). Do not change the existing IDs. The text itself is never changed.
 2. **Units:** `scripts/build-units.ts` generates `data/units/he/LA/32.json` and `data/units/en/LA/32.json`. It runs as the `predev`, `prebuild`, `pretest` and `precoverage` steps in `package.json`, so the units are always fresh.
-3. **Translations:** `data/translations/en/LA/32.json`, one span per paragraph, verbatim from the English source.
+3. **Translations:** `data/translations/en/LA/32.json`, one span per unit, verbatim from the English source.
 4. **Schedule:** `data/schedules/daily.json` already exists; do not change it. If a future portion boundary falls inside a unit, split that unit (§6.1).
 5. **Portion:** `content/portions/adar-09.json` with the date key, label, sources, questions and Avos uBanim cards.
 

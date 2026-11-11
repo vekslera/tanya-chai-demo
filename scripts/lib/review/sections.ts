@@ -88,12 +88,13 @@ export function questionsSection(all: ChapterLayers, p: Portion, rules: ContentR
 
 export function cardsSection(all: ChapterLayers, p: Portion): string[] {
   const out = ['## 3. Avos uBanim cards', ''];
-  for (const c of p.together) {
-    out.push(`### ${c.id} (${c.from}–${c.to})`, '', quote(unitsIn(all.units, c)), '');
+  p.together.forEach((c, i) => {
+    const s = p.sections[i]!;
+    out.push(`### ${c.id} (${s.from}–${s.to})`, '', quote(unitsIn(all.units, s)), '');
     out.push(item(`${he.together.forParent} (forParent)`, c.forParent));
     out.push(item(`${he.together.toChild} (toChild)`, c.toChild));
     if (c.talk) out.push(item(`${he.together.talk} (talk)`, c.talk));
     out.push('');
-  }
+  });
   return out;
 }

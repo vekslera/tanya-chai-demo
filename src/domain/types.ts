@@ -48,7 +48,8 @@ export type GlossaryEntry = {
   source?: string;
 };
 
-export type TogetherCard = Range & {
+/** An Avos uBanim card: the card at a position covers the portion's section at that position. */
+export type TogetherCard = {
   id: string;
   forParent: Reviewed<string>;
   toChild: Reviewed<string>;
@@ -93,6 +94,8 @@ export type Portion = {
   label: { he: string; en: string };
   location: { he: string; en: string };
   boundariesConfirmed: boolean;
+  /** The short sections the portion is learned in, in order (SPEC S3, S8). */
+  sections: Range[];
   sources: Source[];
   questions: Question[];
   together: TogetherCard[];

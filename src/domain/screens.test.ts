@@ -4,7 +4,7 @@ import { portionData } from '../test/fixtures';
 import { completionView, doneDelays } from './completion';
 import { assemblePortion } from './portion';
 import type { Completion, Progress } from './progress';
-import { englishSpanIds, isUnlocked, readingProgress, showsBiur } from './reading';
+import { englishSectionIds, isUnlocked, readingProgress, showsBiur } from './reading';
 import { cardOfUnit, togetherStep } from './together';
 
 const before: Progress = {
@@ -72,8 +72,8 @@ describe('together', () => {
 
   it('finds the card that covers a unit', () => {
     const p = assemblePortion(portionData());
-    expect(cardOfUnit(p.portion.together, p.units, 'LA.1.004')?.id).toBe('card-2');
-    expect(cardOfUnit([], p.units, 'LA.1.004')).toBeUndefined();
+    expect(cardOfUnit(p.portion.together, p.sections, 'LA.1.004')?.id).toBe('card-2');
+    expect(cardOfUnit(p.portion.together, p.sections, 'nope')).toBeUndefined();
   });
 });
 
@@ -94,8 +94,8 @@ describe('reading', () => {
     expect(isUnlocked(true, new Set(), 'b')).toBe(true);
   });
 
-  it('lists the English spans by their first unit', () => {
-    expect(englishSpanIds(assemblePortion(portionData()).paragraphs)).toEqual([
+  it('lists the sections that have English', () => {
+    expect(englishSectionIds(assemblePortion(portionData()).sections)).toEqual([
       'LA.1.001',
       'LA.1.003',
     ]);

@@ -17,6 +17,7 @@ export type DemoState = Progress & {
   level: Level;
   togetherIndex: number;
   quiz: QuizSession | null;
+  /** Whether each section's English is shown, by section ID. */
   englishOpen: Record<string, boolean>;
   seenShinun: boolean;
   /** What the completion screen shows and animates. */
@@ -46,8 +47,8 @@ export type Action =
   | ({ type: 'answer' } & Answer)
   | { type: 'nextQuestion' }
   | { type: 'completeQuiz' }
-  | { type: 'toggleEnglish'; spanId: string }
-  | { type: 'setAllEnglish'; spanIds: string[]; open: boolean }
+  | { type: 'toggleEnglish'; sectionId: string }
+  | { type: 'setAllEnglish'; sectionIds: string[]; open: boolean }
   | { type: 'setTogetherIndex'; index: number }
   | { type: 'seenShinun' }
   | { type: 'reset' };
@@ -78,12 +79,15 @@ export function createReducer({ scoring, initialState }: StoreRules): Reducer {
       case 'toggleEnglish':
         return {
           ...state,
-          englishOpen: { ...state.englishOpen, [action.spanId]: !state.englishOpen[action.spanId] },
+          englishOpen: {
+            ...state.englishOpen,
+            [action.sectionId]: !state.englishOpen[action.sectionId],
+          },
         };
       case 'setAllEnglish':
         return {
           ...state,
-          englishOpen: Object.fromEntries(action.spanIds.map((id) => [id, action.open])),
+          englishOpen: Object.fromEntries(action.sectionIds.map((id) => [id, action.open])),
         };
       case 'setTogetherIndex':
         return { ...state, togetherIndex: action.index };

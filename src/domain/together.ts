@@ -1,7 +1,6 @@
 // Avos uBanim (S8): the intro, one card per thought, then the son's turn.
-import type { PortionUnit } from './portion.ts';
+import type { PortionSection } from './portion.ts';
 import type { TogetherCard, UnitId } from './types.ts';
-import { isInRange } from './units.ts';
 
 export const INTRO_INDEX = -1;
 
@@ -15,11 +14,11 @@ export function togetherStep(index: number, cardCount: number): TogetherStep {
   return { kind: 'card', index };
 }
 
-/** The card that covers a unit, if any. */
+/** The card that covers a unit: the card of the unit's section. */
 export function cardOfUnit(
   cards: readonly TogetherCard[],
-  units: readonly PortionUnit[],
+  sections: readonly PortionSection[],
   id: UnitId,
 ): TogetherCard | undefined {
-  return cards.find((c) => isInRange(units, c, id));
+  return cards[sections.findIndex((s) => s.units.some((u) => u.id === id))];
 }

@@ -43,7 +43,7 @@ describe('BidiText', () => {
 describe('EnglishText', () => {
   it('turns footnote marks into buttons', () => {
     const onFootnote = vi.fn();
-    const span = portion.paragraphs[0]!.translation!;
+    const span = portion.sections[0]!.english[0]!;
     const { container } = render(<EnglishText span={span} onFootnote={onFootnote} />);
     fireEvent.click(screen.getByRole('button', { name: he.read.footnote('1') }));
     expect(onFootnote).toHaveBeenCalledWith('1');
@@ -51,7 +51,7 @@ describe('EnglishText', () => {
   });
 
   it('shows a span without footnotes as text', () => {
-    const span = portion.paragraphs[1]!.translation!;
+    const span = portion.sections[1]!.english[0]!;
     const { container } = render(<EnglishText span={span} onFootnote={vi.fn()} />);
     expect(container.textContent).toBe('Brothers.');
   });

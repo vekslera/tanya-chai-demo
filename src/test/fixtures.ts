@@ -129,6 +129,10 @@ export function portionData(): PortionData {
       label: { he: 'שיעור לבדיקה', en: 'Test lesson' },
       location: { he: 'פרק א', en: 'chapter 1' },
       boundariesConfirmed: true,
+      sections: [
+        { from: 'LA.1.001', to: 'LA.1.002' },
+        { from: 'LA.1.003', to: 'LA.1.004' },
+      ],
       sources: [
         {
           id: 'he-resource',
@@ -142,16 +146,12 @@ export function portionData(): PortionData {
       together: [
         {
           id: 'card-1',
-          from: 'LA.1.001',
-          to: 'LA.1.002',
           forParent: reviewed('לאבא 1'),
           toChild: reviewed('לילד 1'),
           talk: reviewed('שיחה 1'),
         },
         {
           id: 'card-2',
-          from: 'LA.1.003',
-          to: 'LA.1.004',
           forParent: reviewed('לאבא 2'),
           toChild: reviewed('לילד 2'),
         },

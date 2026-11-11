@@ -32,15 +32,19 @@
   padding-block-end: 24px;
 }
 
-.paragraph {
+.read-section {
   padding-block: 12px;
 }
 
-.paragraph + .paragraph {
+.read-section + .read-section {
   border-block-start: 1px solid var(--track);
 }
 
-.paragraph-tools {
+.section-paragraph + .section-paragraph {
+  margin-block-start: 12px;
+}
+
+.section-tools {
   display: flex;
   justify-content: flex-end;
   margin-block-end: 4px;

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { units } from '../test/fixtures';
-import { chapterKey, chapterOf, chaptersOf, isInRange, unitsIn, UNIT_ID } from './units';
+import { chapterKey, chapterOf, chaptersOf, unitsIn, UNIT_ID } from './units';
 
 describe('unit IDs', () => {
   it('accepts IDs with an optional split letter', () => {
@@ -39,11 +39,5 @@ describe('ranges', () => {
 
   it('throws on an unknown unit', () => {
     expect(() => unitsIn(units, { from: 'LA.1.001', to: 'LA.9.001' })).toThrow('Unknown range');
-  });
-
-  it('tells whether a unit is in a range', () => {
-    const range = { from: 'LA.1.001', to: 'LA.1.002' };
-    expect(isInRange(units, range, 'LA.1.002')).toBe(true);
-    expect(isInRange(units, range, 'LA.1.003')).toBe(false);
   });
 });

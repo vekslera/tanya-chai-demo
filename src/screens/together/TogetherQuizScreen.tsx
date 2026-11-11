@@ -22,7 +22,7 @@ export function TogetherQuizScreen() {
   if (!session) return null;
   const { quiz, question: q, chosen, phase, unit, sentence } = session;
   const solved = phase === 'correct';
-  const card = cardOfUnit(portion.portion.together, portion.units, unit.id);
+  const card = cardOfUnit(portion.portion.together, portion.sections, unit.id);
 
   return (
     <main className="screen together child-quiz">

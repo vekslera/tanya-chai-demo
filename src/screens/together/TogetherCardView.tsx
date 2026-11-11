@@ -10,7 +10,7 @@ import { ROUTES } from '../../routes';
 import { he } from '../../strings/he';
 import { CardSection } from './CardSection';
 
-/** One thought: its text, what the father should know, and what to say to the son. */
+/** One thought: its section's text, what the father should know, and what to say to the son. */
 export function TogetherCardView({
   card,
   index,
@@ -22,7 +22,7 @@ export function TogetherCardView({
   count: number;
   onGo: (index: number) => void;
 }) {
-  const { unitsOf } = usePortion();
+  const { sections } = usePortion();
   const [term, setTerm] = useState<GlossaryEntry | null>(null);
   return (
     <main className="screen together">
@@ -34,7 +34,7 @@ export function TogetherCardView({
 
       <article className="together-card" key={card.id}>
         <p className="together-text">
-          {unitsOf(card).map((u) => (
+          {sections[index]!.units.map((u) => (
             <span key={u.id}>
               <SentenceText unit={u} onTerm={setTerm} />{' '}
             </span>
