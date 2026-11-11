@@ -4,7 +4,7 @@
     "term": "נבזה ונמאס",
     "body": {
       "value": "בזוי ומאוס: דבר שאין בו חשיבות, ואין בו במה להתגאות. כך האדם מסתכל כאן על הגוף שלו, לעומת הנשמה.",
-      "reviewed": false
+      "reviewed": true
     }
   },
   {
@@ -12,7 +12,7 @@
     "term": "ואהבת לרעך כמוך",
     "body": {
       "value": "מצוות התורה לאהוב כל יהודי כמו שאדם אוהב את עצמו.",
-      "reviewed": false
+      "reviewed": true
     },
     "source": "ויקרא יט, יח"
   },
@@ -21,7 +21,7 @@
     "term": "הנפש והרוח",
     "body": {
       "value": "שמות של חלקי הנשמה. כאן הכוונה לנשמה של היהודי, לעומת הגוף.",
-      "reviewed": false
+      "reviewed": true
     }
   },
   {
@@ -29,7 +29,7 @@
     "term": "באלקים חיים",
     "body": {
       "value": "בה׳, שהוא חי ונותן חיים לכל. שם נמצאים השורש והמקור של כל נשמה.",
-      "reviewed": false
+      "reviewed": true
     }
   },
   {
@@ -37,7 +37,7 @@
     "term": "מתאימות",
     "body": {
       "value": "מלשון תאומים: הנשמות דומות זו לזו ושוות, כמו אחים תאומים.",
-      "reviewed": false
+      "reviewed": true
     }
   },
   {
@@ -45,7 +45,7 @@
     "term": "אב אחד",
     "body": {
       "value": "לכל הנשמות יש אב אחד, הקב״ה. לכן כל ישראל הם משפחה אחת.",
-      "reviewed": false
+      "reviewed": true
     }
   },
   {
@@ -53,7 +53,7 @@
     "term": "אחים ממש",
     "body": {
       "value": "אחים באמת, ולא רק במשל. כמו שאחים באים מאותם הורים, כך כל הנשמות באות מאותו שורש.",
-      "reviewed": false
+      "reviewed": true
     }
   },
   {
@@ -61,7 +61,7 @@
     "term": "עיקר וטפל",
     "body": {
       "value": "עיקר: הדבר החשוב ביותר. טפל: דבר משני, שבא רק בשביל העיקר.",
-      "reviewed": false
+      "reviewed": true
     }
   },
   {
@@ -69,7 +69,7 @@
     "term": "אהבה התלויה בדבר",
     "body": {
       "value": "אהבה שיש לה סיבה חיצונית, כמו תועלת או הנאה. כשהסיבה נעלמת, נעלמת גם האהבה.",
-      "reviewed": false
+      "reviewed": true
     },
     "source": "משנה, אבות ה, טז"
   },
@@ -78,7 +78,7 @@
     "term": "הלל הזקן",
     "body": {
       "value": "מגדולי החכמים בימי בית שני, נשיא הסנהדרין.",
-      "reviewed": false
+      "reviewed": true
     }
   },
   {
@@ -86,7 +86,7 @@
     "term": "ואידך פירושא הוא",
     "body": {
       "value": "בארמית: ״והשאר, פירוש הוא״. שאר התורה מפרש ומרחיב את המצווה הזאת.",
-      "reviewed": false
+      "reviewed": true
     },
     "source": "שבת לא, א"
   },
@@ -95,7 +95,7 @@
     "term": "עיקרא ושרשא דכל עלמין",
     "body": {
       "value": "בארמית: ״העיקר והשורש של כל העולמות״, כלומר הקב״ה.",
-      "reviewed": false
+      "reviewed": true
     }
   },
   {
@@ -103,7 +103,7 @@
     "term": "אור אין סוף",
     "body": {
       "value": "האור והגילוי של הקב״ה, שאין לו גבול וסוף.",
-      "reviewed": false
+      "reviewed": true
     }
   },
   {
@@ -111,7 +111,7 @@
     "term": "כנסת ישראל",
     "body": {
       "value": "כאן: המקור הרוחני שממנו באות כל נשמות ישראל, כמו שמתבאר מיד בהמשך.",
-      "reviewed": false
+      "reviewed": true
     }
   },
   {
@@ -119,7 +119,7 @@
     "term": "למהוי אחד באחד",
     "body": {
       "value": "בארמית: ״להיות אחד באחד״. ה׳, שהוא אחד, שורה בישראל כשהם מאוחדים כאחד.",
-      "reviewed": false,
+      "reviewed": true,
       "note": "Source per the Kehot English footnote: Zohar II:135a. Alex to confirm before it is shown."
     },
     "source": "זוהר ח״ב קלה, א"
@@ -129,7 +129,7 @@
     "term": "לא שריא באתר פגים",
     "body": {
       "value": "בארמית: ״אינו שורה במקום פגום״. פירוד בין יהודים הוא כמו פגם, ובמקום כזה השכינה אינה שורה.",
-      "reviewed": false,
+      "reviewed": true,
       "note": "Source per the Kehot English footnote: Zohar I:216b. Alex to confirm before it is shown."
     },
     "source": "זוהר ח״א רטז, ב"

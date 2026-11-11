@@ -154,37 +154,41 @@ describe('resolve-matches', () => {
 });
 
 describe('validate-content', () => {
-  it('passes the demo content, with its unreviewed items listed by group', () => {
-    const { env, lines } = memoryEnv(repoWith().files);
+  const unapprove = (file: string) =>
+    disk.read(file).replaceAll('"reviewed": true', '"reviewed": false');
+  const unapproved = () =>
+    repoWith({
+      [pathOf('portion')]: unapprove(pathOf('portion')),
+      [pathOf('glossary')]: unapprove(pathOf('glossary')),
+      [pathOf('unitContent', ch)]: unapprove(pathOf('unitContent', ch)),
+    }).files;
+
+  it('passes the approved demo content, also when strict', () => {
+    const { env, lines } = memoryEnv(repoWith().files, { vars: { CONTENT_STRICT: '1' } });
+    expect(validateContent(env)).toBe(0);
+    expect(lines.info.join()).not.toMatch('unreviewed by group');
+  });
+
+  it('lists unreviewed items by group, and fails on them only when strict', () => {
+    const { env, lines } = memoryEnv(unapproved());
     expect(validateContent(env)).toBe(0);
     expect(lines.info.join('\n')).toMatch(
       /unreviewed by group: LA\.32 \d+, glossary \d+, q \d+, card \d+/,
     );
+    expect(validateContent(memoryEnv(unapproved(), { vars: { CONTENT_STRICT: '1' } }).env)).toBe(1);
   });
 
-  it('fails on unreviewed items when strict, and on errors', () => {
-    expect(
-      validateContent(memoryEnv(repoWith().files, { vars: { CONTENT_STRICT: '1' } }).env),
-    ).toBe(1);
-    const { env, lines } = memoryEnv(repoWith({ [pathOf('portion')]: null }).files);
-    expect(validateContent(env)).toBe(1);
-    expect(lines.error.join()).toMatch('is missing');
-  });
-
-  it('passes strict once everything is approved, and reports warnings', () => {
-    const approve = (file: string) =>
-      disk.read(file).replaceAll('"reviewed": false', '"reviewed": true');
-    const portion = JSON.parse(approve(pathOf('portion')));
+  it('fails on errors, and reports warnings', () => {
+    const missing = memoryEnv(repoWith({ [pathOf('portion')]: null }).files);
+    expect(validateContent(missing.env)).toBe(1);
+    expect(missing.lines.error.join()).toMatch('is missing');
+    const portion = JSON.parse(disk.read(pathOf('portion')));
     portion.boundariesConfirmed = false;
-    const { files } = repoWith({
-      [pathOf('portion')]: JSON.stringify(portion),
-      [pathOf('glossary')]: approve(pathOf('glossary')),
-      [pathOf('unitContent', ch)]: approve(pathOf('unitContent', ch)),
-    });
-    const { env, lines } = memoryEnv(files, { vars: { CONTENT_STRICT: '1' } });
+    const { env, lines } = memoryEnv(
+      repoWith({ [pathOf('portion')]: JSON.stringify(portion) }).files,
+    );
     expect(validateContent(env)).toBe(0);
     expect(lines.warn.join()).toMatch('boundaries not confirmed');
-    expect(lines.info.join()).not.toMatch('unreviewed by group');
   });
 
   it('groups items by chapter, glossary, question and card', () => {

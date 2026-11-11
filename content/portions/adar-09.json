@@ -32,7 +32,7 @@
       "category": "literal",
       "prompt": {
         "value": "לפי תחילת השיעור, מהי ה״דרך ישרה וקלה״ לקיים את מצוות ״ואהבת לרעך כמוך״?",
-        "reviewed": false
+        "reviewed": true
       },
       "options": [
         { "id": "a", "text": "שהגוף יהיה נבזה בעיניו, ושמחתו תהיה רק שמחת הנפש" },
@@ -44,11 +44,11 @@
       "unitRef": "LA.32.001",
       "hint": {
         "value": "קראו שוב את המשפט הראשון: מה האדם חושב על הגוף שלו, וממה הוא שמח?",
-        "reviewed": false
+        "reviewed": true
       },
       "explanation": {
         "value": "התניא אומר שמי שהגוף נבזה ונמאס בעיניו, ושמח רק בשמחת הנשמה, מגיע בדרך ישרה וקלה לאהוב כל יהודי.",
-        "reviewed": false
+        "reviewed": true
       }
     },
     {
@@ -59,17 +59,17 @@
       "category": "literal",
       "prompt": {
         "value": "הקישו על המשפט שאומר שכל ישראל נקראים ״אחים״.",
-        "reviewed": false
+        "reviewed": true
       },
       "answer": "LA.32.008",
       "unitRef": "LA.32.008",
       "hint": {
         "value": "המשפט נמצא בפסקה השנייה, מיד אחרי ״ואב אחד לכולנה״.",
-        "reviewed": false
+        "reviewed": true
       },
       "explanation": {
-        "value": "״ולכן נקראו כל ישראל אחים ממש, מצד שורש נפשם בה׳ אחד״: האחווה באה מהנשמה, ששורשה אחד.",
-        "reviewed": false
+        "value": "״ולכן נקראו כל ישראל אחים ממש, מצד שורש נפשם בה׳ אחד״: האחווה באה מהנשמות, ששורשן אחד.",
+        "reviewed": true
       }
     },
     {
@@ -80,17 +80,17 @@
       "category": "literal",
       "prompt": {
         "value": "לפי התניא, הנשמות של ישראל מחולקות זו מזו, ורק הגופים מאוחדים.",
-        "reviewed": false
+        "reviewed": true
       },
       "answer": "false",
       "unitRef": "LA.32.009",
       "hint": {
         "value": "בפסקה השנייה כתוב ״רק ש...מחולקים״. מה מחולק שם?",
-        "reviewed": false
+        "reviewed": true
       },
       "explanation": {
         "value": "ההפך: הנשמות מתאימות ושורשן אחד, ״רק שהגופים מחולקים״.",
-        "reviewed": false
+        "reviewed": true
       }
     },
     {
@@ -101,7 +101,7 @@
       "category": "understanding",
       "prompt": {
         "value": "מדוע מי שהגוף אינו חשוב בעיניו יכול לאהוב כל יהודי בקלות?",
-        "reviewed": false
+        "reviewed": true
       },
       "options": [
         { "id": "a", "text": "כי הוא מסתכל על הנשמה, ובנשמה כל ישראל שווים ושורשם אחד" },
@@ -112,11 +112,11 @@
       "unitRef": "LA.32.008",
       "hint": {
         "value": "חשבו: במה כל ישראל שווים, ובמה הם נפרדים זה מזה?",
-        "reviewed": false
+        "reviewed": true
       },
       "explanation": {
         "value": "הגוף הוא מה שמפריד בין אנשים, ואילו הנשמות מתאימות ושורשן אחד בה׳. מי שהעיקר אצלו הוא הנשמה, רואה בכל יהודי אח.",
-        "reviewed": false
+        "reviewed": true
       }
     },
     {
@@ -127,17 +127,17 @@
       "category": "understanding",
       "prompt": {
         "value": "לפי התניא, אהבה בין אנשים שהגוף עיקר אצלם תימשך גם אחרי שתיגמר הסיבה שבגללה הם אוהבים.",
-        "reviewed": false
+        "reviewed": true
       },
       "answer": "false",
       "unitRef": "LA.32.010",
       "hint": {
         "value": "מה פירוש אהבה ״התלויה בדבר״?",
-        "reviewed": false
+        "reviewed": true
       },
       "explanation": {
         "value": "אהבה כזו קשורה לסיבה, כמו תועלת או הנאה, וכשהסיבה נגמרת גם האהבה נגמרת. אהבה אמיתית באה מהנשמה.",
-        "reviewed": false
+        "reviewed": true
       }
     },
     {
@@ -148,7 +148,7 @@
       "category": "concept",
       "prompt": {
         "value": "מדוע מצוות אהבת ישראל היא ״כל התורה כולה״?",
-        "reviewed": false
+        "reviewed": true
       },
       "options": [
         {
@@ -162,11 +162,11 @@
       "unitRef": "LA.32.013",
       "hint": {
         "value": "לפי הפסקה השלישית, מהו ״יסוד ושורש כל התורה״?",
-        "reviewed": false
+        "reviewed": true
       },
       "explanation": {
         "value": "יסוד התורה הוא לרומם את הנשמה מעל הגוף, ולהמשיך את אור ה׳ אל מקור הנשמות, והוא שורה רק כשהנשמות מאוחדות. אהבת ישראל היא בדיוק זה.",
-        "reviewed": false
+        "reviewed": true
       }
     },
     {
@@ -174,7 +174,7 @@
       "track": "together",
       "kind": "choice",
       "category": "child",
-      "prompt": { "value": "למה כל היהודים הם אחים?", "reviewed": false },
+      "prompt": { "value": "למה כל היהודים הם אחים?", "reviewed": true },
       "options": [
         { "id": "a", "text": "כי לנשמות של כולם יש אבא אחד, הקב״ה" },
         { "id": "b", "text": "כי כולם גרים באותה שכונה" },
@@ -182,10 +182,10 @@
       ],
       "answer": "a",
       "unitRef": "LA.32.008",
-      "hint": { "value": "חשבו על הנשמה, לא על הגוף.", "reviewed": false },
+      "hint": { "value": "חשבו על הנשמה, לא על הגוף.", "reviewed": true },
       "explanation": {
         "value": "הנשמות של כל ישראל באות מה׳, אבא אחד לכולנו. לכן כולנו אחים באמת.",
-        "reviewed": false
+        "reviewed": true
       }
     },
     {
@@ -193,17 +193,17 @@
       "track": "together",
       "kind": "choice",
       "category": "child",
-      "prompt": { "value": "איזו אהבה נשארת תמיד?", "reviewed": false },
+      "prompt": { "value": "איזו אהבה נשארת תמיד?", "reviewed": true },
       "options": [
         { "id": "a", "text": "אהבה לנשמה של החבר" },
         { "id": "b", "text": "אהבה לחבר כי הוא נותן לי ממתקים" }
       ],
       "answer": "a",
       "unitRef": "LA.32.010",
-      "hint": { "value": "מה קורה כשהממתקים נגמרים?", "reviewed": false },
+      "hint": { "value": "מה קורה כשהממתקים נגמרים?", "reviewed": true },
       "explanation": {
         "value": "אהבה בגלל מתנה נגמרת כשהמתנה נגמרת. אהבה לנשמה של החבר נשארת תמיד.",
-        "reviewed": false
+        "reviewed": true
       }
     },
     {
@@ -213,14 +213,14 @@
       "category": "child",
       "prompt": {
         "value": "הלל הזקן אמר שלאהוב כל יהודי זו כל התורה כולה.",
-        "reviewed": false
+        "reviewed": true
       },
       "answer": "true",
       "unitRef": "LA.32.011",
-      "hint": { "value": "נזכור מה אבא סיפר על הלל הזקן.", "reviewed": false },
+      "hint": { "value": "נזכור מה אבא סיפר על הלל הזקן.", "reviewed": true },
       "explanation": {
         "value": "נכון! הלל אמר שאהבת ישראל היא כל התורה, וכל השאר הוא פירוש שלה.",
-        "reviewed": false
+        "reviewed": true
       }
     }
   ],
@@ -231,11 +231,11 @@
       "to": "LA.32.003",
       "forParent": {
         "value": "מי שאינו מחשיב את הגוף, ושמח רק בנשמה, מגיע בקלות לאהבת ישראל: לאהוב כל יהודי, גדול וקטן, כמו את עצמו.",
-        "reviewed": false
+        "reviewed": true
       },
       "toChild": {
         "value": "יש מצווה לאהוב כל יהודי כמו את עצמך. התניא מלמד דרך קלה לקיים אותה: לזכור שהנשמה חשובה הרבה יותר מהגוף.",
-        "reviewed": false
+        "reviewed": true
       }
     },
     {
@@ -244,15 +244,15 @@
       "to": "LA.32.005",
       "forParent": {
         "value": "הגוף אינו חשוב בעיניו, אבל הנשמה של כל יהודי גדולה מאוד, כי שורשה בה׳ עצמו.",
-        "reviewed": false
+        "reviewed": true
       },
       "toChild": {
         "value": "בתוך כל יהודי יש נשמה, חלק מה׳. היא הרבה יותר גדולה וחשובה ממה שרואים מבחוץ.",
-        "reviewed": false
+        "reviewed": true
       },
       "talk": {
         "value": "כשאתה מסתכל על חבר מהכיתה, מה אתה רואה? ומה אי אפשר לראות מבחוץ?",
-        "reviewed": false
+        "reviewed": true
       }
     },
     {
@@ -261,11 +261,11 @@
       "to": "LA.32.008",
       "forParent": {
         "value": "כל הנשמות שוות ודומות, ולכולן אב אחד, הקב״ה. לכן כל ישראל אחים ממש, מצד שורש הנשמה.",
-        "reviewed": false
+        "reviewed": true
       },
       "toChild": {
         "value": "כל היהודים הם כמו משפחה אחת גדולה. לכולנו יש אבא אחד בשמיים, הקב״ה. לכן כל יהודי הוא באמת אח שלך.",
-        "reviewed": false
+        "reviewed": true
       }
     },
     {
@@ -274,15 +274,15 @@
       "to": "LA.32.010",
       "forParent": {
         "value": "רק הגופים נפרדים. מי שהגוף עיקר אצלו, אהבתו לאחרים תלויה בתועלת או בהנאה, ונגמרת כשהסיבה נגמרת.",
-        "reviewed": false
+        "reviewed": true
       },
       "toChild": {
         "value": "יש מי שאוהב חבר רק כשהוא נותן לו משהו. אהבה כזו נגמרת מהר. כשאוהבים את הנשמה של החבר, האהבה נשארת תמיד.",
-        "reviewed": false
+        "reviewed": true
       },
       "talk": {
         "value": "יש לך חבר שאתה אוהב גם כשהוא לא נותן לך כלום? מה אתה אוהב בו?",
-        "reviewed": false
+        "reviewed": true
       }
     },
     {
@@ -291,11 +291,11 @@
       "to": "LA.32.013",
       "forParent": {
         "value": "הלל אמר שאהבת ישראל היא כל התורה. כי כל התורה באה לרומם את הנשמה מעל הגוף, וזה גם יסוד אהבת ישראל.",
-        "reviewed": false
+        "reviewed": true
       },
       "toChild": {
         "value": "הלל הזקן אמר: לאהוב כל יהודי, זו כל התורה כולה. כי כל התורה מלמדת אותנו לשים את הנשמה במקום הראשון.",
-        "reviewed": false
+        "reviewed": true
       }
     },
     {
@@ -304,15 +304,15 @@
       "to": "LA.32.017",
       "forParent": {
         "value": "עוד מטרה של התורה: שאור ה׳ ישרה במקור כל הנשמות. זה קורה רק כשישראל מאוחדים; במקום של פירוד ה׳ אינו שורה.",
-        "reviewed": false
+        "reviewed": true
       },
       "toChild": {
         "value": "ה׳ רוצה לשרות בתוך עם ישראל. כשכולנו מאוחדים, זה כמו בית שלם ויפה שה׳ שמח לשרות בו. מריבות הן כמו סדקים בבית.",
-        "reviewed": false
+        "reviewed": true
       },
       "talk": {
         "value": "מה אפשר לעשות כדי שבכיתה שלך תהיה יותר אחדות?",
-        "reviewed": false
+        "reviewed": true
       }
     },
     {
@@ -321,11 +321,11 @@
       "to": "LA.32.019",
       "forParent": {
         "value": "לכן אנו מבקשים בתפילה ״ברכנו אבינו כולנו כאחד״: הברכה מגיעה כשכולנו יחד.",
-        "reviewed": false
+        "reviewed": true
       },
       "toChild": {
         "value": "בכל יום אנחנו אומרים בתפילה: ״ברכנו אבינו כולנו כאחד״. כמו אבא שמברך את הילדים כשהם יחד, באהבה.",
-        "reviewed": false
+        "reviewed": true
       }
     }
   ],

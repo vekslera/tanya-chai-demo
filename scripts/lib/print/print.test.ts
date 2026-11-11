@@ -70,10 +70,10 @@ describe('the print model', () => {
   });
 
   it('marks a draft only while a ביאור waits for approval', () => {
-    expect(printModel(real, real.portion!, 'en').draft).toBe(en.print.draft);
-    const approved = structuredClone(real);
-    for (const c of approved.unitContent) c.biur!.en!.short!.reviewed = true;
-    expect(printModel(approved, approved.portion!, 'en').draft).toBeNull();
+    expect(printModel(real, real.portion!, 'en').draft).toBeNull();
+    const waiting = structuredClone(real);
+    waiting.unitContent[0]!.biur!.en!.short!.reviewed = false;
+    expect(printModel(waiting, waiting.portion!, 'en').draft).toBe(en.print.draft);
   });
 
   it('prints a unit without a ביאור as text alone, and credits only what it finds', () => {
@@ -117,7 +117,7 @@ describe('the Word document', () => {
   };
 
   it('is right to left in Hebrew, with the text and the ביאור in their own fonts', async () => {
-    const { body, footer } = await read('he');
+    const { body, footer } = await read('he', (m) => (m.draft = he.print.draft));
     expect(body).toMatch('<w:bidi');
     expect(body).toMatch('<w:rtl');
     expect(body).toMatch(`w:bidi="${settings('he').tag}"`);
