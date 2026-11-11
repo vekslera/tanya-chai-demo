@@ -6,7 +6,7 @@ import { config, type AppConfig } from './config';
 import { loadPortion } from './content/loadPortion';
 import type { AssembledPortion } from './domain/portion';
 import type { KeyValueStorage, LearningContentSource, TextSource } from './ports';
-import { createPersistence } from './store/persistence';
+import { createPersistence, storageKeyFor } from './store/persistence';
 import { createReducer, initialStateFrom } from './store/state';
 import type { StoreDeps } from './store/StoreProvider';
 
@@ -21,13 +21,18 @@ export type Adapters = {
 export function createDeps(
   { text, content, storage }: Adapters,
   appConfig: AppConfig = config,
+  base: string = import.meta.env.BASE_URL,
 ): AppDeps {
   const initialState = initialStateFrom(appConfig);
   return {
     loadPortion: () => loadPortion(text, content, appConfig.language),
     store: {
       reducer: createReducer({ scoring: appConfig.scoring, initialState }),
-      persistence: createPersistence(storage, appConfig.storage.key, initialState),
+      persistence: createPersistence(
+        storage,
+        storageKeyFor(appConfig.storage.key, base),
+        initialState,
+      ),
     },
   };
 }

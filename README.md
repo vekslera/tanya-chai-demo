@@ -26,6 +26,10 @@ npm run coverage          # the same, failing below 100% line and branch coverag
 npm run validate-content  # SPEC §6.5 integrity rules; CONTENT_STRICT=1 also fails on unreviewed items
 ```
 
+## Deployment
+
+GitHub Pages publishes one site with two builds (SPEC §10): `main`, the stable demo, at `https://demo.tanyachai.app/`, and `dev`, the current state, at `https://demo.tanyachai.app/dev/`. A push to either branch runs `.github/workflows/deploy.yml`, which checks and rebuilds both; `main` must pass `CONTENT_STRICT=1`.
+
 ## Content pipeline
 
 Every file path, the chapter list and the Sefaria refs are named once, in [`texts.config.json`](texts.config.json). The app's parameters (scoring, attempts, timings, demo values, the validator's content rules) are named once, in [`app.config.json`](app.config.json).
