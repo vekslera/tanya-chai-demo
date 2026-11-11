@@ -1,4 +1,5 @@
-// Checks of the learning content attached to units: the glossary and the ביאור.
+// Checks of the learning content attached to units: the glossary and the ביאור. A sentence's
+// ביאור is kept on its first unit (SPEC §6.2).
 import type { ContentRules } from '../config.ts';
 import { isReviewed, wordCount, type Context } from './context.ts';
 
@@ -20,9 +21,16 @@ export function checkUnitContent(ctx: Context, glossaryIds: Set<string>, rules: 
     const known = ctx.unitRef('content', c.id);
     if (ids.has(c.id)) ctx.errors.push(`content: duplicate ${c.id}`);
     ids.add(c.id);
+    const continued = known ? ctx.byId.get(c.id)!.sentence : undefined;
+    if (continued && c.biur) {
+      ctx.errors.push(`${where}: continues ${continued}'s sentence; its ביאור belongs there`);
+    }
+    // A longer sentence may have a longer ביאור: the limit is per unit.
+    const units = ctx.sentenceSize.get(c.id) ?? 1;
     for (const [language, b] of Object.entries(c.biur ?? {})) {
       const biur = b.short;
-      const max = rules.biurMaxWords[language];
+      const perUnit = rules.biurMaxWords[language];
+      const max = perUnit === undefined ? undefined : perUnit * units;
       if (max === undefined) ctx.errors.push(`${where}: biur in an unknown language "${language}"`);
       else if (biur && !isReviewed(biur)) {
         ctx.errors.push(`${where}: biur.${language} is not a Reviewed<string>`);

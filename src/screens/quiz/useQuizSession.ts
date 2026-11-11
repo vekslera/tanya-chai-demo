@@ -35,8 +35,9 @@ export function useQuizSession(track: Track, route: Route, fallback: Route) {
     chosen,
     phase,
     isLast,
-    /** The sentence the question relies on. */
+    /** The unit the question relies on, and its whole sentence. */
     unit: portion.unit(question.unitRef)!,
+    sentence: portion.sentenceOf(question.unitRef)!,
     /** Records an answer; null when the question takes no answer now, or this one was tried. */
     answer(choice: string): AnswerResult | null {
       if (!canAnswer(phase) || chosen.includes(choice)) return null;

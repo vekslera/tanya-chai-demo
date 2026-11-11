@@ -1,36 +1,50 @@
 // The three sections of the review document: the text with its ביאור and glossary, the
 // questions, and the Avos uBanim cards.
 import type { Portion, Question, Unit } from '../../../src/domain/types.ts';
-import { unitsIn } from '../../../src/domain/units.ts';
+import { sentenceOf, unitsIn } from '../../../src/domain/units.ts';
 import { he } from '../../../src/strings/he.ts';
 import { appLanguage, type ContentRules } from '../config.ts';
 import type { ChapterLayers } from '../load.ts';
 import { item, quote } from './item.ts';
+
+/** The portion's units, sentence by sentence (SPEC §6.2). */
+function sentencesOf(units: Unit[]): Unit[][] {
+  const out: Unit[][] = [];
+  for (const u of units) {
+    const last = out[out.length - 1];
+    if (last && sentenceOf(last[0]!) === sentenceOf(u)) last.push(u);
+    else out.push([u]);
+  }
+  return out;
+}
 
 export function textSection(all: ChapterLayers, portionUnits: Unit[]): string[] {
   const content = new Map(all.unitContent.map((c) => [c.id, c]));
   const glossary = new Map(all.glossary.map((g) => [g.id, g]));
   const out = ['## 1. Text and short ביאור', ''];
   let paragraph = 0;
-  for (const u of portionUnits) {
-    if (u.paragraph !== paragraph) {
-      paragraph = u.paragraph;
+  for (const units of sentencesOf(portionUnits)) {
+    const first = units[0]!;
+    const last = units[units.length - 1]!;
+    if (first.paragraph !== paragraph) {
+      paragraph = first.paragraph;
       out.push(`### Paragraph ${paragraph}`, '');
     }
-    out.push(`#### ${u.id}`, '', quote([u]), '');
-    const c = content.get(u.id);
-    const { [appLanguage]: own, ...others } = c?.biur ?? {};
-    if (own?.short) out.push(item(`${u.id}/biur.${appLanguage}`, own.short));
-    for (const m of c?.glossary ?? []) {
+    const title = units.length > 1 ? `${first.id}–${last.id.split('.').pop()}` : first.id;
+    out.push(`#### ${title}`, '', quote(units), '');
+    const { [appLanguage]: own, ...others } = content.get(first.id)?.biur ?? {};
+    if (own?.short) out.push(item(`${first.id}/biur.${appLanguage}`, own.short));
+    for (const m of units.flatMap((u) => content.get(u.id)?.glossary ?? [])) {
       const g = glossary.get(m.entryId)!;
       out.push(item(`glossary/${g.id}: ${g.term}`, g.body));
       if (g.source) out.push(`  Source line: ${g.source}`);
     }
-    // The ביאור in another language follows that language's text of the unit.
+    // The ביאור in another language follows that language's text of the sentence.
     for (const [language, b] of Object.entries(others)) {
-      const translated = all.texts[language]?.units.find((x) => x.id === u.id);
-      if (translated) out.push('', quote([translated]), '');
-      if (b.short) out.push(item(`${u.id}/biur.${language}`, b.short));
+      const ids = new Set(units.map((u) => u.id));
+      const translated = all.texts[language]?.units.filter((x) => ids.has(x.id)) ?? [];
+      if (translated.length) out.push('', quote(translated), '');
+      if (b.short) out.push(item(`${first.id}/biur.${language}`, b.short));
     }
     out.push('');
   }

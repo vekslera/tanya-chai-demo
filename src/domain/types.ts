@@ -10,6 +10,8 @@ export type Unit = ChapterRef & {
   seq: number;
   paragraph: number;
   text: string;
+  /** The sentence's first unit, on a unit that continues a sentence (SPEC §6.2). */
+  sentence?: UnitId;
 };
 
 export type DateKey = string;

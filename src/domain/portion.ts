@@ -12,15 +12,23 @@ import type {
   UnitContent,
   UnitId,
 } from './types.ts';
-import { chapterKey, unitsIn } from './units.ts';
+import { chapterKey, sentenceOf, unitsIn } from './units.ts';
 
 export type GlossaryMark = { entry: GlossaryEntry; match: string };
 
 export type PortionUnit = Unit & {
   /** The exact text, without the spaces around it. */
   display: string;
-  biur?: Reviewed<string>;
   glossary: GlossaryMark[];
+};
+
+/** A sentence of the text: one unit, or consecutive units of a paragraph, and its ביאור. */
+export type PortionSentence = {
+  /** Its first unit's ID. */
+  id: UnitId;
+  units: PortionUnit[];
+  /** The ביאור of the whole sentence, kept on its first unit. */
+  biur?: Reviewed<string>;
 };
 
 export type PortionParagraph = {
@@ -28,6 +36,7 @@ export type PortionParagraph = {
   key: string;
   paragraph: number;
   units: PortionUnit[];
+  sentences: PortionSentence[];
   translation?: TranslationSpan;
 };
 
@@ -46,13 +55,19 @@ export type PortionData = {
 export type AssembledPortion = {
   portion: Portion;
   units: PortionUnit[];
+  sentences: PortionSentence[];
   paragraphs: PortionParagraph[];
   unit: (id: UnitId) => PortionUnit | undefined;
+  /** The sentence a unit belongs to. */
+  sentenceOf: (id: UnitId) => PortionSentence | undefined;
   /** The portion's units within a range, in order. */
   unitsOf: (range: Range) => PortionUnit[];
   /** Items still waiting for approval (the טיוטה badge, SPEC §8.4). */
   unreviewed: number;
 };
+
+/** A sentence's text: its units' text, joined. */
+export const sentenceText = (s: PortionSentence) => s.units.map((u) => u.display).join(' ');
 
 /** The key of a unit's paragraph, unique across chapters. */
 export const paragraphKey = (u: Unit) => `${chapterKey(u)}.${u.paragraph}`;
@@ -80,7 +95,6 @@ export function assemblePortion(data: PortionData): AssembledPortion {
       return {
         ...u,
         display: u.text.trim(),
-        biur: c?.biur?.[data.language]?.short,
         glossary: (c?.glossary ?? []).flatMap((m) => {
           const entry = glossaryById.get(m.entryId);
           return entry ? [{ entry, match: m.match }] : [];
@@ -89,22 +103,40 @@ export function assemblePortion(data: PortionData): AssembledPortion {
     });
 
   const paragraphs: PortionParagraph[] = [];
+  const sentences: PortionSentence[] = [];
   for (const u of portionUnits) {
     const key = paragraphKey(u);
     let p = paragraphs[paragraphs.length - 1];
     if (p?.key !== key) {
-      p = { key, paragraph: u.paragraph, units: [], translation: translationOf.get(u.id) };
+      p = {
+        key,
+        paragraph: u.paragraph,
+        units: [],
+        sentences: [],
+        translation: translationOf.get(u.id),
+      };
       paragraphs.push(p);
     }
     p.units.push(u);
+    const id = sentenceOf(u);
+    let s = p.sentences[p.sentences.length - 1];
+    if (s?.id !== id) {
+      s = { id, units: [], biur: contentById.get(id)?.biur?.[data.language]?.short };
+      p.sentences.push(s);
+      sentences.push(s);
+    }
+    s.units.push(u);
   }
 
   const byId = new Map(portionUnits.map((u) => [u.id, u]));
+  const sentenceById = new Map(sentences.flatMap((s) => s.units.map((u) => [u.id, s] as const)));
   return {
     portion,
     units: portionUnits,
+    sentences,
     paragraphs,
     unit: (id) => byId.get(id),
+    sentenceOf: (id) => sentenceById.get(id),
     unitsOf: (range) => unitsIn(portionUnits, range),
     unreviewed: unreviewedOf(reviewableItems(data)).length,
   };

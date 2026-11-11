@@ -16,7 +16,16 @@ export const units: Unit[] = [
     text: 'וְהַנֶּפֶשׁ שׁוֹרֶשׁ.',
   },
   { id: 'LA.1.003', seq: 1003, part: 'LA', chapter: 1, paragraph: 2, text: 'אַחִים מַמָּשׁ ' },
-  { id: 'LA.1.004', seq: 1004, part: 'LA', chapter: 1, paragraph: 2, text: 'אָב אֶחָד.' },
+  // Continues LA.1.003's sentence.
+  {
+    id: 'LA.1.004',
+    seq: 1004,
+    part: 'LA',
+    chapter: 1,
+    paragraph: 2,
+    text: 'אָב אֶחָד.',
+    sentence: 'LA.1.003',
+  },
 ];
 
 const q = (over: Partial<Question> & Pick<Question, 'id'>): Question => ({

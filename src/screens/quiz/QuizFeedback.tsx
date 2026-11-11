@@ -7,8 +7,8 @@ import type { QuizSessionView } from './useQuizSession';
 
 /** What follows an answer: a hint to try again, praise, or the correct answer. */
 export function QuizFeedback({ session }: { session: QuizSessionView }) {
-  const { question: q, quiz, chosen, phase, unit } = session;
-  const quote = <QuoteCard unit={unit} label={he.quiz.fromText} />;
+  const { question: q, quiz, chosen, phase, sentence } = session;
+  const quote = <QuoteCard sentence={sentence} label={he.quiz.fromText} />;
   return (
     <div className="feedback" aria-live="polite">
       {phase === 'retry' && (

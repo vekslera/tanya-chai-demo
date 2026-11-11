@@ -29,6 +29,10 @@ function checkAnswer(
     if (ctx.unitRef(where, q.answer) && !inPortion.has(q.answer)) {
       ctx.errors.push(`${where}: answer ${q.answer} is outside the portion`);
     }
+    const continued = ctx.byId.get(q.answer)?.sentence;
+    if (continued) {
+      ctx.errors.push(`${where}: answer ${q.answer} is part of a sentence; use ${continued}`);
+    }
   } else {
     ctx.errors.push(`${where}: unknown kind ${(q as { kind: string }).kind}`);
   }

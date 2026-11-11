@@ -378,9 +378,12 @@ All files are JSON, validated against the TypeScript types below (`src/domain/ty
 type Split = {
   id: UnitId;            // "LA.32.004"
   startsWith: string;    // "כי מאחר שגופו נמאס" — the raw file's words, unvocalized
+  continues?: true;      // this unit carries on the previous unit's sentence
 };
 // data/splits/he/LA/32.json: Split[] in reading order
 ```
+
+**Sentences.** The units follow the division of the Hebrew Shiurim (Lessons in Tanya), which sometimes cuts one sentence of the Tanya into two units: `בשגם שכולן מתאימות` / `ואב אחד לכולנה`. The unit IDs stay as they are; a sentence is annotated on top of them, by `continues: true` on each unit after the sentence's first. A sentence stays within its paragraph. The app shows the text sentence by sentence: one ביאור per sentence, after the whole sentence, and the sentence questions offer whole sentences. A sentence's ביאור is kept on its first unit, and its ID is its first unit's ID. The sentences are the Hebrew's: the other languages share the unit IDs and are joined the same way. In chapter 32, units 001–019 form 11 sentences: 001–002, 003, 004–005, 006–007, 008, 009–010, 011–012, 013, 014–015, 016–017, 018–019.
 
 **Other languages.** The same units are anchored in each other language's text, so that language can be read unit by unit too. `data/splits/en/LA/32.json` gives, for each Hebrew unit ID, in the same order, the words its English starts with. The validator checks that the IDs match the Hebrew. Matching works the same way, on letters only: in English, case, punctuation, quotes and footnote numbers are ignored, and an em dash counts as a space, as the maqaf does in Hebrew. The languages are the keys of `paths.splits` in `texts.config.json`; the app's own language is `language` in `app.config.json`.
 
@@ -394,6 +397,7 @@ type Unit = {
   chapter: number;
   paragraph: number;     // 1-based line of the raw file
   text: string;          // exact text from the anchor up to the next anchor or the end of the line
+  sentence?: UnitId;     // on a unit that continues a sentence: the sentence's first unit
 };
 ```
 
@@ -512,7 +516,7 @@ type Reviewed<T> = { value: T; reviewed: boolean; note?: string };
 
 ## 7. Behavior details
 
-- **Unit splitting:** split at the natural sentence and clause boundaries of the Tanya text (periods, `כי`, `ולכן`, `והנה`, etc.). Aim for 1–3 lines per unit on a phone. Splitting is defined by hand in the splits file (§6.2), never at runtime. A screen "sentence" is one unit.
+- **Unit splitting:** split at the natural sentence and clause boundaries of the Tanya text (periods, `כי`, `ולכן`, `והנה`, etc.). Aim for 1–3 lines per unit on a phone. Splitting is defined by hand in the splits file (§6.2), never at runtime. A screen "sentence" is one sentence of §6.2: one unit, or consecutive units joined by `continues`.
 - **Glossary underline:** rendered by splitting the unit's text at `match`. If a match appears twice, underline only the first occurrence.
 - **Shuffling:** seeded per session, so a reload does not reorder a question the user is looking at.
 - **Reading progress:** an IntersectionObserver per unit.
@@ -567,7 +571,7 @@ These are drafted by Claude (in the claude.ai conversation or in Claude Code) an
 - Stay strictly within the plain meaning of the text, as it is learned in Chabad. No novel interpretations, no stories, no attributions to the Rebbe or other sources unless Alex supplies them.
 - The ביאור follows the meaning of the approved commentaries (§2), so it carries the inner, Chassidic point of each unit and not only its literal sense. It is written in our own words with our own examples. **Never** quote a commentary or rewrite its sentences one by one.
 - **Overlap check:** before review, a script compares every draft item with the local Shiurim file and flags any run of 5 or more words in common (letters only, nikud ignored). Flagged items are rewritten. The check runs only where the file exists, that is on Alex's machine, never in CI. The English ביאור is checked the same way against the English commentaries it follows.
-- **Short ביאור:** written in each language (Hebrew and English), at most 25 words per unit in Hebrew and 35 in English (`contentRules.biurMaxWords`). Each language explains its own text of the unit, with the same meaning, and is written from the commentaries in that language: the English ביאור follows Lessons in Tanya and Steinsaltz in English, and is not a translation of the Hebrew ביאור. (The English ביאור of `LA.32.001`–`LA.32.019` was carried over from the Hebrew; it is to be rewritten this way.) It explains words and the flow, so simply that a child of about 10, or someone opening Tanya for the first time, understands it. No unexplained terms. The third paragraph (`LA.32.011`–`LA.32.019`) is the hardest at this level and needs the most care. There is no extended ביאור in the demo.
+- **Short ביאור:** written in each language (Hebrew and English), at most 25 words per unit in Hebrew and 35 in English (`contentRules.biurMaxWords`); a sentence of several units may have that many words for each of its units. Each language explains its own text of the sentence, with the same meaning, and is written from the commentaries in that language: the English ביאור follows Lessons in Tanya and Steinsaltz in English, and is not a translation of the Hebrew ביאור. (The English ביאור of `LA.32.001`–`LA.32.019` was carried over from the Hebrew; it is to be rewritten this way.) It explains words and the flow, so simply that a child of about 10, or someone opening Tanya for the first time, understands it. No unexplained terms. The third paragraph (`LA.32.011`–`LA.32.019`) is the hardest at this level and needs the most care. There is no extended ביאור in the demo.
 - **Questions** test the text, not trivia.
   - **Literal:** what does the text say.
   - **Understanding:** why does it say so.

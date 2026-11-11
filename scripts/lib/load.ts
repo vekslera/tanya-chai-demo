@@ -28,6 +28,30 @@ export function loadText(files: Files, ch: ChapterRef, language: string): TextLa
   return { splits, footnotes: resource.footnotes, ...buildUnits({ raw, splits, ...ch, language }) };
 }
 
+/**
+ * Every language's text of a chapter, by language. The sentences are the app language's (SPEC
+ * §6.2): the other languages share its unit IDs, so their units are joined the same way.
+ */
+export function loadTexts(files: Files, ch: ChapterRef): Record<string, TextLayer> {
+  const texts = Object.fromEntries(
+    textLanguages.flatMap((l) => {
+      const layer = loadText(files, ch, l);
+      return layer ? [[l, layer]] : [];
+    }),
+  );
+  const sentenceOf = new Map(
+    (texts[appLanguage]?.units ?? []).flatMap((u) => (u.sentence ? [[u.id, u.sentence]] : [])),
+  );
+  for (const [language, layer] of Object.entries(texts)) {
+    if (language === appLanguage) continue;
+    layer.units = layer.units.map((u) => {
+      const sentence = sentenceOf.get(u.id);
+      return sentence ? { ...u, sentence } : u;
+    });
+  }
+  return texts;
+}
+
 /** The app's language is at the top level: its units are the ones every layer points into. */
 export type ChapterLayers = ChapterRef &
   TextLayer & {
@@ -46,12 +70,7 @@ export function loadChapter(files: Files, ch: ChapterRef = config.chapters[0]!):
   const at = (key: string) => pathOf(key, ch);
   const optional = <T>(key: string, fallback: T, parse: (rel: string) => T): T =>
     files.exists(at(key)) ? parse(at(key)) : fallback;
-  const texts = Object.fromEntries(
-    textLanguages.flatMap((l) => {
-      const layer = loadText(files, ch, l);
-      return layer ? [[l, layer]] : [];
-    }),
-  );
+  const texts = loadTexts(files, ch);
   const primary = texts[appLanguage];
   if (!primary) throw new Error(`${ch.part} ${ch.chapter}: no ${appLanguage} text or splits`);
   return {

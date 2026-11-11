@@ -3,7 +3,8 @@
 import type { Unit } from '../../src/domain/types.ts';
 import { UNIT_ID } from '../../src/domain/units.ts';
 
-export type Split = { id: string; startsWith: string };
+/** Where a unit starts; `continues` when it carries on the previous unit's sentence. */
+export type Split = { id: string; startsWith: string; continues?: boolean };
 type Word = { start: number; letters: string };
 
 /**
@@ -117,22 +118,30 @@ export function buildUnits({
     if (!starts.some((s) => s.line === l)) errors.push(`paragraph ${l + 1} has no unit`);
   });
 
-  const units: Unit[] = starts.map((s, n) => {
+  const units: Unit[] = [];
+  starts.forEach((s, n) => {
     const text = lines[s.line]!;
     const next = starts[n + 1];
+    const previous = units[n - 1];
     // The first unit of a paragraph starts at the line start, so leading spaces stay with it and
     // the units of a paragraph join back to the exact line.
     const begin = s.wordIndex === 0 ? 0 : lineWords[s.line]![s.wordIndex]!.start;
     const end =
       next && next.line === s.line ? lineWords[s.line]![next.wordIndex]!.start : text.length;
-    return {
+    // A sentence stays within its paragraph.
+    const continues = s.split.continues && previous?.paragraph === s.line + 1;
+    if (s.split.continues && !continues) {
+      errors.push(`${s.split.id}: continues a sentence, but starts a paragraph`);
+    }
+    units.push({
       id: s.split.id,
       seq: chapter * 1000 + n + 1,
       part,
       chapter,
       paragraph: s.line + 1,
       text: text.slice(begin, end),
-    };
+      ...(continues ? { sentence: previous.sentence ?? previous.id } : {}),
+    });
   });
   return { units, lines, errors };
 }

@@ -14,19 +14,19 @@ export function FindSentence({
   session: QuizSessionView;
   onAnswer: (unitId: string) => void;
 }) {
-  const { paragraphs, units } = usePortion();
+  const { paragraphs, sentences } = usePortion();
   const { question: q, chosen, phase, unit, quiz } = session;
   const choices = new Set(
     sentenceChoices(
-      units.map((u) => u.id),
+      sentences.map((s) => s.id),
       q,
       config.quiz.findSentence.choices,
       quiz.seed,
     ),
   );
   const shown = paragraphs
-    .map((p) => ({ ...p, units: p.units.filter((u) => choices.has(u.id)) }))
-    .filter((p) => p.units.length > 0);
+    .map((p) => ({ ...p, sentences: p.sentences.filter((s) => choices.has(s.id)) }))
+    .filter((p) => p.sentences.length > 0);
   const open = canAnswer(phase);
   const marked = open ? chosen : [...chosen, q.answer];
   return (

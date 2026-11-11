@@ -129,10 +129,21 @@ describe('glossary and ביאור', () => {
       'unknown glossary entry',
     );
     expect(errorsAfter((a) => (c(a).glossary![0]!.match = 'אין'))).toMatch('not in the unit text');
-    const long = Array(contentRules.biurMaxWords.he! + 1)
-      .fill('מילה')
-      .join(' ');
-    expect(warningsAfter((a) => (c(a).biur!.he!.short!.value = long))).toMatch('biur.he has');
+    // The limit is per unit: LA.32.001 opens a sentence of two units, LA.32.003 is one alone.
+    const words = (n: number) => Array(n).fill('מילה').join(' ');
+    const perUnit = contentRules.biurMaxWords.he!;
+    const one = (a: ChapterLayers) => a.unitContent.find((x) => x.id === 'LA.32.003')!;
+    expect(warningsAfter((a) => (c(a).biur!.he!.short!.value = words(perUnit + 1)))).toBe('');
+    expect(warningsAfter((a) => (c(a).biur!.he!.short!.value = words(2 * perUnit + 1)))).toMatch(
+      `biur.he has ${2 * perUnit + 1} words (max ${2 * perUnit})`,
+    );
+    expect(warningsAfter((a) => (one(a).biur!.he!.short!.value = words(perUnit + 1)))).toMatch(
+      'content LA.32.003: biur.he has',
+    );
+    // A unit that continues a sentence has no ביאור of its own.
+    expect(errorsAfter((a) => a.unitContent.push({ id: 'LA.32.002', biur: c(a).biur }))).toMatch(
+      "content LA.32.002: continues LA.32.001's sentence",
+    );
     expect(after((a) => (c(a).biur = { he: {} })).errors).toEqual([]);
   });
 
@@ -210,6 +221,9 @@ describe('questions', () => {
     );
     expect(errorsAfter((a) => delete choice(a).options)).toMatch('0 options');
     expect(errorsAfter((a) => (q(a, 'q-l1-bodies').answer = 'yes'))).toMatch('"true" or "false"');
+    expect(errorsAfter((a) => (q(a, 'q-l1-brothers').answer = 'LA.32.007'))).toMatch(
+      'answer LA.32.007 is part of a sentence; use LA.32.006',
+    );
     expect(errorsAfter((a) => (q(a, 'q-l1-brothers').answer = 'LA.32.040'))).toMatch(
       'answer LA.32.040 is outside',
     );

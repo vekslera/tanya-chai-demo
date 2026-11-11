@@ -20,7 +20,7 @@ export function TogetherQuizScreen() {
   const portion = usePortion();
   const session = useQuizSession('together', ROUTES.togetherQuiz, ROUTES.together);
   if (!session) return null;
-  const { quiz, question: q, chosen, phase, unit } = session;
+  const { quiz, question: q, chosen, phase, unit, sentence } = session;
   const solved = phase === 'correct';
   const card = cardOfUnit(portion.portion.together, portion.units, unit.id);
 
@@ -66,7 +66,7 @@ export function TogetherQuizScreen() {
         {phase === 'retry' && (
           <>
             <p className="child-try-again">{he.togetherQuiz.tryAgain}</p>
-            <QuoteCard unit={unit} label={he.togetherQuiz.fromText} />
+            <QuoteCard sentence={sentence} label={he.togetherQuiz.fromText} />
             {card && (
               <CardSection label={he.togetherQuiz.fatherSaid} className="together-child">
                 <p>{card.toChild.value}</p>

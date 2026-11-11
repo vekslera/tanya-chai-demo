@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { portionData } from '../test/fixtures';
-import { assemblePortion, paragraphKey, portionRanges } from './portion';
+import { assemblePortion, paragraphKey, portionRanges, sentenceText } from './portion';
 
 describe('assemblePortion', () => {
   const p = assemblePortion(portionData());
@@ -11,19 +11,30 @@ describe('assemblePortion', () => {
     expect(p.unit('nope')).toBeUndefined();
   });
 
-  it('attaches the ביאור and the known glossary entries', () => {
-    const u = p.unit('LA.1.001')!;
-    expect(u.biur?.value).toBe('ביאור ראשון');
-    expect(u.glossary.map((m) => m.entry.id)).toEqual(['ahava']);
+  it('joins units into sentences, each with the ביאור of its first unit', () => {
+    expect(p.sentences.map((s) => [s.id, s.units.map((u) => u.id)])).toEqual([
+      ['LA.1.001', ['LA.1.001']],
+      ['LA.1.002', ['LA.1.002']],
+      ['LA.1.003', ['LA.1.003', 'LA.1.004']],
+    ]);
+    expect(p.paragraphs.map((x) => x.sentences.length)).toEqual([2, 1]);
+    expect(p.sentenceOf('LA.1.004')!.id).toBe('LA.1.003');
+    expect(sentenceText(p.sentenceOf('LA.1.004')!)).toBe('אַחִים מַמָּשׁ אָב אֶחָד.');
+    expect(p.sentenceOf('nope')).toBeUndefined();
+    expect(p.sentenceOf('LA.1.001')!.biur?.value).toBe('ביאור ראשון');
+    expect(p.sentenceOf('LA.1.003')!.biur).toBeUndefined();
+  });
+
+  it('attaches the known glossary entries', () => {
+    expect(p.unit('LA.1.001')!.glossary.map((m) => m.entry.id)).toEqual(['ahava']);
     // An entry missing from the glossary is left out.
     expect(p.unit('LA.1.002')!.glossary).toEqual([]);
-    expect(p.unit('LA.1.003')!.biur).toBeUndefined();
   });
 
   it('attaches the ביאור in the language asked for', () => {
     const english = assemblePortion({ ...portionData(), language: 'en' });
-    expect(english.unit('LA.1.001')!.biur?.value).toBe('The first biur');
-    expect(english.unit('LA.1.002')!.biur).toBeUndefined();
+    expect(english.sentenceOf('LA.1.001')!.biur?.value).toBe('The first biur');
+    expect(english.sentenceOf('LA.1.002')!.biur).toBeUndefined();
   });
 
   it('groups units into paragraphs with their English', () => {

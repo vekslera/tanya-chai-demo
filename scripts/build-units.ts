@@ -2,14 +2,15 @@
 // language with splits. The output is generated: never edit it, and it is not committed.
 import { config, pathOf, textLanguages } from './lib/config.ts';
 import { runMain, type ScriptEnv } from './lib/env.ts';
-import { loadText } from './lib/load.ts';
+import { loadTexts } from './lib/load.ts';
 
 export function run({ files, log }: ScriptEnv): number {
   let failed = false;
   for (const ch of config.chapters) {
+    const texts = loadTexts(files, ch);
     for (const language of textLanguages) {
       const where = `${ch.part} ${ch.chapter} (${language})`;
-      const text = loadText(files, ch, language);
+      const text = texts[language];
       if (!text) {
         log.warn(`build-units: ${where} has no text or no splits yet`);
         continue;

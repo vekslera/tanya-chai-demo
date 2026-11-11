@@ -22,8 +22,9 @@ describe('loadPortion', () => {
   it('assembles the demo portion from the bundled files', async () => {
     const p = await loadPortion(bundledTextSource(), bundledContentSource(), config.language);
     expect(p.units[0]!.id).toBe('LA.32.001');
-    // The app's language's ביאור, for every unit of the portion.
-    expect(p.units.every((u) => /[א-ת]/.test(u.biur?.value ?? ''))).toBe(true);
+    // The app's language's ביאור, for every sentence of the portion.
+    expect(p.sentences.every((s) => /[א-ת]/.test(s.biur?.value ?? ''))).toBe(true);
+    expect(p.sentences.length).toBeLessThan(p.units.length);
     expect(p.paragraphs.every((x) => x.translation)).toBe(true);
   });
 });

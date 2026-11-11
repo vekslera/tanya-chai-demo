@@ -1,6 +1,7 @@
 // Checks of the portion file itself: its day in the schedule, its sources, its ביאור coverage,
 // its dedication.
 import type { Portion, Unit } from '../../../src/domain/types.ts';
+import { sentenceOf } from '../../../src/domain/units.ts';
 import { he } from '../../../src/strings/he.ts';
 import { pathOf } from '../config.ts';
 import type { Context } from './context.ts';
@@ -20,11 +21,11 @@ export function checkPortion(ctx: Context): { p: Portion; units: Unit[] } | null
   }
   const units = ranges.flatMap(ctx.unitsOf);
   if (!p.boundariesConfirmed) ctx.warnings.push('portion: boundaries not confirmed');
-  for (const u of units) {
-    const biur = all.unitContent.find((c) => c.id === u.id)?.biur;
+  for (const id of new Set(units.map(sentenceOf))) {
+    const biur = all.unitContent.find((c) => c.id === id)?.biur;
     for (const language of Object.keys(all.texts)) {
       if (!biur?.[language]?.short) {
-        ctx.warnings.push(`content: ${u.id} has no short biur in "${language}"`);
+        ctx.warnings.push(`content: ${id} has no short biur in "${language}"`);
       }
     }
   }

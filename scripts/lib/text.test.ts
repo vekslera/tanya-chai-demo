@@ -5,7 +5,7 @@ import { parseResource } from './resource.ts';
 import { resolveMatch, sameLetters, skipLetters } from './matches.ts';
 import { overlaps, runs, toWords } from './overlap.ts';
 import { translationSpans } from './translations.ts';
-import { buildUnits, checkUnits, lettersOnly, paragraphs } from './units.ts';
+import { buildUnits, checkUnits, lettersOnly, paragraphs, type Split } from './units.ts';
 
 describe('lettersOnly', () => {
   it('drops nikud, punctuation and gershayim', () => {
@@ -27,7 +27,7 @@ describe('paragraphs', () => {
 
 describe('buildUnits', () => {
   const raw = '  שָׁלוֹם, עוֹלָם – גָּדוֹל. [וְעוֹד] דָּבָר־אַחֵר \r\nשׁוּרָה שְׁנִיָּה\r\n';
-  const splits = [
+  const splits: Split[] = [
     { id: 'LA.1.001', startsWith: 'שלום עולם' },
     { id: 'LA.1.002', startsWith: 'ועוד דבר' },
     { id: 'LA.1.003', startsWith: 'שורה' },
@@ -48,6 +48,16 @@ describe('buildUnits', () => {
       [2, 1003],
     ]);
     expect(checkUnits({ units, lines, splits })).toEqual([]);
+  });
+
+  it('joins a unit to the previous one’s sentence, within a paragraph only', () => {
+    const joined = build([
+      splits[0]!,
+      { ...splits[1]!, continues: true },
+      { ...splits[2]!, continues: true },
+    ]);
+    expect(joined.units.map((u) => u.sentence)).toEqual([undefined, 'LA.1.001', undefined]);
+    expect(joined.errors).toEqual(['LA.1.003: continues a sentence, but starts a paragraph']);
   });
 
   it('treats a maqaf as a space', () => {

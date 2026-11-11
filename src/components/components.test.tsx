@@ -74,9 +74,10 @@ describe('SentenceText', () => {
 
 describe('PortionText', () => {
   it('quotes one sentence', () => {
-    render(<QuoteCard unit={unit} label="מתוך" />);
+    const sentence = portion.sentenceOf(unit.id)!;
+    render(<QuoteCard sentence={sentence} label="מתוך" />);
     expect(screen.getByText('מתוך')).toBeTruthy();
-    render(<QuoteCard unit={unit} />);
+    render(<QuoteCard sentence={sentence} />);
     expect(screen.getAllByText(unit.display)).toHaveLength(2);
   });
 

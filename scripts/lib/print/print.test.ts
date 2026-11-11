@@ -42,13 +42,15 @@ describe('the print style', () => {
 });
 
 describe('the print model', () => {
-  it.each(['he', 'en'])('puts each unit’s ביאור right after its text (%s)', (language) => {
+  it.each(['he', 'en'])('puts each sentence’s ביאור right after it (%s)', (language) => {
     const model = printModel(real, real.portion!, language);
     expect(model.paragraphs).toHaveLength(3);
+    // The first sentence joins the first two units, in either language.
     const first = model.paragraphs[0]![0]!;
+    const [a, b] = real.texts[language]!.units;
     expect(first.text[0]).toMatchObject({ kind: 'text' });
     expect(first.text[0]!.kind === 'text' && first.text[0]!.text).toBe(
-      real.texts[language]!.units[0]!.text.trim(),
+      `${a!.text.trim()} ${b!.text.trim()}`,
     );
     expect(first.biur).toBe(biurOf(language));
     expect(model.subtitle).toMatch(real.portion!.label[language as 'he' | 'en']);
@@ -58,7 +60,7 @@ describe('the print model', () => {
   it('keeps the footnotes the portion’s text marks', () => {
     const english = printModel(real, real.portion!, 'en');
     expect(Object.keys(english.footnotes)).toEqual(['1', '2', '3', '4', '5', '6', '7']);
-    expect(english.paragraphs[0]![2]!.text).toContainEqual({ kind: 'note', n: '1' });
+    expect(english.paragraphs[0]![1]!.text).toContainEqual({ kind: 'note', n: '1' });
     expect(printModel(real, real.portion!, 'he').footnotes).toEqual({});
   });
 
@@ -70,10 +72,13 @@ describe('the print model', () => {
   });
 
   it('marks a draft only while a ביאור waits for approval', () => {
-    expect(printModel(real, real.portion!, 'en').draft).toBeNull();
-    const waiting = structuredClone(real);
-    waiting.unitContent[0]!.biur!.en!.short!.reviewed = false;
-    expect(printModel(waiting, waiting.portion!, 'en').draft).toBe(en.print.draft);
+    const approved = structuredClone(real);
+    for (const c of approved.unitContent) {
+      for (const b of Object.values(c.biur ?? {})) if (b.short) b.short.reviewed = true;
+    }
+    expect(printModel(approved, approved.portion!, 'en').draft).toBeNull();
+    approved.unitContent[0]!.biur!.en!.short!.reviewed = false;
+    expect(printModel(approved, approved.portion!, 'en').draft).toBe(en.print.draft);
   });
 
   it('prints a unit without a ביאור as text alone, and credits only what it finds', () => {

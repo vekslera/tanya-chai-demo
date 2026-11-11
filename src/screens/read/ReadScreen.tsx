@@ -21,16 +21,16 @@ import './Read.css';
 /** The portion's text, with the ביאור on level 2 and the English on demand (S3). */
 export function ReadScreen() {
   const { state, dispatch } = useStore();
-  const { portion, paragraphs, units } = usePortion();
+  const { portion, paragraphs, sentences } = usePortion();
   const startQuiz = useStartQuiz();
   const [term, setTerm] = useState<GlossaryEntry | null>(null);
   const [footnote, setFootnote] = useState<Footnote | null>(null);
   const body = useRef<HTMLDivElement>(null);
 
-  const unitIds = useMemo(() => units.map((u) => u.id), [units]);
-  const seen = useSeen(body, unitIds, config.read.seenMargin, [units, state.level]);
+  const sentenceIds = useMemo(() => sentences.map((s) => s.id), [sentences]);
+  const seen = useSeen(body, sentenceIds, config.read.seenMargin, [sentences, state.level]);
   const timeUp = useElapsed(config.read.unlockAfterMs);
-  const unlocked = isUnlocked(timeUp, seen, unitIds[unitIds.length - 1]!);
+  const unlocked = isUnlocked(timeUp, seen, sentenceIds[sentenceIds.length - 1]!);
   const spanIds = englishSpanIds(paragraphs);
   const allEnglishOpen = spanIds.length > 0 && spanIds.every((id) => state.englishOpen[id]);
 
@@ -48,7 +48,7 @@ export function ReadScreen() {
           />
         }
       >
-        <ReadProgress percent={readingProgress(seen.size, units.length)} />
+        <ReadProgress percent={readingProgress(seen.size, sentences.length)} />
       </TopBar>
 
       <p className="read-location">{portion.location.he}</p>

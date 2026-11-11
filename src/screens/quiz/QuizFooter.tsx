@@ -10,10 +10,10 @@ import type { QuizSessionView } from './useQuizSession';
 export function QuizFooter({ session, onNext }: { session: QuizSessionView; onNext: () => void }) {
   const { paragraphs } = usePortion();
   const [sheetOpen, setSheetOpen] = useState(false);
-  const { question: q, phase, isLast } = session;
+  const { question: q, phase, isLast, sentence } = session;
   const open = canAnswer(phase);
   // While a findSentence question is open, the sheet must not point at the answer.
-  const highlight = q.kind === 'findSentence' && open ? undefined : q.unitRef;
+  const highlight = q.kind === 'findSentence' && open ? undefined : sentence.id;
 
   return (
     <>

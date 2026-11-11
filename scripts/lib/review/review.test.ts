@@ -42,7 +42,11 @@ describe('reviewDocument', () => {
   it('quotes the text of each other language before its ביאור', () => {
     const all = structuredClone(real);
     const { text } = reviewDocument(all, all.portion!);
-    const english = all.texts.en!.units[0]!.text.trim();
+    // The first sentence joins the first two units.
+    const english = all.texts
+      .en!.units.slice(0, 2)
+      .map((u) => u.text.trim())
+      .join(' ');
     expect(text).toMatch(`> ${english}\n\n- **LA.32.001/biur.en**`);
     all.unitContent[0]!.biur = {
       he: {},
