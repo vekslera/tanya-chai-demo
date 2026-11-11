@@ -23,6 +23,7 @@
   },
   "quiz": {
     "solo": { "maxAttempts": 2 },
+    "findSentence": { "choices": 3 },
     "together": { "retryUntilCorrect": true }
   },
   "read": {

@@ -8,12 +8,37 @@ import {
   optionsOf,
   phaseOf,
   questionIdsFor,
+  sentenceChoices,
   TRUE,
 } from './quiz';
 import type { Question } from './types';
 
 const byId = (id: string) => questions.find((q) => q.id === id)!;
-const rules = { solo: { maxAttempts: 2 }, together: { retryUntilCorrect: true } };
+const rules = {
+  solo: { maxAttempts: 2 },
+  findSentence: { choices: 3 },
+  together: { retryUntilCorrect: true },
+};
+
+describe('sentenceChoices', () => {
+  const ids = ['u1', 'u2', 'u3', 'u4', 'u5', 'u6'];
+  const at = (answer: string) => ({ ...byId('q-find'), answer });
+  const windows = (answer: string, count = 3, units = ids) =>
+    new Set(
+      Array.from({ length: 40 }, (_, s) => sentenceChoices(units, at(answer), count, s).join(' ')),
+    );
+
+  it('offers consecutive sentences around the answer, placing it anywhere among them', () => {
+    expect(windows('u4')).toEqual(new Set(['u2 u3 u4', 'u3 u4 u5', 'u4 u5 u6']));
+    expect(sentenceChoices(ids, at('u4'), 3, 7)).toEqual(sentenceChoices(ids, at('u4'), 3, 7));
+  });
+
+  it('stays within the portion at its edges, and offers all of a short one', () => {
+    expect(windows('u1')).toEqual(new Set(['u1 u2 u3']));
+    expect(windows('u6')).toEqual(new Set(['u4 u5 u6']));
+    expect(windows('u2', 3, ['u1', 'u2'])).toEqual(new Set(['u1 u2']));
+  });
+});
 
 describe('optionsOf', () => {
   it('gives true and false, in that order, for a true/false question', () => {

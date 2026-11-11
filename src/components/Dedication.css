@@ -2,8 +2,12 @@
   /* The full width, also in a grid of buttons. */
   grid-column: 1 / -1;
   margin: 0;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--gold-soft);
   text-align: center;
   text-wrap: balance;
-  font-size: var(--fs-small);
-  color: var(--navy-muted);
+  font-size: var(--fs-dedication);
+  font-weight: 500;
+  color: var(--navy);
 }

@@ -109,7 +109,7 @@ The last choice is remembered. The default selection is level 2.
 - **Glossary terms:** marked with a dotted gold underline. Tapping one opens a bottom sheet with the term, a 1–3 line ביאור, and (if present) a source line. At least these terms: `נבזה ונמאס`, `נפש` / `הנפש והרוח`, `באלקים חיים`, `אחים ממש`, `אב אחד`. Final list per §8.3.
 - **English toggle:** each paragraph has a small `EN` chip. Tapping it reveals the English translation of that paragraph below the Hebrew (LTR, `lang="en"`, serif, smaller). The toggle is per paragraph, not global. A global "show all English" action is in the overflow menu.
 - **Bottom bar:** a sticky primary button, `לשאלות` (enabled once the user has scrolled to the end, or after 20 seconds).
-- **Dedication:** when the portion has a `dedication`, a quiet line under the button (small, muted navy, centered). It appears on the reading screens of every learning path (S3 and the S8 cards), not on the finish screen. Its wording comes from `src/strings/he.ts` by kind: `הלימוד היומי מוקדש לעילוי נשמת …` (`leiluiNishmas`), `הלימוד היומי מוקדש לזכות …` (`lizchus`), or `השותף שלך בלימוד היומי: …` (`partner`).
+- **Dedication:** when the portion has a `dedication`, a short line under the button, centered: small (15px, `--fs-dedication`) but clearly visible, in navy, medium weight, on a light gold band (`--gold-soft`). It appears on the reading screens of every learning path (S3 and the S8 cards), not on the finish screen. Its wording comes from `src/strings/he.ts` by kind: `הלימוד היומי מוקדש לעילוי נשמת …` (`leiluiNishmas`), `הלימוד היומי מוקדש לזכות …` (`lizchus`), or `השותף שלך בלימוד היומי: …` (`partner`).
 
 #### S4: Questions (`#/quiz`)
 
@@ -117,7 +117,7 @@ The last choice is remembered. The default selection is level 2.
 - **Question types:**
   - `choice`: 3–4 options. Options are shuffled per session, except options marked `fixedOrder`.
   - `trueFalse`: `נכון` / `לא נכון`.
-  - `findSentence`: "tap the sentence in the text that says …". The text is shown in compact form and the user taps a sentence.
+  - `findSentence`: "tap the sentence in the text that says …". Three consecutive sentences of the portion are shown in compact form, the right one among them, and the user taps a sentence. Where the right one falls among the three changes from session to session; the number of sentences is `quiz.findSentence.choices` in `app.config.json`.
 - **Feedback** appears immediately after answering:
   - **Correct:** the option turns gold, a short positive line appears (`יפה מאוד` / `בדיוק` and similar, rotating), plus the explanation, and the source sentence from the text is shown in a quote card with a gold highlight.
   - **Wrong (first attempt):** a gentle shake (none under reduced motion) and a hint line. The relevant sentence is highlighted, and the user may try once more.
@@ -220,7 +220,7 @@ The contrast of `--gold` on `--bg` is too low for body text, so use `--gold-deep
 - **Frank Ruhl Libre:** Tanya text, headings, the wordmark. Weights 400, 700 and 900.
 - **Rubik:** UI, ביאור, buttons. Weights 400, 500 and 700.
 - Self-host both via `@fontsource/frank-ruhl-libre` and `@fontsource/rubik`, importing only the Hebrew and Latin subsets and only the weights listed.
-- **Scale (phones):** Tanya text 21px; ביאור 16px; UI 15–16px; screen titles 24px; completion headline 28px.
+- **Scale (phones):** Tanya text 21px; ביאור 16px; UI 15–16px; the dedication 15px; screen titles 24px; completion headline 28px.
 
 ### 4.3 Logo
 

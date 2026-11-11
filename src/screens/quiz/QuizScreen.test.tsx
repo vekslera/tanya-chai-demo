@@ -13,6 +13,11 @@ const withQuiz = (questionIds = ['q-choice', 'q-find', 'q-tf']) =>
   });
 const option = (text: string) => button(new RegExp(text));
 const sentence = (id: string) => document.querySelector(`button[data-unit="${id}"]`)!;
+/** The sentences offered, other than the answer (LA.1.003). */
+const wrongSentences = () =>
+  [...document.querySelectorAll<HTMLElement>('button[data-unit]')].filter(
+    (b) => b.dataset.unit !== 'LA.1.003',
+  );
 
 describe('QuizScreen', () => {
   it('leaves for the level screen without a quiz', async () => {
@@ -43,10 +48,13 @@ describe('QuizScreen', () => {
     expect(document.querySelector('.option--shake')).toBeNull();
   });
 
-  it('finds a sentence in the text, with a hint to its paragraph', async () => {
+  it('finds a sentence among a few of the text, with a hint to its paragraph', async () => {
     await renderApp(ROUTES.quiz, { storage: withQuiz(['q-find']) });
     expect(screen.getByText(he.quiz.findSentenceHelp)).toBeTruthy();
-    await click(sentence('LA.1.001'));
+    expect(document.querySelectorAll('button[data-unit]')).toHaveLength(
+      config.quiz.findSentence.choices,
+    );
+    await click(wrongSentences()[0]!);
     expect(document.querySelector('.compact-paragraph--hint')).toBeTruthy();
     await click(sentence('LA.1.003'));
     expect(screen.getByText(he.quiz.praise[0]!)).toBeTruthy();
@@ -55,13 +63,14 @@ describe('QuizScreen', () => {
 
   it('reveals a findSentence answer in the text itself', async () => {
     await renderApp(ROUTES.quiz, { storage: withQuiz(['q-find']) });
-    await click(sentence('LA.1.001'));
-    await click(sentence('LA.1.002'));
+    const [first, second] = wrongSentences();
+    await click(first!);
+    await click(second!);
     expect(screen.getByText(he.quiz.revealed)).toBeTruthy();
     expect(sentence('LA.1.003').className).toContain('compact-sentence--correct');
     // The question is done: the text takes no more answers.
-    await click(sentence('LA.1.004'));
-    expect(sentence('LA.1.004').className).not.toContain('wrong');
+    await click(sentence('LA.1.003'));
+    expect(screen.getByText(he.quiz.revealed)).toBeTruthy();
   });
 
   it('opens the text in a sheet, pointing at the source once answered', async () => {

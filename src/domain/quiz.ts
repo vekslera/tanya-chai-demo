@@ -4,6 +4,8 @@ import type { Level, Question, Track } from './types.ts';
 
 export type QuizRules = {
   solo: { maxAttempts: number };
+  /** How many sentences a findSentence question offers. */
+  findSentence: { choices: number };
   /** The son may try every option until he finds the answer. */
   together: { retryUntilCorrect: boolean; maxAttempts?: number };
 };
@@ -23,6 +25,25 @@ export function optionsOf(q: Question, seed: number): Option[] {
   if (q.kind === 'trueFalse') return [{ id: TRUE }, { id: FALSE }];
   const options = q.options ?? [];
   return q.fixedOrder ? options : seededShuffle(options, seed, q.id);
+}
+
+/**
+ * The sentences a findSentence question offers: `count` consecutive units of the portion that
+ * include the answer, in text order. Where the answer falls among them is chosen per session.
+ */
+export function sentenceChoices(
+  unitIds: readonly string[],
+  q: Question,
+  count: number,
+  seed: number,
+): string[] {
+  const at = unitIds.indexOf(q.answer);
+  const size = Math.min(count, unitIds.length);
+  const first = Math.max(0, at - size + 1);
+  const last = Math.min(at, unitIds.length - size);
+  const starts = Array.from({ length: last - first + 1 }, (_, i) => first + i);
+  const start = seededShuffle(starts, seed, q.id)[0]!;
+  return unitIds.slice(start, start + size);
 }
 
 /** The questions of a track, and of a level on the solo track, in their order. */
