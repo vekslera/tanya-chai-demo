@@ -1,4 +1,5 @@
 import { HeartMark } from '../../components/HeartMark';
+import { LanguageToggle } from '../../components/LanguageToggle';
 import { TopBar } from '../../components/TopBar';
 import { ROUTES } from '../../routes';
 import { he } from '../../strings/he';
@@ -12,7 +13,7 @@ export function TogetherIntro({
 }) {
   return (
     <main className="screen together together--center">
-      <TopBar back={ROUTES.home} />
+      <TopBar back={ROUTES.home} end={<LanguageToggle comingSoon />} />
       <div className="together-intro">
         <HeartMark progress={heartProgress} beating />
         <h1 className="together-title">{he.together.title}</h1>

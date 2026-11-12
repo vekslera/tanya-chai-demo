@@ -4,7 +4,7 @@ import { portionData } from '../test/fixtures';
 import { completionView, doneDelays } from './completion';
 import { assemblePortion } from './portion';
 import type { Completion, Progress } from './progress';
-import { englishSectionIds, readingProgress, showsBiur } from './reading';
+import { hasEnglish, readingProgress, showsBiur } from './reading';
 import { cardOfUnit, togetherStep } from './together';
 
 const before: Progress = {
@@ -95,10 +95,10 @@ describe('reading', () => {
     expect(readingProgress(0, 0)).toBe(100);
   });
 
-  it('lists the sections that have English', () => {
-    expect(englishSectionIds(assemblePortion(portionData()).sections)).toEqual([
-      'LA.1.001',
-      'LA.1.003',
-    ]);
+  it('tells whether the portion has English', () => {
+    const data = portionData();
+    expect(hasEnglish(assemblePortion(data).sections)).toBe(true);
+    data.translations = [];
+    expect(hasEnglish(assemblePortion(data).sections)).toBe(false);
   });
 });

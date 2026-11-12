@@ -17,8 +17,8 @@ export type DemoState = Progress & {
   level: Level;
   togetherIndex: number;
   quiz: QuizSession | null;
-  /** Whether each section's English is shown, by section ID. */
-  englishOpen: Record<string, boolean>;
+  /** Whether the lesson is read with its English: the translation, and its ביאור. */
+  english: boolean;
   seenShinun: boolean;
   /** What the completion screen shows and animates. */
   lastCompletion: Completion | null;
@@ -35,7 +35,7 @@ export function initialStateFrom({
     completedTogether: false,
     togetherIndex: INTRO_INDEX,
     quiz: null,
-    englishOpen: {},
+    english: false,
     seenShinun: false,
     lastCompletion: null,
   };
@@ -47,8 +47,7 @@ export type Action =
   | ({ type: 'answer' } & Answer)
   | { type: 'nextQuestion' }
   | { type: 'completeQuiz' }
-  | { type: 'toggleEnglish'; sectionId: string }
-  | { type: 'setAllEnglish'; sectionIds: string[]; open: boolean }
+  | { type: 'toggleEnglish' }
   | { type: 'setTogetherIndex'; index: number }
   | { type: 'seenShinun' }
   | { type: 'reset' };
@@ -77,18 +76,7 @@ export function createReducer({ scoring, initialState }: StoreRules): Reducer {
         return { ...state, ...progress, quiz: null, lastCompletion: completion };
       }
       case 'toggleEnglish':
-        return {
-          ...state,
-          englishOpen: {
-            ...state.englishOpen,
-            [action.sectionId]: !state.englishOpen[action.sectionId],
-          },
-        };
-      case 'setAllEnglish':
-        return {
-          ...state,
-          englishOpen: Object.fromEntries(action.sectionIds.map((id) => [id, action.open])),
-        };
+        return { ...state, english: !state.english };
       case 'setTogetherIndex':
         return { ...state, togetherIndex: action.index };
       case 'seenShinun':

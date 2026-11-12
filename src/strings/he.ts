@@ -22,7 +22,6 @@ export const he = {
     close: 'סגירה',
     next: 'הבא',
     prev: 'הקודם',
-    menu: 'אפשרויות נוספות',
     demoData: 'נתון להדגמה',
   },
 
@@ -44,15 +43,18 @@ export const he = {
   read: {
     backToLevel: 'חזרה לבחירת אופן הלימוד',
     progress: 'התקדמות הקריאה',
-    englishChip: 'EN',
-    englishShow: 'הצגת התרגום לאנגלית של קטע זה',
-    englishHide: 'הסתרת התרגום לאנגלית של קטע זה',
-    englishAllShow: 'הצגת התרגום לאנגלית בכל הקטעים',
-    englishAllHide: 'הסתרת התרגום לאנגלית בכל הקטעים',
     biurLabel: 'ביאור',
     glossaryHint: 'הקישו על מילה מסומנת לביאור',
     footnote: (n: string) => `הערה ${n}`,
     footnoteTitle: 'הערה',
+  },
+
+  /** The lesson's language: Hebrew only, or with the English translation and its ביאור. */
+  language: {
+    he: 'HE',
+    en: 'EN',
+    label: 'לימוד עם התרגום לאנגלית',
+    comingSoon: 'בקרוב',
   },
 
   /** The day's dedication line, by kind (SPEC §4.4). */

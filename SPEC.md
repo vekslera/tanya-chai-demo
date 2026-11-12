@@ -104,12 +104,12 @@ The last choice is remembered. The default selection is level 2.
 
 #### S3: Read (`#/read`)
 
-- **Header:** a back arrow (pointing right, as in RTL), the portion label, and a thin reading-progress bar (sentences scrolled into view).
+- **Header:** a back arrow (pointing right, as in RTL), the portion label, the `HE`/`EN` language switch, and a thin reading-progress bar (sentences scrolled into view).
 - **Body:** the text in **short sections** (`sections` in the portion file: 7 in the demo portion, the same parts as the Avos uBanim cards, S8), separated by a thin rule. Each section is split into **sentences** (§6.2), each a block with a little breathing room. Frank Ruhl Libre 400, 20–22px on phones, line-height 2.0, since the text carries nikud.
 - **Level 1:** text only.
 - **Level 2:** the short ביאור (1–2 lines) appears after each sentence. Rubik, smaller, muted navy, with a thin gold rule on the right edge.
 - **Glossary terms:** marked with a dotted gold underline. Tapping one opens a bottom sheet with the term, a 1–3 line ביאור, and (if present) a source line. At least these terms: `נבזה ונמאס`, `נפש` / `הנפש והרוח`, `באלקים חיים`, `אחים ממש`, `אב אחד`. Final list per §8.3.
-- **English toggle:** each section has a small `EN` chip. Tapping it reveals the English translation of that section right after its Hebrew (LTR, `lang="en"`, serif, smaller), so the English is never far from the text it translates. The toggle is per section, not global. A global "show all English" action is in the overflow menu.
+- **Language switch:** one `HE`/`EN` switch at the top of the screen, a choice for the whole lesson, kept in the state (`english`). In Hebrew mode (`HE`, the default) the screen is as above. In English mode (`EN`), each sentence's English translation comes right after its Hebrew, in exactly the same portions (LTR, `lang` set to `translationLanguage` in `app.config.json`, serif, smaller), so the English is never far from the text it translates. On level 2, the ביאור that follows is the English ביאור (§8.3), **instead of** the Hebrew one; a sentence without an English ביאור keeps its Hebrew one. The switch is hidden when the portion has no English.
 - **Sections and questions:** the screen shows the sections read so far. After a section comes its question (S4), in a card under the text; once it is answered, `להמשך הלימוד` opens the next section, scrolled into view. After the last section comes the summary question, and then `לסיום השיעור` leads to the completion screen (S5). The progress bar shows the questions answered.
 - **Bottom bar:** sticky, with the dedication.
 - **Dedication:** when the portion has a `dedication`, a short line under the button, centered: small (15px, `--fs-dedication`) but clearly visible, in navy, medium weight, on a light gold band (`--gold-soft`). It appears on the reading screens of every learning path (S3 and the S8 cards), not on the finish screen. Its wording comes from `src/strings/he.ts` by kind: `הלימוד היומי מוקדש לעילוי נשמת …` (`leiluiNishmas`), `הלימוד היומי מוקדש לזכות …` (`lizchus`), or `השותף שלך בלימוד היומי: …` (`partner`).
@@ -166,6 +166,7 @@ Memorization is a secondary path, so this screen is built last and stays hidden 
 
 A father learns the portion with his son on one device. The screen gives the father everything to say, so the session does not depend on the father's own skill in explaining Tanya.
 
+- **Language switch:** the `HE`/`EN` switch of S3 is shown dimmed in the header (intro, cards and questions); pressing it shows `בקרוב` for a moment (`motion.comingSoonMs`). Avos uBanim is in Hebrew only for now.
 - **Intro card:** the title `לימוד אבות ובנים`, and one line: `האב קורא, מסביר ושואל, והילד עונה. כל מה שצריך לומר כתוב כאן.` A button `מתחילים`.
 - **One thought per card:** 6–8 cards for the portion, one per section of the portion (S3): the card at each position covers the section at that position. Moving forward with `הבא` and back with `הקודם`. Each card shows:
   - the Tanya words of that thought, large;
@@ -328,7 +329,7 @@ type DemoState = {
   familyStreak: number;           // seeded from demo.initialProgress; shown only in the Avos uBanim completion
   togetherIndex: number;          // current card in S8
   quiz: { track: "solo" | "together"; questionIds: string[]; index: number; attempts: Record<string, number>; earned: number } | null;
-  englishOpen: Record<string, boolean>; // per translation span (by its first unit ID)
+  english: boolean;               // the lesson is read with its English (S3)
   seenShinun: boolean;
   lastCompletion: Completion | null; // what the completion screen shows and animates
 };
@@ -436,7 +437,7 @@ type TranslationSpan = {
 // data/translations/en/LA/32.json: TranslationSpan[] in order
 ```
 
-`npm run build-translations` makes one span per unit, from the English units (`data/splits/en/`, §6.2), with the footnotes each marks. The per-section `EN` toggle (S3) shows the spans of the section's units, in order.
+`npm run build-translations` makes one span per unit, from the English units (`data/splits/en/`, §6.2), with the footnotes each marks. In English mode (S3), each span is shown under the sentence it starts in, so each sentence gets the English of its own units.
 
 ### 6.5 Learning content (keyed by unit ID)
 

@@ -35,14 +35,6 @@ export const BackIcon = () => (
   </Icon>
 );
 
-export const MoreIcon = () => (
-  <Icon>
-    <circle cx="12" cy="5" r="1.4" fill="currentColor" />
-    <circle cx="12" cy="12" r="1.4" fill="currentColor" />
-    <circle cx="12" cy="19" r="1.4" fill="currentColor" />
-  </Icon>
-);
-
 export const CloseIcon = () => (
   <Icon>
     <path d="M6 6l12 12M18 6L6 18" />

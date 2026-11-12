@@ -108,53 +108,66 @@ describe('ReadScreen', () => {
     expect(screen.getByText(he.quiz.revealed)).toBeTruthy();
   });
 
-  it('shows the English of a section, and its footnote', async () => {
-    await renderApp(ROUTES.read, { storage: reading() });
-    await click(screen.getAllByRole('button', { name: he.read.englishShow })[0]!);
+  it('switches the whole lesson to English and back, with its footnotes', async () => {
+    const { storage } = await renderApp(ROUTES.read, { storage: reading(['q-find']) });
+    const toggle = button(he.language.label);
+    expect(toggle.getAttribute('aria-pressed')).toBe('false');
+    await click(toggle);
+    expect(toggle.getAttribute('aria-pressed')).toBe('true');
+    // Every section shown has its English: the choice is for the whole lesson.
     expect(screen.getByText(/Love/)).toBeTruthy();
+    expect(screen.getByText('Brothers.')).toBeTruthy();
+    expect(JSON.parse(storage.get(config.storage.key)!).english).toBe(true);
     await click(button(he.read.footnote('1')));
     expect(screen.getByRole('dialog', { name: he.read.footnote('1') })).toBeTruthy();
     expect(screen.getByText('A note.')).toBeTruthy();
     await click(button(he.common.close));
     expect(screen.queryByRole('dialog')).toBeNull();
-    await click(button(he.read.englishHide));
+    await click(toggle);
     expect(screen.queryByText(/Love/)).toBeNull();
   });
 
-  it('shows or hides all the English from the menu', async () => {
-    await renderApp(ROUTES.read, { storage: reading(['q-find']) });
-    await click(button(he.common.menu));
-    await click(screen.getByRole('menuitem', { name: he.read.englishAllShow }));
-    expect(screen.getByText('Brothers.')).toBeTruthy();
-    await click(button(he.common.menu));
-    await click(screen.getByRole('menuitem', { name: he.read.englishAllHide }));
-    expect(screen.queryByText('Brothers.')).toBeNull();
-    await click(button(he.common.menu));
-    await click(document.querySelector('.menu-scrim')!);
-    expect(screen.queryByRole('menu')).toBeNull();
+  it('gives the English ביאור instead of the Hebrew in English mode', async () => {
+    await renderApp(ROUTES.read, { storage: reading(['q-l2'], 2) });
+    expect(screen.getByText('ביאור ראשון')).toBeTruthy();
+    await click(button(he.language.label));
+    expect(screen.queryByText('ביאור ראשון')).toBeNull();
+    const biur = screen.getByText('The first biur');
+    expect([biur.getAttribute('dir'), biur.getAttribute('lang')]).toEqual([
+      'ltr',
+      config.translationLanguage,
+    ]);
+    // A sentence without an English ביאור keeps its Hebrew one.
+    expect(screen.getByText('ביאור שני').getAttribute('dir')).toBeNull();
   });
 
-  it('shows a section’s English after its text, whole', async () => {
+  it('shows the English of each sentence right after it', async () => {
     const data = portionData();
     data.portion.sections = [{ from: 'LA.1.001', to: 'LA.1.004' }];
-    // One span per unit in the first paragraph: they join as written, a new paragraph after a space.
+    // One span per unit; the two units of the sentence LA.1.003 join as written.
     const [first, second] = data.translations;
     data.translations = [
-      { ...first!, to: 'LA.1.001', text: 'Love ', footnotes: {} },
+      { ...first!, to: 'LA.1.001', text: 'Love, ', footnotes: {} },
       { ...first!, from: 'LA.1.002', text: '[and soul][1].' },
-      second!,
+      { ...second!, to: 'LA.1.003', text: 'Brothers, ' },
+      { ...second!, from: 'LA.1.004', text: 'one father.' },
     ];
     await renderApp(ROUTES.read, { data, storage: reading() });
-    expect(screen.getAllByRole('button', { name: he.read.englishShow })).toHaveLength(1);
-    await click(button(he.read.englishShow));
-    expect(document.querySelector('.english')!.textContent).toBe('Love [and soul]1. Brothers.');
+    await click(button(he.language.label));
+    const englishOf = (id: string) =>
+      document.querySelector(`.sentence-block[data-unit="${id}"] .english`)!.textContent;
+    expect(['LA.1.001', 'LA.1.002', 'LA.1.003'].map(englishOf)).toEqual([
+      'Love, ',
+      '[and soul]1.',
+      'Brothers, one father.',
+    ]);
   });
 
-  it('has no menu without English', async () => {
+  it('has no language switch without English', async () => {
     const data = portionData();
     data.translations = [];
     await renderApp(ROUTES.read, { data, storage: reading() });
-    expect(screen.queryByRole('button', { name: he.common.menu })).toBeNull();
+    expect(screen.queryByRole('button', { name: he.language.label })).toBeNull();
   });
 
   it('opens a glossary term', async () => {

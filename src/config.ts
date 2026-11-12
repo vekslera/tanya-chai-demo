@@ -13,6 +13,8 @@ export type DemoProgress = Pick<Progress, 'streak' | 'points' | 'heartProgress' 
 export type AppConfig = {
   /** The language of the app: its text, its ביאור and its UI. */
   language: string;
+  /** The language of the translation the learner may switch to, and of its ביאור. */
+  translationLanguage: string;
   storage: { key: string };
   levels: LevelRule[];
   defaultLevel: Level;
@@ -25,7 +27,13 @@ export type AppConfig = {
   };
   scoring: ScoringRules;
   quiz: QuizRules;
-  motion: { heartContourMs: number; countUpMs: number; done: DoneTimeline };
+  motion: {
+    heartContourMs: number;
+    countUpMs: number;
+    /** How long a "coming soon" note stays. */
+    comingSoonMs: number;
+    done: DoneTimeline;
+  };
   format: { numberLocale: string };
   text: { bidiNowrapMaxChars: number };
 };

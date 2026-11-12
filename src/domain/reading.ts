@@ -11,6 +11,6 @@ export const showsBiur = (levels: readonly LevelRule[], level: Level) =>
 export const readingProgress = (done: number, total: number) =>
   total === 0 ? 100 : Math.round((done / total) * 100);
 
-/** The sections that have an English translation, by ID. */
-export const englishSectionIds = (sections: readonly PortionSection[]) =>
-  sections.flatMap((s) => (s.english.length ? [s.id] : []));
+/** Whether any of the sections has an English translation. */
+export const hasEnglish = (sections: readonly PortionSection[]) =>
+  sections.some((s) => s.english.length > 0);

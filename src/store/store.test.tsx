@@ -59,12 +59,10 @@ describe('reducer', () => {
   it('handles the other actions', () => {
     let s: DemoState = reducer(initialState, { type: 'setLevel', level: 1 });
     expect(s.level).toBe(1);
-    s = reducer(s, { type: 'toggleEnglish', sectionId: 'x' });
-    expect(s.englishOpen).toEqual({ x: true });
-    s = reducer(s, { type: 'toggleEnglish', sectionId: 'x' });
-    expect(s.englishOpen).toEqual({ x: false });
-    s = reducer(s, { type: 'setAllEnglish', sectionIds: ['x', 'y'], open: true });
-    expect(s.englishOpen).toEqual({ x: true, y: true });
+    s = reducer(s, { type: 'toggleEnglish' });
+    expect(s.english).toBe(true);
+    s = reducer(s, { type: 'toggleEnglish' });
+    expect(s.english).toBe(false);
     s = reducer(s, { type: 'setTogetherIndex', index: 3 });
     expect(s.togetherIndex).toBe(3);
     s = reducer(s, { type: 'seenShinun' });

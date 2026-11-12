@@ -1,5 +1,5 @@
-import { screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { act, screen } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
 import { memoryStorage } from '../../adapters/memoryStorage';
 import { config } from '../../config';
 import { startSession } from '../../domain/quizSession';
@@ -52,6 +52,27 @@ describe('TogetherScreen', () => {
     ).toBeTruthy();
     await click(button(he.togetherQuiz.finish));
     expect(hash()).toBe(ROUTES.done);
+  });
+
+  it('dims the English switch, which is coming soon on this path', async () => {
+    vi.useFakeTimers();
+    try {
+      await renderApp(ROUTES.together);
+      const toggle = button(he.language.label);
+      expect(toggle.getAttribute('aria-disabled')).toBe('true');
+      expect(screen.getByRole('status').textContent).toBe('');
+      await click(toggle);
+      expect(screen.getByRole('status').textContent).toBe(he.language.comingSoon);
+      act(() => void vi.advanceTimersByTime(config.motion.comingSoonMs));
+      expect(screen.getByRole('status').textContent).toBe('');
+      // Dimmed on the cards and the questions too.
+      await click(button(he.together.start));
+      expect(button(he.language.label).getAttribute('aria-disabled')).toBe('true');
+      await click(button(he.common.next));
+      expect(button(he.language.label).getAttribute('aria-disabled')).toBe('true');
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it('shows the dedication on the cards only', async () => {

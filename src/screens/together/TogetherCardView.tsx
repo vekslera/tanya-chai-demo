@@ -3,6 +3,7 @@ import { Dedication } from '../../components/Dedication';
 import { GlossarySheet } from '../../components/GlossarySheet';
 import { ProgressDots } from '../../components/ProgressDots';
 import { SentenceText } from '../../components/Sentence';
+import { LanguageToggle } from '../../components/LanguageToggle';
 import { TopBar } from '../../components/TopBar';
 import { usePortion } from '../../content/PortionProvider';
 import type { GlossaryEntry, TogetherCard } from '../../domain/types';
@@ -26,7 +27,7 @@ export function TogetherCardView({
   const [term, setTerm] = useState<GlossaryEntry | null>(null);
   return (
     <main className="screen together">
-      <TopBar back={ROUTES.home} title={he.together.title} />
+      <TopBar back={ROUTES.home} title={he.together.title} end={<LanguageToggle comingSoon />} />
       <p className="together-progress">
         <span>{he.together.cardOf(index + 1, count)}</span>
         <ProgressDots count={count} current={index} />

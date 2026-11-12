@@ -1,16 +1,16 @@
 import { useEffect, useRef, useState } from 'react';
 import { Dedication } from '../../components/Dedication';
 import { GlossarySheet } from '../../components/GlossarySheet';
+import { LanguageToggle } from '../../components/LanguageToggle';
 import { TopBar } from '../../components/TopBar';
 import { config } from '../../config';
 import { usePortion } from '../../content/PortionProvider';
-import { englishSectionIds, readingProgress, showsBiur } from '../../domain/reading';
+import { hasEnglish, readingProgress, showsBiur } from '../../domain/reading';
 import type { GlossaryEntry } from '../../domain/types';
 import { ROUTES } from '../../routes';
 import { useStore } from '../../store/StoreProvider';
 import { he } from '../../strings/he';
 import { useQuizSession } from '../quiz/useQuizSession';
-import { EnglishMenu } from './EnglishMenu';
 import { FootnoteSheet, type Footnote } from './FootnoteSheet';
 import { ReadQuestion } from './ReadQuestion';
 import { ReadSection } from './ReadSection';
@@ -19,7 +19,7 @@ import './Read.css';
 
 /**
  * The portion in short sections, each followed by its question (S3, S4): the text so far, with the
- * ביאור on level 2 and the English on demand, and the next section once the question is done.
+ * ביאור on level 2, the English in English mode, and the next section once the question is done.
  */
 export function ReadScreen() {
   const { state, dispatch } = useStore();
@@ -42,8 +42,6 @@ export function ReadScreen() {
   }, [shown, sections]);
 
   if (!session) return null;
-  const sectionIds = englishSectionIds(sections);
-  const allEnglishOpen = sectionIds.length > 0 && sectionIds.every((id) => state.englishOpen[id]);
   const { quiz } = session;
 
   return (
@@ -53,11 +51,12 @@ export function ReadScreen() {
         backLabel={he.read.backToLevel}
         title={portion.label.he}
         end={
-          <EnglishMenu
-            hasEnglish={sectionIds.length > 0}
-            allOpen={allEnglishOpen}
-            onSetAll={(open) => dispatch({ type: 'setAllEnglish', sectionIds, open })}
-          />
+          hasEnglish(sections) && (
+            <LanguageToggle
+              english={state.english}
+              onToggle={() => dispatch({ type: 'toggleEnglish' })}
+            />
+          )
         }
       >
         <ReadProgress percent={readingProgress(quiz.index, quiz.questionIds.length)} />
@@ -71,8 +70,7 @@ export function ReadScreen() {
             key={s.id}
             section={s}
             showBiur={showsBiur(config.levels, state.level)}
-            englishOpen={!!state.englishOpen[s.id]}
-            onToggleEnglish={(sectionId) => dispatch({ type: 'toggleEnglish', sectionId })}
+            english={state.english}
             onTerm={setTerm}
             onFootnote={(span, n) => setFootnote({ span, n })}
           />

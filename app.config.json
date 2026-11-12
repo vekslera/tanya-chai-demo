@@ -1,6 +1,7 @@
 {
   "$comment": "The single place for the app's parameters. Each one is defined here once and read through src/config.ts (the app) or scripts/lib/config.ts (the scripts). Paths and text sources live in texts.config.json; colors, sizes and spacing live in src/styles/tokens.css.",
   "language": "he",
+  "translationLanguage": "en",
   "storage": {
     "key": "tanyachai.demo.v1"
   },
@@ -29,6 +30,7 @@
   "motion": {
     "heartContourMs": 1200,
     "countUpMs": 900,
+    "comingSoonMs": 2500,
     "done": {
       "contourAtMs": 500,
       "streakAtMs": 900,

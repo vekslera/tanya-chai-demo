@@ -2,6 +2,7 @@ import { act, renderHook } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { prefersReducedMotion } from './reducedMotion';
 import { easeOut, useCountUp } from './useCountUp';
+import { useNotice } from './useNotice';
 import { useTimeline } from './useTimeline';
 
 const setReducedMotion = (matches: boolean) => {
@@ -62,5 +63,20 @@ describe('useTimeline', () => {
   it('has every step at once under reduced motion', () => {
     setReducedMotion(true);
     expect(renderHook(() => useTimeline([100, 300])).result.current).toBe(2);
+  });
+});
+
+describe('useNotice', () => {
+  it('shows a note for a while, the wait starting again when asked again', () => {
+    const { result } = renderHook(() => useNotice(1000));
+    expect(result.current[0]).toBe(false);
+    act(() => result.current[1]());
+    expect(result.current[0]).toBe(true);
+    act(() => void vi.advanceTimersByTime(600));
+    act(() => result.current[1]());
+    act(() => void vi.advanceTimersByTime(600));
+    expect(result.current[0]).toBe(true);
+    act(() => void vi.advanceTimersByTime(400));
+    expect(result.current[0]).toBe(false);
   });
 });

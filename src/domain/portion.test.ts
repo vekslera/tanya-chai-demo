@@ -41,6 +41,14 @@ describe('assemblePortion', () => {
     expect(english.sentenceOf('LA.1.002')!.biur).toBeUndefined();
   });
 
+  it('attaches the ביאור in the translation’s language too, when there is one', () => {
+    const both = assemblePortion({ ...portionData(), translationLanguage: 'en' });
+    expect(both.sentenceOf('LA.1.001')!.biur?.value).toBe('ביאור ראשון');
+    expect(both.sentenceOf('LA.1.001')!.translationBiur?.value).toBe('The first biur');
+    expect(both.sentenceOf('LA.1.002')!.translationBiur).toBeUndefined();
+    expect(p.sentenceOf('LA.1.001')!.translationBiur).toBeUndefined();
+  });
+
   it('groups units into paragraphs', () => {
     expect(p.paragraphs.map((x) => [x.key, x.units.length])).toEqual([
       ['LA.1.1', 2],
@@ -77,6 +85,15 @@ describe('assemblePortion', () => {
   it('places each question after its section, the summary after the last', () => {
     const at = (id: string) => p.questionSection(p.portion.questions.find((q) => q.id === id)!);
     expect(['q-choice', 'q-find', 'q-tf', 'q-child'].map(at)).toEqual([0, 1, 1, 1]);
+  });
+
+  it('gives each sentence the English that starts in it, once', () => {
+    // The fixture's first span covers both sentences of the first paragraph.
+    expect(p.sentences.map((s) => s.english.map((e) => e.text))).toEqual([
+      ['Love [and soul][1].'],
+      [],
+      ['Brothers.'],
+    ]);
   });
 
   it('keeps a section without English', () => {

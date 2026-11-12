@@ -44,41 +44,6 @@
   margin-block-start: 12px;
 }
 
-.section-tools {
-  display: flex;
-  justify-content: flex-end;
-  margin-block-end: 4px;
-}
-
-.en-chip {
-  min-width: 44px;
-  min-height: 32px;
-  padding-inline: 10px;
-  border-radius: 999px;
-  border: 1px solid var(--tint);
-  background: transparent;
-  color: var(--navy-muted);
-  font-family: var(--font-ui);
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  cursor: pointer;
-  /* A larger hit area than the chip itself. */
-  position: relative;
-}
-
-.en-chip::after {
-  content: '';
-  position: absolute;
-  inset: -6px 0;
-}
-
-.en-chip--open {
-  background: var(--navy);
-  border-color: var(--navy);
-  color: var(--white);
-}
-
 .sentence-block {
   padding-block: 6px;
 }
@@ -167,45 +132,6 @@
 
 .bottom-bar .dedication {
   margin-block-start: 8px;
-}
-
-/* Overflow menu */
-.menu {
-  position: relative;
-}
-
-.menu-scrim {
-  position: fixed;
-  inset: 0;
-  z-index: 20;
-}
-
-.menu-popover {
-  position: absolute;
-  inset-inline-end: 4px;
-  top: 44px;
-  z-index: 21;
-  min-width: 240px;
-  padding: 6px;
-  background: var(--white);
-  border-radius: var(--radius-sm);
-  box-shadow: 0 8px 28px rgba(30, 42, 90, 0.18);
-}
-
-.menu-popover button {
-  display: block;
-  width: 100%;
-  min-height: 44px;
-  padding-inline: 12px;
-  border: 0;
-  border-radius: 8px;
-  background: none;
-  text-align: start;
-  cursor: pointer;
-}
-
-.menu-popover button:hover {
-  background: var(--navy-soft);
 }
 
 @media (min-width: 600px) {

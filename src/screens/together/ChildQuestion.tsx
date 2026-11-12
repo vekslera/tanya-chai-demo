@@ -1,6 +1,7 @@
 import { CheckIcon } from '../../components/Icons';
 import { QuoteCard } from '../../components/PortionText';
 import { ProgressDots } from '../../components/ProgressDots';
+import { LanguageToggle } from '../../components/LanguageToggle';
 import { TopBar } from '../../components/TopBar';
 import { config } from '../../config';
 import { usePortion } from '../../content/PortionProvider';
@@ -38,6 +39,7 @@ export function ChildQuestion({
       <TopBar
         back={ROUTES.home}
         title={<ProgressDots count={quiz.questionIds.length} current={quiz.index} />}
+        end={<LanguageToggle comingSoon />}
       />
       <p className="child-quiz-count">
         {q.summary ? he.togetherQuiz.summary : he.together.childTurn}

@@ -23,13 +23,17 @@ export type PortionUnit = Unit & {
   glossary: GlossaryMark[];
 };
 
-/** A sentence of the text: one unit, or consecutive units of a paragraph, and its ביאור. */
+/** A sentence of the text: one unit, or consecutive units of a paragraph, its ביאור and English. */
 export type PortionSentence = {
   /** Its first unit's ID. */
   id: UnitId;
   units: PortionUnit[];
   /** The ביאור of the whole sentence, kept on its first unit. */
   biur?: Reviewed<string>;
+  /** Its ביאור in the translation's language, shown with the translation. */
+  translationBiur?: Reviewed<string>;
+  /** The English spans that start in it, in order; empty without a translation. */
+  english: TranslationSpan[];
 };
 
 export type PortionParagraph = {
@@ -48,7 +52,7 @@ export type PortionSection = {
   /** Its part of each paragraph it touches. */
   paragraphs: PortionParagraph[];
   sentences: PortionSentence[];
-  /** The English of its units, in order; empty without a translation. */
+  /** The English of its sentences, in order; empty without a translation. */
   english: TranslationSpan[];
 };
 
@@ -56,6 +60,8 @@ export type PortionSection = {
 export type PortionData = {
   /** The language of the ביאור to attach. */
   language: string;
+  /** The language of the translation, whose ביאור is attached too. */
+  translationLanguage?: string;
   portion: Portion;
   schedule: DailySchedule;
   units: Unit[];
@@ -126,6 +132,7 @@ export function assemblePortion(data: PortionData): AssembledPortion {
 
   const paragraphs: PortionParagraph[] = [];
   const sentences: PortionSentence[] = [];
+  const placed = new Set<TranslationSpan>();
   for (const u of portionUnits) {
     const key = paragraphKey(u);
     let p = paragraphs[paragraphs.length - 1];
@@ -137,11 +144,26 @@ export function assemblePortion(data: PortionData): AssembledPortion {
     const id = sentenceOf(u);
     let s = p.sentences[p.sentences.length - 1];
     if (s?.id !== id) {
-      s = { id, units: [], biur: contentById.get(id)?.biur?.[data.language]?.short };
+      const biur = contentById.get(id)?.biur;
+      s = {
+        id,
+        units: [],
+        biur: biur?.[data.language]?.short,
+        translationBiur: data.translationLanguage
+          ? biur?.[data.translationLanguage]?.short
+          : undefined,
+        english: [],
+      };
       p.sentences.push(s);
       sentences.push(s);
     }
     s.units.push(u);
+    // A span is shown once, with the sentence it starts in.
+    const span = translationOf.get(u.id);
+    if (span && !placed.has(span)) {
+      placed.add(span);
+      s.english.push(span);
+    }
   }
 
   const sections = portion.sections.map((range): PortionSection => {
@@ -154,13 +176,13 @@ export function assemblePortion(data: PortionData): AssembledPortion {
         sentences: x.sentences.filter((s) => inSection.has(s.id)),
       }))
       .filter((x) => x.units.length > 0);
-    const english = [...new Set(units.flatMap((u) => translationOf.get(u.id) ?? []))];
+    const inParts = parts.flatMap((x) => x.sentences);
     return {
       id: units[0]!.id,
       units,
       paragraphs: parts,
-      sentences: parts.flatMap((x) => x.sentences),
-      english,
+      sentences: inParts,
+      english: inParts.flatMap((x) => x.english),
     };
   });
 
