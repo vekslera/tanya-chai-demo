@@ -27,10 +27,13 @@ describe('main', () => {
   it('renders the app into #root with the browser adapters', async () => {
     document.body.innerHTML = '<div id="root"></div>';
     window.history.replaceState(null, '', '#/');
+    let main!: typeof import('./main');
     await act(async () => {
-      await import('./main');
+      main = await import('./main');
     });
     await act(async () => {});
     expect(document.getElementById('root')!.textContent).toContain(he.home.start);
+    // Nothing may render once the test environment is gone.
+    act(() => main.root.unmount());
   });
 });
