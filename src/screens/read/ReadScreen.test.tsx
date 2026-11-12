@@ -4,6 +4,7 @@ import { memoryStorage } from '../../adapters/memoryStorage';
 import { config } from '../../config';
 import { startSession } from '../../domain/quizSession';
 import { ROUTES } from '../../routes';
+import { en } from '../../strings/en';
 import { he } from '../../strings/he';
 import { portionData } from '../../test/fixtures';
 import { button, click, hash, renderApp } from '../../test/renderApp';
@@ -115,8 +116,8 @@ describe('ReadScreen', () => {
     await click(toggle);
     expect(toggle.getAttribute('aria-pressed')).toBe('true');
     // Every section shown has its English: the choice is for the whole lesson.
-    expect(screen.getByText(/Love/)).toBeTruthy();
-    expect(screen.getByText('Brothers.')).toBeTruthy();
+    const english = () => [...document.querySelectorAll('.read-section .english')];
+    expect(english().map((e) => e.textContent)).toEqual(['Love [and soul]1.', 'Brothers.']);
     expect(JSON.parse(storage.get(config.storage.key)!).english).toBe(true);
     await click(button(he.read.footnote('1')));
     expect(screen.getByRole('dialog', { name: he.read.footnote('1') })).toBeTruthy();
@@ -124,7 +125,7 @@ describe('ReadScreen', () => {
     await click(button(he.common.close));
     expect(screen.queryByRole('dialog')).toBeNull();
     await click(toggle);
-    expect(screen.queryByText(/Love/)).toBeNull();
+    expect(english()).toEqual([]);
   });
 
   it('gives the English ביאור instead of the Hebrew in English mode', async () => {
@@ -139,6 +140,42 @@ describe('ReadScreen', () => {
     ]);
     // A sentence without an English ביאור keeps its Hebrew one.
     expect(screen.getByText('ביאור שני').getAttribute('dir')).toBeNull();
+  });
+
+  it('asks the questions in English in English mode, quoting the English', async () => {
+    Element.prototype.scrollIntoView = vi.fn();
+    const quiz = { ...startSession('solo', 1, ['q-choice', 'q-find', 'q-tf'], 1), index: 0 };
+    const storage = memoryStorage({
+      [config.storage.key]: JSON.stringify({ level: 1, english: true, quiz }),
+    });
+    await renderApp(ROUTES.read, { storage });
+    const card = document.querySelector('.read-question')!;
+    expect([card.getAttribute('dir'), card.getAttribute('lang')]).toEqual([
+      'ltr',
+      config.translationLanguage,
+    ]);
+    expect(screen.getByText(en.quiz.progress(1, 3))).toBeTruthy();
+    expect(screen.getByText('prompt q-choice en')).toBeTruthy();
+    await click(option('Second answer'));
+    expect(screen.getByText(en.quiz.tryAgain)).toBeTruthy();
+    expect(screen.getByText('hint q-choice en')).toBeTruthy();
+    expect(screen.getByText('Love [and soul].', { selector: 'mark' })).toBeTruthy();
+    await click(option('Third answer'));
+    expect(screen.getByText(en.quiz.revealed)).toBeTruthy();
+    expect(screen.getByText('Right answer', { selector: 'strong' })).toBeTruthy();
+    expect(screen.getByText(en.quiz.fromText)).toBeTruthy();
+
+    // The sentences to find are offered in English.
+    await click(button(en.quiz.next));
+    expect(screen.getByText(en.quiz.findSentenceHelp)).toBeTruthy();
+    await click(button('Brothers.'));
+    expect(screen.getByText(en.quiz.praise[1]!)).toBeTruthy();
+
+    await click(button(en.quiz.next));
+    expect(screen.getByText(en.quiz.summary)).toBeTruthy();
+    await click(button(en.quiz.false));
+    await click(button(en.quiz.finish));
+    expect(hash()).toBe(ROUTES.done);
   });
 
   it('shows the English of each sentence right after it', async () => {

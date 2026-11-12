@@ -41,6 +41,16 @@ const q = (over: Partial<Question> & Pick<Question, 'id'>): Question => ({
   ...over,
 });
 
+/** A question's English texts, named after its ID. */
+const english = (id: string, options?: { id: string; text: string }[]) => ({
+  en: {
+    prompt: reviewed(`prompt ${id} en`),
+    hint: reviewed(`hint ${id} en`),
+    explanation: reviewed(`explanation ${id} en`),
+    ...(options ? { options } : {}),
+  },
+});
+
 export const questions: Question[] = [
   q({
     id: 'q-choice',
@@ -50,9 +60,26 @@ export const questions: Question[] = [
       { id: 'c', text: 'תשובה שלישית' },
     ],
     fixedOrder: true,
+    translations: english('q-choice', [
+      { id: 'a', text: 'Right answer' },
+      { id: 'b', text: 'Second answer' },
+      { id: 'c', text: 'Third answer' },
+    ]),
   }),
-  q({ id: 'q-find', kind: 'findSentence', answer: 'LA.1.003', unitRef: 'LA.1.003' }),
-  q({ id: 'q-tf', kind: 'trueFalse', answer: 'false', summary: true }),
+  q({
+    id: 'q-find',
+    kind: 'findSentence',
+    answer: 'LA.1.003',
+    unitRef: 'LA.1.003',
+    translations: english('q-find'),
+  }),
+  q({
+    id: 'q-tf',
+    kind: 'trueFalse',
+    answer: 'false',
+    summary: true,
+    translations: english('q-tf'),
+  }),
   q({
     id: 'q-l2',
     level: 2,

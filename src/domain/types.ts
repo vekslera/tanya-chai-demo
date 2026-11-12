@@ -70,6 +70,14 @@ export type Source = {
 export type Level = number;
 export type Track = 'solo' | 'together';
 
+/** A question's texts in another language: the same question, with the same option IDs. */
+export type QuestionTexts = {
+  prompt: Reviewed<string>;
+  options?: { id: string; text: string }[];
+  hint: Reviewed<string>;
+  explanation: Reviewed<string>;
+};
+
 export type Question = {
   id: string;
   track: Track;
@@ -85,6 +93,8 @@ export type Question = {
   fixedOrder?: boolean;
   /** Asked once the whole portion was read, about all of it; the others follow their section. */
   summary?: true;
+  /** The question in other languages, by language: asked in the translation's mode (SPEC S4). */
+  translations?: Record<string, QuestionTexts>;
 };
 
 /** Who the day's learning is dedicated to; its wording is in the strings, by kind. */

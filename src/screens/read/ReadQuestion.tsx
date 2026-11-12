@@ -1,6 +1,8 @@
 import { useState } from 'react';
-import { canAnswer } from '../../domain/quiz';
-import { he } from '../../strings/he';
+import { config } from '../../config';
+import { canAnswer, questionIn } from '../../domain/quiz';
+import { useStore } from '../../store/StoreProvider';
+import { quizStrings } from '../../strings/quiz';
 import { FindSentence } from '../quiz/FindSentence';
 import { QuizFeedback } from '../quiz/QuizFeedback';
 import { QuizOptions } from '../quiz/QuizOptions';
@@ -9,12 +11,17 @@ import '../quiz/Quiz.css';
 
 /**
  * The question that follows a section (S4): two attempts, then the answer; then on to the next
- * section, or, after the summary question, to the finish.
+ * section, or, after the summary question, to the finish. In English mode it is asked in English,
+ * quoting the English translation.
  */
 export function ReadQuestion({ session }: { session: QuizSessionView }) {
+  const { state } = useStore();
   // The option to shake after a wrong answer.
   const [shake, setShake] = useState<string | null>(null);
-  const { quiz, question: q, phase, isLast } = session;
+  const translation = state.english ? config.translationLanguage : undefined;
+  const t = quizStrings(translation ?? config.language);
+  const view = { ...session, question: questionIn(session.question, translation) };
+  const { quiz, question: q, phase, isLast } = view;
 
   const answer = (choice: string) => {
     const result = session.answer(choice);
@@ -22,22 +29,22 @@ export function ReadQuestion({ session }: { session: QuizSessionView }) {
   };
 
   return (
-    <section className="read-question">
+    <section className="read-question" {...(translation ? { dir: 'ltr', lang: translation } : {})}>
       <p className="quiz-count">
-        {q.summary ? he.quiz.summary : he.quiz.progress(quiz.index + 1, quiz.questionIds.length)}
+        {q.summary ? t.summary : t.progress(quiz.index + 1, quiz.questionIds.length)}
       </p>
       <h2 className="quiz-prompt">{q.prompt.value}</h2>
 
       {q.kind === 'findSentence' ? (
-        <FindSentence session={session} onAnswer={answer} />
+        <FindSentence session={view} onAnswer={answer} t={t} language={translation} />
       ) : (
-        <QuizOptions session={session} shake={shake} onAnswer={answer} />
+        <QuizOptions session={view} shake={shake} onAnswer={answer} t={t} />
       )}
 
-      <QuizFeedback session={session} />
+      <QuizFeedback session={view} t={t} language={translation} />
       {!canAnswer(phase) && (
         <button type="button" className="btn btn-primary btn-block" onClick={session.next}>
-          {isLast ? he.quiz.finish : he.quiz.next}
+          {isLast ? t.finish : t.next}
         </button>
       )}
     </section>

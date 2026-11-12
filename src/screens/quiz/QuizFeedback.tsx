@@ -1,19 +1,30 @@
 import { QuoteCard } from '../../components/PortionText';
 import { config } from '../../config';
 import { pointsFor } from '../../domain/scoring';
-import { he } from '../../strings/he';
+import type { QuizStrings } from '../../strings/quiz';
 import { answerLabel } from './labels';
 import type { QuizSessionView } from './useQuizSession';
 
-/** What follows an answer: a hint to try again, praise, or the correct answer. */
-export function QuizFeedback({ session }: { session: QuizSessionView }) {
+/**
+ * What follows an answer: a hint to try again, praise, or the correct answer. With a `language`,
+ * the sentence is quoted in its translation.
+ */
+export function QuizFeedback({
+  session,
+  t,
+  language,
+}: {
+  session: QuizSessionView;
+  t: QuizStrings;
+  language?: string;
+}) {
   const { question: q, quiz, chosen, phase, sentence } = session;
-  const quote = <QuoteCard sentence={sentence} label={he.quiz.fromText} />;
+  const quote = <QuoteCard sentence={sentence} label={t.fromText} language={language} />;
   return (
     <div className="feedback" aria-live="polite">
       {phase === 'retry' && (
         <>
-          <p className="feedback-line feedback-line--hint">{he.quiz.tryAgain}</p>
+          <p className="feedback-line feedback-line--hint">{t.tryAgain}</p>
           <p className="feedback-hint">{q.hint.value}</p>
           {q.kind !== 'findSentence' && quote}
         </>
@@ -21,9 +32,9 @@ export function QuizFeedback({ session }: { session: QuizSessionView }) {
       {phase === 'correct' && (
         <>
           <p className="feedback-line feedback-line--praise">
-            <span>{he.quiz.praise[quiz.index % he.quiz.praise.length]}</span>
+            <span>{t.praise[quiz.index % t.praise.length]}</span>
             <bdi className="points-badge" dir="ltr">
-              {he.quiz.points(pointsFor(chosen.length, config.scoring))}
+              {t.points(pointsFor(chosen.length, config.scoring))}
             </bdi>
           </p>
           <p className="feedback-explanation">{q.explanation.value}</p>
@@ -33,7 +44,7 @@ export function QuizFeedback({ session }: { session: QuizSessionView }) {
       {phase === 'revealed' && (
         <>
           <p className="feedback-reveal">
-            {he.quiz.revealed} <strong>{answerLabel(q)}</strong>
+            {t.revealed} <strong>{answerLabel(q, t)}</strong>
           </p>
           <p className="feedback-explanation">{q.explanation.value}</p>
           {quote}

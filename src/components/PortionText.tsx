@@ -1,14 +1,40 @@
-import { sentenceText, type PortionParagraph, type PortionSentence } from '../domain/portion';
+import {
+  sentenceText,
+  sentenceTranslation,
+  type PortionParagraph,
+  type PortionSentence,
+} from '../domain/portion';
 import type { AnswerState } from '../domain/quiz';
 import './PortionText.css';
 
+/**
+ * A sentence's text: its translation in `language` when asked for and it has one, with the
+ * language's attributes; else the text itself.
+ */
+function textOf(s: PortionSentence, language?: string) {
+  const translated = language ? sentenceTranslation(s) : '';
+  return translated
+    ? { text: translated, attrs: { dir: 'ltr', lang: language } }
+    : { text: sentenceText(s), attrs: {} };
+}
+
 /** One sentence in a gold-highlighted quote card (SPEC §3.1, S4 feedback). */
-export function QuoteCard({ sentence, label }: { sentence: PortionSentence; label?: string }) {
+export function QuoteCard({
+  sentence,
+  label,
+  language,
+}: {
+  sentence: PortionSentence;
+  label?: string;
+  /** Quote the sentence's translation in this language. */
+  language?: string;
+}) {
+  const { text, attrs } = textOf(sentence, language);
   return (
     <figure className="quote-card">
       {label && <figcaption className="quote-card-label">{label}</figcaption>}
-      <blockquote className="quote-card-text">
-        <mark>{sentenceText(sentence)}</mark>
+      <blockquote className="quote-card-text" {...attrs}>
+        <mark>{text}</mark>
       </blockquote>
     </figure>
   );
@@ -24,6 +50,7 @@ export function CompactText({
   highlightParagraph,
   states = {},
   onSelect,
+  language,
 }: {
   paragraphs: PortionParagraph[];
   /** The ID of a sentence to mark. */
@@ -32,6 +59,8 @@ export function CompactText({
   highlightParagraph?: string;
   states?: Record<string, AnswerState>;
   onSelect?: (sentenceId: string) => void;
+  /** Show each sentence's translation in this language. */
+  language?: string;
 }) {
   return (
     <div className="compact-text">
@@ -48,6 +77,7 @@ export function CompactText({
             ]
               .filter(Boolean)
               .join(' ');
+            const { text, attrs } = textOf(s, language);
             return onSelect ? (
               <button
                 key={s.id}
@@ -56,12 +86,13 @@ export function CompactText({
                 data-unit={s.id}
                 onClick={() => onSelect(s.id)}
                 aria-pressed={states[s.id] !== undefined}
+                {...attrs}
               >
-                {sentenceText(s)}
+                {text}
               </button>
             ) : (
-              <span key={s.id} className={cls} data-unit={s.id}>
-                {sentenceText(s)}{' '}
+              <span key={s.id} className={cls} data-unit={s.id} {...attrs}>
+                {text}{' '}
               </span>
             );
           })}

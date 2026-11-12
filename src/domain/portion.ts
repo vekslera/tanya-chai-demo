@@ -1,5 +1,6 @@
 // Assembles a daily portion from its layers (SPEC §6.5): the schedule picks the units, and the
 // learning content and translations attach to them by unit ID. Pure: the data is passed in.
+import { FOOTNOTE_MARK } from './footnotes.ts';
 import { reviewableItems, unreviewedOf } from './reviewable.ts';
 import type {
   DailySchedule,
@@ -95,6 +96,14 @@ export const sentenceText = (s: PortionSentence) =>
   s.units
     .map((u) => u.text)
     .join('')
+    .trim();
+
+/** A sentence's translation, without its footnote marks; empty without one. */
+export const sentenceTranslation = (s: PortionSentence) =>
+  s.english
+    .map((span) => span.text)
+    .join('')
+    .replace(FOOTNOTE_MARK, '')
     .trim();
 
 /** The key of a unit's paragraph, unique across chapters. */

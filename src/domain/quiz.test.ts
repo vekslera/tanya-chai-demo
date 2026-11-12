@@ -8,6 +8,7 @@ import {
   optionsOf,
   phaseOf,
   questionIdsFor,
+  questionIn,
   sentenceChoices,
   TRUE,
 } from './quiz';
@@ -37,6 +38,22 @@ describe('sentenceChoices', () => {
     expect(windows('u1')).toEqual(new Set(['u1 u2 u3']));
     expect(windows('u6')).toEqual(new Set(['u4 u5 u6']));
     expect(windows('u2', 3, ['u1', 'u2'])).toEqual(new Set(['u1 u2']));
+  });
+});
+
+describe('questionIn', () => {
+  it('gives a question in its translation’s language, or as written', () => {
+    const q = byId('q-choice');
+    const en = questionIn(q, 'en');
+    expect([en.prompt.value, en.hint.value, en.explanation.value]).toEqual([
+      'prompt q-choice en',
+      'hint q-choice en',
+      'explanation q-choice en',
+    ]);
+    expect(en.options![0]!.text).toBe('Right answer');
+    expect([en.id, en.answer]).toEqual([q.id, q.answer]);
+    expect(questionIn(q, 'fr')).toBe(q);
+    expect(questionIn(q)).toBe(q);
   });
 });
 

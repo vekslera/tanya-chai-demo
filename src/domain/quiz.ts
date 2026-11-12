@@ -21,6 +21,14 @@ export const FALSE = 'false';
 export type Option = { id: string; text?: string };
 
 /** The options as shown: true/false fixed; choice options shuffled per session unless fixed. */
+/** A question in a language: its translation's texts when it has them, else as written. */
+export function questionIn(q: Question, language?: string): Question {
+  const t = language ? q.translations?.[language] : undefined;
+  return t
+    ? { ...q, prompt: t.prompt, hint: t.hint, explanation: t.explanation, options: t.options }
+    : q;
+}
+
 export function optionsOf(q: Question, seed: number): Option[] {
   if (q.kind === 'trueFalse') return [{ id: TRUE }, { id: FALSE }];
   const options = q.options ?? [];

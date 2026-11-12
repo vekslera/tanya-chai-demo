@@ -1,9 +1,10 @@
 // The three sections of the review document: the text with its ביאור and glossary, the
 // questions, and the Avos uBanim cards.
-import { questionIdsFor } from '../../../src/domain/quiz.ts';
+import { questionIdsFor, questionIn } from '../../../src/domain/quiz.ts';
 import type { Level, Portion, Question, Track, Unit } from '../../../src/domain/types.ts';
 import { sentenceOf, unitsIn } from '../../../src/domain/units.ts';
 import { he } from '../../../src/strings/he.ts';
+import { quizStrings } from '../../../src/strings/quiz.ts';
 import { appLanguage, type ContentRules } from '../config.ts';
 import type { ChapterLayers } from '../load.ts';
 import { item, quote } from './item.ts';
@@ -52,15 +53,29 @@ export function textSection(all: ChapterLayers, portionUnits: Unit[]): string[] 
   return out;
 }
 
-function answerLines(q: Question, all: ChapterLayers): string[] {
+/** The answer of a question in a language: its options, or the answer in that language's text. */
+function answerLines(q: Question, all: ChapterLayers, language: string): string[] {
   if (q.kind === 'choice') {
     return (q.options ?? []).map((o) => `  - ${o.id === q.answer ? '**✔**' : '✘'} ${o.text}`);
   }
   if (q.kind === 'trueFalse') {
-    return [`  Answer: ${q.answer === 'true' ? he.quiz.true : he.quiz.false}`];
+    const t = quizStrings(language);
+    return [`  Answer: ${q.answer === 'true' ? t.true : t.false}`];
   }
-  const unit = all.units.find((u) => u.id === q.answer)!;
+  const unit = all.texts[language]!.units.find((u) => u.id === q.answer)!;
   return [`  Answer: ${q.answer}: ${unit.text.trim()}`];
+}
+
+/** A question's items in one language; another language than the app's names its items. */
+function questionItems(q: Question, all: ChapterLayers, language: string): string[] {
+  const shown = questionIn(q, language === appLanguage ? undefined : language);
+  const id = (key: string) => (language === appLanguage ? key : `${key}.${language}`);
+  return [
+    item(id('prompt'), shown.prompt),
+    ...answerLines(shown, all, language),
+    item(id('hint'), shown.hint),
+    item(id('explanation'), shown.explanation),
+  ];
 }
 
 export function questionsSection(all: ChapterLayers, p: Portion, rules: ContentRules): string[] {
@@ -85,8 +100,11 @@ export function questionsSection(all: ChapterLayers, p: Portion, rules: ContentR
       const q = byId.get(id)!;
       const where = q.summary ? 'summary' : `after section ${sectionOf(q) + 1}`;
       out.push(`#### ${q.id} (${q.kind}, ${q.category}, ${where}), relies on ${q.unitRef}`, '');
-      out.push(item('prompt', q.prompt), ...answerLines(q, all));
-      out.push(item('hint', q.hint), item('explanation', q.explanation), '');
+      out.push(...questionItems(q, all, appLanguage));
+      for (const language of Object.keys(q.translations ?? {})) {
+        out.push('', ...questionItems(q, all, language));
+      }
+      out.push('');
     }
   }
   return out;

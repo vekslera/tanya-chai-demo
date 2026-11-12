@@ -22,6 +22,9 @@ export function reviewableItems({ unitContent, glossary, portion }: ReviewableCo
   for (const g of glossary) add(`glossary/${g.id}`, g.body);
   for (const q of portion.questions) {
     for (const key of QUESTION_FIELDS) add(`${q.id}/${key}`, q[key]);
+    for (const [language, t] of Object.entries(q.translations ?? {})) {
+      for (const key of QUESTION_FIELDS) add(`${q.id}/${key}.${language}`, t[key]);
+    }
   }
   for (const c of portion.together) {
     for (const key of CARD_FIELDS) add(`${c.id}/${key}`, c[key]);

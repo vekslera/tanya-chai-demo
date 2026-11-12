@@ -2,7 +2,7 @@
 // one question after each section but the last and a summary question (SPEC S4, S9).
 import { QUESTION_FIELDS } from '../../../src/domain/reviewable.ts';
 import type { Portion, Question } from '../../../src/domain/types.ts';
-import type { ContentRules } from '../config.ts';
+import { translationLanguage, type ContentRules } from '../config.ts';
 import { isReviewed, type Context } from './context.ts';
 
 function checkAnswer(
@@ -36,6 +36,29 @@ function checkAnswer(
     }
   } else {
     ctx.errors.push(`${where}: unknown kind ${(q as { kind: string }).kind}`);
+  }
+}
+
+/**
+ * A question's texts in other languages: each a full set, with the same options; required in the
+ * translation's language on the tracks that are translated.
+ */
+function checkTranslations(ctx: Context, q: Question, where: string, rules: ContentRules) {
+  const translations = Object.entries(q.translations ?? {});
+  for (const [language, t] of translations) {
+    for (const key of QUESTION_FIELDS) {
+      if (!isReviewed(t[key])) {
+        ctx.errors.push(`${where}: ${key}.${language} is not a Reviewed<string>`);
+      }
+    }
+    const ids = (o?: { id: string }[]) => (o ?? []).map((x) => x.id).join();
+    if (ids(t.options) !== ids(q.options)) {
+      ctx.errors.push(`${where}: the ${language} options do not match the options`);
+    }
+  }
+  const required = rules.questions.translatedTracks.includes(q.track);
+  if (required && !q.translations?.[translationLanguage]) {
+    ctx.errors.push(`${where}: has no ${translationLanguage} translation`);
   }
 }
 
@@ -112,6 +135,7 @@ export function checkQuestions(
       ctx.errors.push(`${where}: unitRef ${q.unitRef} is outside the portion`);
     }
     checkAnswer(ctx, q, where, inPortion, rules);
+    checkTranslations(ctx, q, where, rules);
   }
   checkGroups(ctx, p, rules);
 }

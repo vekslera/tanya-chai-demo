@@ -126,6 +126,7 @@ The last choice is remembered. The default selection is level 2.
   - **Wrong (first attempt):** a gentle shake (none under reduced motion) and a hint line. The relevant sentence is highlighted, and the user may try once more.
   - **Wrong (second attempt):** the correct answer is revealed, with its explanation and the highlighted sentence.
 - **Points:** 10 for a correct first attempt, 5 for a correct second attempt, 0 otherwise.
+- **Language:** the questions follow the lesson's language (S3). In English mode the whole question card is in English (LTR): the question's English texts (`translations.en`: prompt, options, hint and explanation), the card's own strings (`src/strings/en.ts`), and the cited sentences of the Tanya in the English translation, both in the quote card and as the `findSentence` choices. When a question or its explanation quotes the Tanya, it quotes the English translation word for word. Every Matmid question has its English (`contentRules.questions.translatedTracks`), and each language is approved on its own (`prompt.en`, `hint.en`, `explanation.en` in the review document). Avos uBanim is in Hebrew only for now.
 
 #### S5: Completion (`#/done`)
 
@@ -498,6 +499,12 @@ type Question = {
   explanation: Reviewed<string>;
   fixedOrder?: boolean;
   summary?: true;                             // asked after the last section, about the whole lesson
+  translations?: Record<string, {             // by language, e.g. "en": the question in English mode (S4)
+    prompt: Reviewed<string>;
+    options?: { id: string; text: string }[]; // the same option IDs, in the same order
+    hint: Reviewed<string>;
+    explanation: Reviewed<string>;
+  }>;
 };
 
 type Reviewed<T> = { value: T; reviewed: boolean; note?: string };
@@ -513,7 +520,7 @@ type Reviewed<T> = { value: T; reviewed: boolean; note?: string };
 - Every `Range`, `TranslationSpan`, `unitRef`, unit-ID answer and `UnitContent.id` refers to existing units, with `from` not after `to`.
 - The translation spans of a chapter cover each of its units exactly once.
 - Every `glossary.match` occurs in its unit's text. Every `entryId` exists.
-- In each level of the solo track, and in the together track: `contentRules.questions.perSection` (1) questions after each section but the last, by the section of their `unitRef`, none after the last, and exactly one `summary` question. Level 1 questions are `literal`; level 2 questions are `understanding` or `concept` (`levelCategories`).
+- In each level of the solo track, and in the together track: `contentRules.questions.perSection` (1) questions after each section but the last, by the section of their `unitRef`, none after the last, and exactly one `summary` question. Level 1 questions are `literal`; level 2 questions are `understanding` or `concept` (`levelCategories`). Every question of the tracks in `translatedTracks` (the solo track) has its texts in `translationLanguage`, with all three fields and the same options.
 - The sections cover the portion's units exactly once, in order, each from a sentence's start. There are 6–8 Avos uBanim cards, one per section. The together track's questions are all `category: "child"`, `kind` `choice` or `trueFalse`, with 2–3 options.
 - Every solo `choice` question has exactly one correct option and 3–4 options in total.
 - The validator prints a **summary of unreviewed items**. It fails the build only when `CONTENT_STRICT=1` is set. The deploy validates `main` with `CONTENT_STRICT=1`, and `dev` without it (§10).

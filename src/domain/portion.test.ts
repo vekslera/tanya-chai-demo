@@ -1,6 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import { portionData } from '../test/fixtures';
-import { assemblePortion, paragraphKey, portionRanges, sentenceText, spaceAfter } from './portion';
+import {
+  assemblePortion,
+  paragraphKey,
+  portionRanges,
+  sentenceText,
+  sentenceTranslation,
+  spaceAfter,
+} from './portion';
 
 describe('assemblePortion', () => {
   const p = assemblePortion(portionData());
@@ -78,8 +85,9 @@ describe('assemblePortion', () => {
 
   it('gives the units of a range and counts the unreviewed items', () => {
     expect(p.unitsOf({ from: 'LA.1.003', to: 'LA.1.004' })).toHaveLength(2);
-    // 3 ביאורים (1 approved), 2 glossary bodies, 6 questions × 3 fields, 2 cards with 5 fields.
-    expect(p.unreviewed).toBe(2 + 2 + 18 + 5);
+    // 3 ביאורים (1 approved), 2 glossary bodies, 6 questions × 3 fields, 3 of them in English too,
+    // 2 cards with 5 fields.
+    expect(p.unreviewed).toBe(2 + 2 + 18 + 9 + 5);
   });
 
   it('places each question after its section, the summary after the last', () => {
@@ -94,6 +102,10 @@ describe('assemblePortion', () => {
       [],
       ['Brothers.'],
     ]);
+  });
+
+  it('gives a sentence’s translation without its footnote marks', () => {
+    expect(p.sentences.map(sentenceTranslation)).toEqual(['Love [and soul].', '', 'Brothers.']);
   });
 
   it('keeps a section without English', () => {

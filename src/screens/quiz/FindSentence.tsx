@@ -3,16 +3,23 @@ import { usePortion } from '../../content/PortionProvider';
 import { paragraphKey } from '../../domain/portion';
 import { config } from '../../config';
 import { answerState, canAnswer, sentenceChoices } from '../../domain/quiz';
-import { he } from '../../strings/he';
+import type { QuizStrings } from '../../strings/quiz';
 import type { QuizSessionView } from './useQuizSession';
 
-/** A findSentence question: a few consecutive sentences already read, one button per sentence. */
+/**
+ * A findSentence question: a few consecutive sentences already read, one button per sentence; with
+ * a `language`, in their translation.
+ */
 export function FindSentence({
   session,
   onAnswer,
+  t,
+  language,
 }: {
   session: QuizSessionView;
   onAnswer: (unitId: string) => void;
+  t: QuizStrings;
+  language?: string;
 }) {
   const { paragraphs, sections } = usePortion();
   const { question: q, chosen, phase, unit, quiz, section } = session;
@@ -34,12 +41,13 @@ export function FindSentence({
   const marked = open ? chosen : [...chosen, q.answer];
   return (
     <>
-      <p className="quiz-help">{he.quiz.findSentenceHelp}</p>
+      <p className="quiz-help">{t.findSentenceHelp}</p>
       <CompactText
         paragraphs={shown}
         highlightParagraph={phase === 'retry' ? paragraphKey(unit) : undefined}
         states={Object.fromEntries(marked.map((id) => [id, answerState(id, q, chosen, !open)]))}
         onSelect={onAnswer}
+        language={language}
       />
     </>
   );

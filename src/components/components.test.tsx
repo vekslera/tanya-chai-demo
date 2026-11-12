@@ -81,6 +81,26 @@ describe('PortionText', () => {
     expect(screen.getAllByText(unit.display)).toHaveLength(2);
   });
 
+  it('quotes a sentence’s translation when asked, and the text itself without one', () => {
+    render(<QuoteCard sentence={portion.sentenceOf('LA.1.001')!} language="en" />);
+    const english = screen.getByText('Love [and soul].').closest('blockquote')!;
+    expect([english.getAttribute('dir'), english.getAttribute('lang')]).toEqual(['ltr', 'en']);
+    // LA.1.002 has no English span of its own.
+    render(<QuoteCard sentence={portion.sentenceOf('LA.1.002')!} language="en" />);
+    const hebrew = screen.getByText(portion.unit('LA.1.002')!.display).closest('blockquote')!;
+    expect(hebrew.getAttribute('dir')).toBeNull();
+  });
+
+  it('shows the sentences in their translation when asked', () => {
+    const { container } = render(
+      <CompactText paragraphs={portion.paragraphs} language="en" onSelect={() => {}} />,
+    );
+    expect(screen.getByRole('button', { name: 'Brothers.' }).getAttribute('lang')).toBe('en');
+    render(<CompactText paragraphs={portion.paragraphs} language="en" />);
+    expect(container.textContent).toContain('Love [and soul].');
+    expect(screen.getAllByText(/Brothers\./)).toHaveLength(2);
+  });
+
   it('shows the text compact, with highlights', () => {
     const { container } = render(
       <CompactText

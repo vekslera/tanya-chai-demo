@@ -211,6 +211,19 @@ describe('questions', () => {
     );
   });
 
+  it('checks the translations of each question, required on the translated tracks', () => {
+    const english = (a: ChapterLayers) => q(a, 'q-l1-easy-way').translations!.en!;
+    expect(errorsAfter((a) => ((english(a).hint as unknown) = 'x'))).toMatch(
+      'hint.en is not a Reviewed',
+    );
+    expect(errorsAfter((a) => english(a).options!.pop())).toMatch(
+      'the en options do not match the options',
+    );
+    expect(errorsAfter((a) => delete q(a, 'q-l1-easy-way').translations)).toMatch(
+      'question q-l1-easy-way: has no en translation',
+    );
+  });
+
   it('checks the answers of each kind', () => {
     const choice = (a: ChapterLayers) => q(a, 'q-l1-easy-way');
     expect(errorsAfter((a) => choice(a).options!.push({ ...choice(a).options![1]! }))).toMatch(

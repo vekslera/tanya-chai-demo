@@ -58,7 +58,7 @@ export function ChildQuestion({
               onClick={() => session.answer(o.id)}
               disabled={solved || tried}
             >
-              <span>{optionLabel(o)}</span>
+              <span>{optionLabel(o, he.quiz)}</span>
               {isCorrect && <CheckIcon />}
             </button>
           );
