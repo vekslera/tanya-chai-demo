@@ -20,7 +20,6 @@ const solo: Completion = {
   track: 'solo',
   earned: 15,
   bonus: 20,
-  awarded: true,
   before,
   after,
 };
@@ -49,14 +48,14 @@ describe('completion', () => {
     });
   });
 
-  it('shows the family streak for Avos uBanim, and no points when nothing was awarded', () => {
-    const together: Completion = { ...solo, track: 'together', awarded: false, after: before };
+  it('shows the family streak for Avos uBanim', () => {
+    const together: Completion = { ...solo, track: 'together', after: before };
     expect(completionView(together, 4)).toMatchObject({
       together: true,
       streak: 1,
       streakChanged: false,
-      points: 0,
-      purify: false,
+      points: 35,
+      purify: true,
     });
   });
 });

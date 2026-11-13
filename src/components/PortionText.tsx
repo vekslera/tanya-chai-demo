@@ -45,7 +45,6 @@ export type TextBlock = { key: string; sentences: PortionSentence[] };
 export function CompactText({
   blocks,
   highlight,
-  highlightBlock,
   states = {},
   onSelect,
   language,
@@ -53,8 +52,6 @@ export function CompactText({
   blocks: TextBlock[];
   /** The ID of a sentence to mark. */
   highlight?: string;
-  /** The key of a block to mark as a hint. */
-  highlightBlock?: string;
   states?: Record<string, AnswerState>;
   onSelect?: (sentenceId: string) => void;
   /** Show each sentence's translation in this language. */
@@ -63,10 +60,7 @@ export function CompactText({
   return (
     <div className="compact-text">
       {blocks.map((p) => (
-        <p
-          key={p.key}
-          className={`compact-block${p.key === highlightBlock ? ' compact-block--hint' : ''}`}
-        >
+        <p key={p.key} className="compact-block">
           {p.sentences.map((s) => {
             const cls = [
               'compact-sentence',

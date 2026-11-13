@@ -55,13 +55,10 @@ describe('DoneScreen', () => {
     expect(screen.getByText(he.common.demoData)).toBeTruthy();
   });
 
-  it('explains when nothing was added', async () => {
+  it('awards the points again on a second completion', async () => {
     reducedMotion(true);
-    const { unmount } = await renderApp(ROUTES.done, { storage: afterCompleting('solo', true) });
-    expect(screen.getByText(he.done.pointsAlready)).toBeTruthy();
-    unmount();
-    await renderApp(ROUTES.done, { storage: afterCompleting('together', true) });
-    expect(screen.getByText(he.done.pointsAlreadyTogether)).toBeTruthy();
+    await renderApp(ROUTES.done, { storage: afterCompleting('solo', true) });
+    expect(screen.getByText(he.done.pointsDetail(15, config.scoring.completionBonus))).toBeTruthy();
   });
 
   it('shows the family streak after Avos uBanim, and goes home', async () => {

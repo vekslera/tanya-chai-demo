@@ -48,7 +48,7 @@ describe('reducer', () => {
     s = reducer(s, { type: 'completeQuiz' });
     expect(s.quiz).toBeNull();
     expect(s.completedSolo).toBe(true);
-    expect(s.lastCompletion?.awarded).toBe(true);
+    expect(s.lastCompletion?.bonus).toBe(config.scoring.completionBonus);
   });
 
   it('ignores quiz actions without a quiz', () => {
@@ -102,6 +102,14 @@ describe('persistence', () => {
     const p = createPersistence(storage, key, initialState);
     p.save({ ...initialState, points: 999 });
     expect(p.load().points).toBe(999);
+  });
+
+  it('does not keep the last completion', () => {
+    const storage = memoryStorage();
+    const p = createPersistence(storage, key, initialState);
+    const done = { track: 'solo', earned: 1, bonus: 2, before: initialState, after: initialState };
+    p.save({ ...initialState, lastCompletion: done } as DemoState);
+    expect(p.load().lastCompletion).toBeNull();
   });
 
   it('falls back to the initial state on missing or broken data', () => {

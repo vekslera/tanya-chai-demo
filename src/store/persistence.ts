@@ -25,6 +25,7 @@ export function createPersistence(
         return initialState;
       }
     },
-    save: (state) => storage.set(key, JSON.stringify(state)),
+    // The completion is not kept: opening the demo again never starts on the completion screen.
+    save: (state) => storage.set(key, JSON.stringify({ ...state, lastCompletion: null })),
   };
 }

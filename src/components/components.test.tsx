@@ -101,13 +101,10 @@ describe('PortionText', () => {
   });
 
   it('shows the text compact, with highlights', () => {
-    const { container } = render(
-      <CompactText blocks={blocks} highlight="LA.1.002" highlightBlock="LA.1.003" />,
-    );
+    const { container } = render(<CompactText blocks={blocks} highlight="LA.1.002" />);
     expect(container.querySelector('.compact-sentence--highlight')?.textContent).toContain(
       'שׁוֹרֶשׁ',
     );
-    expect(container.querySelectorAll('.compact-block--hint')).toHaveLength(1);
   });
 
   it('makes each sentence a button with its state when it can be selected', () => {

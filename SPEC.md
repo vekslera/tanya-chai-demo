@@ -127,7 +127,7 @@ The learner does not choose a level before reading: a learner may not know befor
   - `findSentence`: "tap the sentence in the text that says …". Three consecutive sentences already read are shown in compact form, the right one among them, and the user taps a sentence. Where the right one falls among the three changes from session to session; the number of sentences is `quiz.findSentence.choices` in `app.config.json`.
 - **Feedback** appears immediately after answering:
   - **Correct:** the option turns gold, a short positive line appears (`יפה מאוד` / `בדיוק` and similar, rotating), plus the explanation, and the source sentence from the text is shown in a quote card with a gold highlight.
-  - **Wrong (first attempt):** a gentle shake (none under reduced motion) and a hint line. The relevant sentence is highlighted (in a `findSentence` question, the section that holds it), and the user may try once more.
+  - **Wrong (first attempt):** a gentle shake (none under reduced motion) and a hint line, and the user may try once more. In a `choice` or `trueFalse` question, the sentence the question relies on is shown in a quote card. Nothing on screen marks the right answer: in a `findSentence` question no sentence or section is highlighted, and no option is set apart from the others (on a touch screen, an option keeps no hover border after a tap).
   - **Wrong (second attempt):** the correct answer is revealed, with its explanation and the highlighted sentence.
 - **Points:** 10 for a correct first attempt, 5 for a correct second attempt, 0 otherwise; a level-2 question earns double (`scoring.levelFactor` in `app.config.json`), to encourage learning in depth.
 - **Language:** the questions follow the lesson's language (S3). In English mode the whole question card is in English (LTR): the question's English texts (`translations.en`: prompt, options, hint and explanation), the card's own strings (`src/strings/en.ts`), and the cited sentences of the Tanya in the English translation, both in the quote card and as the `findSentence` choices. When a question or its explanation quotes the Tanya, it quotes the English translation word for word. Every Matmid question has its English (`contentRules.questions.translatedTracks`), and each language is approved on its own (`prompt.en`, `hint.en`, `explanation.en` in the review document). Avos uBanim is in Hebrew only for now.
@@ -143,7 +143,7 @@ The learner does not choose a level before reading: a learner may not know befor
 - **Streak rule note** (small, under the streak): `הרצף נשמר בשבת ובחג, ואת השיעור משלימים במוצאי שבת`.
 - **Buttons:**
   - `לימוד אבות ובנים`, which opens S8.
-  - `למסך הבית`. The lesson is simply completed, whatever the level of each section; learning it again awards no points a second time.
+  - `למסך הבית`. The lesson is simply completed, whatever the level of each section; learning it again awards its points again (§5.3).
   - `טעימה משינון` (only if the Shinun flag is on).
   - `אודות`.
 
@@ -329,8 +329,8 @@ type DemoState = {
   streak: number;                 // seeded from demo.initialProgress
   points: number;                 // seeded from demo.initialProgress
   heartProgress: number;          // seeded from demo.initialProgress, 0..scoring.heartMax
-  completedSolo: boolean;         // the Matmid lesson done once, at any level: prevents double awarding
-  completedTogether: boolean;     // Avos uBanim done once (awards like the Matmid lesson)
+  completedSolo: boolean;         // the Matmid lesson done in this session, at any level: the streak counts once
+  completedTogether: boolean;     // Avos uBanim done in this session
   familyStreak: number;           // seeded from demo.initialProgress; shown only in the Avos uBanim completion
   togetherIndex: number;          // current card in S8
   quiz: {
@@ -344,13 +344,13 @@ type DemoState = {
   english: boolean;               // the lesson is read with its English (S3)
   seenBiurTip: boolean;           // the first-time line under the ביאור switch (S2) was seen
   seenShinun: boolean;
-  lastCompletion: Completion | null; // what the completion screen shows and animates
+  lastCompletion: Completion | null; // what the completion screen shows and animates; not saved, so opening the demo again never starts on the completion screen
 };
 ```
 
 **Rules:**
 
-- Completing the Matmid lesson, or Avos uBanim, for the first time awards the points and the completion bonus, increments the streak once per session (not per path), and advances `heartProgress` by `scoring.heartStep`, capped at `scoring.heartMax`. Completing Avos uBanim also increments `familyStreak`. The demo's values: 10 and 5 points for a correct answer on the first and second attempt, doubled on level 2 (`scoring.levelFactor`), a bonus of 20, and a step of 3 up to 100.
+- The demo is built to be used many times: every completion of the Matmid lesson, or of Avos uBanim, awards the points and the completion bonus, and advances `heartProgress` by `scoring.heartStep`, capped at `scoring.heartMax`. The streak increments once per session (not per path or per completion). Completing Avos uBanim also increments `familyStreak`. The demo's values: 10 and 5 points for a correct answer on the first and second attempt, doubled on level 2 (`scoring.levelFactor`), a bonus of 20, and a step of 3 up to 100.
 - The streak is a demo value. The Shabbos rule is displayed but not computed.
 
 ### 5.4 Architecture and code rules

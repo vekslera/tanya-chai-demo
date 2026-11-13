@@ -32,8 +32,8 @@ export function completionView(c: Completion, step: number) {
     heart: step >= STEP.contour ? c.after.heartProgress : c.before.heartProgress,
     streak: streakShown ? streakAfter : streakBefore,
     streakChanged: streakShown && streakAfter !== streakBefore,
-    points: c.awarded ? c.earned + c.bonus : 0,
+    points: c.earned + c.bonus,
     countPoints: step >= STEP.points,
-    purify: c.awarded && step >= STEP.purify,
+    purify: step >= STEP.purify,
   };
 }
