@@ -23,4 +23,14 @@ describe('HomeScreen', () => {
     await click(button(label));
     expect(hash()).toBe(route);
   });
+
+  it('switches to the other look, and back to the device’s own', async () => {
+    const { storage } = await renderApp(ROUTES.home);
+    await click(button(he.theme.toDark));
+    expect(document.documentElement.dataset.theme).toBe('dark');
+    expect(JSON.parse(storage.get(config.storage.key)!).theme).toBe('dark');
+    await click(button(he.theme.toLight));
+    expect(document.documentElement.dataset.theme).toBeUndefined();
+    expect(JSON.parse(storage.get(config.storage.key)!).theme).toBe('auto');
+  });
 });

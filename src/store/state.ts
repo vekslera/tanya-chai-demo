@@ -25,8 +25,6 @@ export type DemoState = Progress & {
   english: boolean;
   /** Light or dark, or the device's own mode (S7). */
   theme: Theme;
-  /** The first-time line under the ביאור switch (S2) was seen. */
-  seenBiurTip: boolean;
   seenShinun: boolean;
   /** What the completion screen shows and animates. */
   lastCompletion: Completion | null;
@@ -46,7 +44,6 @@ export function initialStateFrom({
     quiz: null,
     english: false,
     theme: defaultTheme,
-    seenBiurTip: false,
     seenShinun: false,
     lastCompletion: null,
   };
@@ -81,24 +78,14 @@ export function createReducer({ scoring, initialState }: StoreRules): Reducer {
         };
       case 'showBiur':
         return state.quiz
-          ? {
-              ...state,
-              seenBiurTip: true,
-              quiz: showBiur(state.quiz, action.section, action.shown),
-            }
+          ? { ...state, quiz: showBiur(state.quiz, action.section, action.shown) }
           : state;
       case 'startQuiz':
         return { ...state, quiz: startSession(action.track, action.questionIds, action.seed) };
       case 'answer':
         return state.quiz ? { ...state, quiz: answer(state.quiz, action, scoring) } : state;
       case 'nextQuestion':
-        return state.quiz
-          ? {
-              ...state,
-              seenBiurTip: state.seenBiurTip || state.quiz.track === 'solo',
-              quiz: nextQuestion(state.quiz),
-            }
-          : state;
+        return state.quiz ? { ...state, quiz: nextQuestion(state.quiz) } : state;
       case 'completeQuiz': {
         const q = state.quiz;
         if (!q) return state;

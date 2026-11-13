@@ -1,5 +1,6 @@
 import { HeartMark } from '../../components/HeartMark';
 import { HeartPulseIcon } from '../../components/Icons';
+import { ThemeToggle } from '../../components/ThemeToggle';
 import { Wordmark } from '../../components/Wordmark';
 import { config } from '../../config';
 import { usePortion } from '../../content/PortionProvider';
@@ -16,6 +17,9 @@ export function HomeScreen() {
   const startQuiz = useStartQuiz();
   return (
     <main className="screen home">
+      <div className="home-top">
+        <ThemeToggle />
+      </div>
       <div className="home-brand">
         <HeartMark progress={state.heartProgress} animated drawIn beating label={he.appName.full} />
         <Wordmark />

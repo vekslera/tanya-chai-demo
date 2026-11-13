@@ -15,7 +15,6 @@ describe('initialStateFrom', () => {
       ...config.demo.initialProgress,
       level: config.defaultLevel,
       completedSolo: false,
-      seenBiurTip: false,
       theme: config.defaultTheme,
       togetherIndex: -1,
       quiz: null,
@@ -45,7 +44,6 @@ describe('reducer', () => {
       index: 1,
       earned: config.scoring.pointsByAttempt[0]! * config.scoring.levelFactor[2]!,
     });
-    expect(s.seenBiurTip).toBe(true);
     s = reducer(s, { type: 'completeQuiz' });
     expect(s.quiz).toBeNull();
     expect(s.completedSolo).toBe(true);
@@ -65,19 +63,9 @@ describe('reducer', () => {
 
   it('switches the ביאור of a section, and the level with its questions', () => {
     let s = reducer(started, { type: 'showBiur', section: 's1', shown: false });
-    expect(s).toMatchObject({ seenBiurTip: true, quiz: { biur: { s1: false } } });
+    expect(s).toMatchObject({ quiz: { biur: { s1: false } } });
     s = reducer(s, { type: 'setLevel', level: 1, questionIds: ['q1', 'q3'] });
     expect(s).toMatchObject({ level: 1, quiz: { questionIds: ['q1', 'q3'] } });
-  });
-
-  it('marks the ביאור tip seen only after a Matmid question', () => {
-    const together = reducer(initialState, {
-      type: 'startQuiz',
-      track: 'together',
-      questionIds: ['q1', 'q2'],
-      seed: 1,
-    });
-    expect(reducer(together, { type: 'nextQuestion' }).seenBiurTip).toBe(false);
   });
 
   it('handles the other actions', () => {

@@ -51,6 +51,12 @@ export const he = {
     footnoteTitle: 'הערה',
   },
 
+  /** The button for the other look (S1). */
+  theme: {
+    toDark: 'מעבר לתצוגה כהה',
+    toLight: 'מעבר לתצוגה בהירה',
+  },
+
   /** The lesson's language: Hebrew only, or with the English translation and its ביאור. */
   language: {
     he: 'HE',
