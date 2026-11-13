@@ -166,7 +166,7 @@ Memorization is a secondary path, so this screen is built last and stays hidden 
 - **Sources and credits:** the Hebrew text from Sefaria; the English translation with the exact attribution line required by its license (from the API metadata, §8.1); the ביאור and questions written for Tanya Chai.
 - **תצוגה:** the look, a choice of three: `לפי המכשיר` (the default, `defaultTheme` in `app.config.json`: the device's own light or dark mode), `בהירה` or `כהה`. It is kept in the state (`theme`), and starting over keeps it (§4.1).
 - `התחל מחדש`: resets all local demo state, except the chosen look.
-- A contact line placeholder: `[TO FILL BY ALEX]`.
+- **Contact:** Alex's email (a `mailto:` link) and the number for a direct message, from `he.about.contact`.
 - Version and build date (from the build).
 
 #### S8: Avos uBanim (`#/together`)
@@ -726,6 +726,6 @@ All of these are covered in the product blueprint, not here.
 1. Done: the portion boundaries for chapter 32 are in `data/schedules/daily.json`.
 2. Done: the source of the Hebrew text is recorded in `resources/texts/he/SOURCE.md`.
 3. Review all content in `content/REVIEW.md` (§8.4), including the Avos uBanim tools.
-4. Fill in the contact line on the About screen.
+4. Done: the contact details on the About screen.
 5. Register `tanyachai.app` and set the DNS record (§10.2).
 6. Review the UI strings in `src/strings/he.ts`.
