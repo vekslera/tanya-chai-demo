@@ -73,6 +73,7 @@ describe('SentenceText', () => {
 });
 
 describe('PortionText', () => {
+  const blocks = portion.sections.map((s) => ({ key: s.id, sentences: s.sentences }));
   it('quotes one sentence', () => {
     const sentence = portion.sentenceOf(unit.id)!;
     render(<QuoteCard sentence={sentence} label="מתוך" />);
@@ -92,38 +93,26 @@ describe('PortionText', () => {
   });
 
   it('shows the sentences in their translation when asked', () => {
-    const { container } = render(
-      <CompactText paragraphs={portion.paragraphs} language="en" onSelect={() => {}} />,
-    );
+    const { container } = render(<CompactText blocks={blocks} language="en" onSelect={() => {}} />);
     expect(screen.getByRole('button', { name: 'Brothers.' }).getAttribute('lang')).toBe('en');
-    render(<CompactText paragraphs={portion.paragraphs} language="en" />);
+    render(<CompactText blocks={blocks} language="en" />);
     expect(container.textContent).toContain('Love [and soul].');
     expect(screen.getAllByText(/Brothers\./)).toHaveLength(2);
   });
 
   it('shows the text compact, with highlights', () => {
     const { container } = render(
-      <CompactText
-        paragraphs={portion.paragraphs}
-        highlight="LA.1.002"
-        highlightParagraph="LA.1.2"
-      />,
+      <CompactText blocks={blocks} highlight="LA.1.002" highlightBlock="LA.1.003" />,
     );
     expect(container.querySelector('.compact-sentence--highlight')?.textContent).toContain(
       'שׁוֹרֶשׁ',
     );
-    expect(container.querySelectorAll('.compact-paragraph--hint')).toHaveLength(1);
+    expect(container.querySelectorAll('.compact-block--hint')).toHaveLength(1);
   });
 
   it('makes each sentence a button with its state when it can be selected', () => {
     const onSelect = vi.fn();
-    render(
-      <CompactText
-        paragraphs={portion.paragraphs}
-        states={{ 'LA.1.002': 'wrong' }}
-        onSelect={onSelect}
-      />,
-    );
+    render(<CompactText blocks={blocks} states={{ 'LA.1.002': 'wrong' }} onSelect={onSelect} />);
     const wrong = screen.getByRole('button', { name: portion.unit('LA.1.002')!.display });
     expect(wrong.className).toContain('compact-sentence--wrong');
     expect(wrong.getAttribute('aria-pressed')).toBe('true');

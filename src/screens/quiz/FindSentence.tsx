@@ -1,6 +1,5 @@
 import { CompactText } from '../../components/PortionText';
 import { usePortion } from '../../content/PortionProvider';
-import { paragraphKey } from '../../domain/portion';
 import { config } from '../../config';
 import { answerState, canAnswer, sentenceChoices } from '../../domain/quiz';
 import type { QuizStrings } from '../../strings/quiz';
@@ -21,8 +20,8 @@ export function FindSentence({
   t: QuizStrings;
   language?: string;
 }) {
-  const { paragraphs, sections } = usePortion();
-  const { question: q, chosen, phase, unit, quiz, section } = session;
+  const { sections } = usePortion();
+  const { question: q, chosen, phase, quiz, section } = session;
   const choices = new Set(
     sentenceChoices(
       sections
@@ -34,17 +33,18 @@ export function FindSentence({
       quiz.seed,
     ),
   );
-  const shown = paragraphs
-    .map((p) => ({ ...p, sentences: p.sentences.filter((s) => choices.has(s.id)) }))
-    .filter((p) => p.sentences.length > 0);
+  // The sentences offered, by the section they are in.
+  const shown = sections
+    .map((s) => ({ key: s.id, sentences: s.sentences.filter((x) => choices.has(x.id)) }))
+    .filter((b) => b.sentences.length > 0);
   const open = canAnswer(phase);
   const marked = open ? chosen : [...chosen, q.answer];
   return (
     <>
       <p className="quiz-help">{t.findSentenceHelp}</p>
       <CompactText
-        paragraphs={shown}
-        highlightParagraph={phase === 'retry' ? paragraphKey(unit) : undefined}
+        blocks={shown}
+        highlightBlock={phase === 'retry' ? sections[section]!.id : undefined}
         states={Object.fromEntries(marked.map((id) => [id, answerState(id, q, chosen, !open)]))}
         onSelect={onAnswer}
         language={language}

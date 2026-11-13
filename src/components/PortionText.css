@@ -41,14 +41,14 @@
   line-height: 1.9;
 }
 
-.compact-paragraph {
+.compact-block {
   margin-block-end: 14px;
   padding: 2px 4px;
   border-radius: 8px;
   transition: background-color 0.3s var(--ease);
 }
 
-.compact-paragraph--hint {
+.compact-block--hint {
   background: var(--gold-soft);
 }
 

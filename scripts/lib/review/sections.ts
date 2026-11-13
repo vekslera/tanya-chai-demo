@@ -1,7 +1,7 @@
 // The three sections of the review document: the text with its ביאור and glossary, the
 // questions, and the Avos uBanim cards.
 import { questionIdsFor, questionIn } from '../../../src/domain/quiz.ts';
-import type { Level, Portion, Question, Track, Unit } from '../../../src/domain/types.ts';
+import type { Level, Portion, Question, Range, Track, Unit } from '../../../src/domain/types.ts';
 import { sentenceOf, unitsIn } from '../../../src/domain/units.ts';
 import { he } from '../../../src/strings/he.ts';
 import { quizStrings } from '../../../src/strings/quiz.ts';
@@ -20,36 +20,49 @@ function sentencesOf(units: Unit[]): Unit[][] {
   return out;
 }
 
-export function textSection(all: ChapterLayers, portionUnits: Unit[]): string[] {
+/** A run of units by its IDs, e.g. "LA.32.011–013". */
+const span = (first: Unit, last: Unit) =>
+  first.id === last.id ? first.id : `${first.id}–${last.id.split('.').pop()}`;
+
+/** A section as the app numbers it, with its units: "5 (LA.32.011–013)". */
+export function sectionTitle(all: ChapterLayers, sections: Range[], i: number): string {
+  const units = unitsIn(all.units, sections[i]!);
+  return `${i + 1} (${span(units[0]!, units[units.length - 1]!)})`;
+}
+
+/** The text and its ביאור, section by section as the app shows them (S3), sentence by sentence. */
+export function textSection(all: ChapterLayers, p: Portion): string[] {
+  const out = ['## 1. Text and short ביאור', ''];
+  p.sections.forEach((range, i) => {
+    out.push(`### Section ${sectionTitle(all, p.sections, i)}`, '');
+    for (const units of sentencesOf(unitsIn(all.units, range))) {
+      out.push(...sentenceItems(all, units));
+    }
+  });
+  return out;
+}
+
+/** One sentence: its text, its ביאור and glossary, then its ביאור in each other language. */
+function sentenceItems(all: ChapterLayers, units: Unit[]): string[] {
   const content = new Map(all.unitContent.map((c) => [c.id, c]));
   const glossary = new Map(all.glossary.map((g) => [g.id, g]));
-  const out = ['## 1. Text and short ביאור', ''];
-  let paragraph = 0;
-  for (const units of sentencesOf(portionUnits)) {
-    const first = units[0]!;
-    const last = units[units.length - 1]!;
-    if (first.paragraph !== paragraph) {
-      paragraph = first.paragraph;
-      out.push(`### Paragraph ${paragraph}`, '');
-    }
-    const title = units.length > 1 ? `${first.id}–${last.id.split('.').pop()}` : first.id;
-    out.push(`#### ${title}`, '', quote(units), '');
-    const { [appLanguage]: own, ...others } = content.get(first.id)?.biur ?? {};
-    if (own?.short) out.push(item(`${first.id}/biur.${appLanguage}`, own.short));
-    for (const m of units.flatMap((u) => content.get(u.id)?.glossary ?? [])) {
-      const g = glossary.get(m.entryId)!;
-      out.push(item(`glossary/${g.id}: ${g.term}`, g.body));
-      if (g.source) out.push(`  Source line: ${g.source}`);
-    }
-    // The ביאור in another language follows that language's text of the sentence.
-    for (const [language, b] of Object.entries(others)) {
-      const ids = new Set(units.map((u) => u.id));
-      const translated = all.texts[language]?.units.filter((x) => ids.has(x.id)) ?? [];
-      if (translated.length) out.push('', quote(translated), '');
-      if (b.short) out.push(item(`${first.id}/biur.${language}`, b.short));
-    }
-    out.push('');
+  const first = units[0]!;
+  const out = [`#### ${span(first, units[units.length - 1]!)}`, '', quote(units), ''];
+  const { [appLanguage]: own, ...others } = content.get(first.id)?.biur ?? {};
+  if (own?.short) out.push(item(`${first.id}/biur.${appLanguage}`, own.short));
+  for (const m of units.flatMap((u) => content.get(u.id)?.glossary ?? [])) {
+    const g = glossary.get(m.entryId)!;
+    out.push(item(`glossary/${g.id}: ${g.term}`, g.body));
+    if (g.source) out.push(`  Source line: ${g.source}`);
   }
+  // The ביאור in another language follows that language's text of the sentence.
+  for (const [language, b] of Object.entries(others)) {
+    const ids = new Set(units.map((u) => u.id));
+    const translated = all.texts[language]?.units.filter((x) => ids.has(x.id)) ?? [];
+    if (translated.length) out.push('', quote(translated), '');
+    if (b.short) out.push(item(`${first.id}/biur.${language}`, b.short));
+  }
+  out.push('');
   return out;
 }
 
@@ -98,8 +111,17 @@ export function questionsSection(all: ChapterLayers, p: Portion, rules: ContentR
     out.push(`### ${title}`, '');
     for (const id of questionIdsFor(p.questions, sectionOf, track, level)) {
       const q = byId.get(id)!;
-      const where = q.summary ? 'summary' : `after section ${sectionOf(q) + 1}`;
-      out.push(`#### ${q.id} (${q.kind}, ${q.category}, ${where}), relies on ${q.unitRef}`, '');
+      const where = q.summary
+        ? 'summary question, after the last section'
+        : `after section ${sectionTitle(all, p.sections, sectionOf(q))}`;
+      out.push(
+        `#### ${q.id}: ${where}`,
+        '',
+        `${q.kind}, ${q.category}; relies on ${q.unitRef}`,
+        '',
+      );
+      // The text the question is asked on: its section; the summary is on the whole lesson.
+      if (!q.summary) out.push(quote(unitsIn(all.units, p.sections[sectionOf(q)]!)), '');
       out.push(...questionItems(q, all, appLanguage));
       for (const language of Object.keys(q.translations ?? {})) {
         out.push('', ...questionItems(q, all, language));
@@ -115,7 +137,7 @@ export function cardsSection(all: ChapterLayers, p: Portion): string[] {
   p.together.forEach((c, i) => {
     const s = p.sections[i]!;
     out.push(
-      `### ${c.id}: section ${i + 1} (${s.from}–${s.to})`,
+      `### ${c.id}: section ${sectionTitle(all, p.sections, i)}`,
       '',
       quote(unitsIn(all.units, s)),
       '',

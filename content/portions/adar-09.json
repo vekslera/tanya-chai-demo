@@ -63,7 +63,7 @@
         "en": {
           "prompt": {
             "value": "According to the start of the lesson, what is the “direct and easy way” to fulfill the commandment “You shall love your fellow as yourself”?",
-            "reviewed": false
+            "reviewed": true
           },
           "options": [
             {
@@ -76,11 +76,11 @@
           ],
           "hint": {
             "value": "Read the first sentence again: what does one think of one’s body, and what does one find joy in?",
-            "reviewed": false
+            "reviewed": true
           },
           "explanation": {
             "value": "The Tanya says that one who views the body “with scorn and contempt,” and finds joy “only in the joy of the soul,” has “a direct and easy way” to love every Jew.",
-            "reviewed": false
+            "reviewed": true
           }
         }
       }
@@ -98,7 +98,7 @@
       "answer": "LA.32.008",
       "unitRef": "LA.32.008",
       "hint": {
-        "value": "המשפט נמצא בפסקה השנייה, מיד אחרי ״ואב אחד לכולנה״.",
+        "value": "המשפט נמצא בקטע שקראתם עכשיו, מיד אחרי ״ואב אחד לכולנה״.",
         "reviewed": true
       },
       "explanation": {
@@ -109,15 +109,15 @@
         "en": {
           "prompt": {
             "value": "Tap the sentence that says all Israel are called “brothers.”",
-            "reviewed": false
+            "reviewed": true
           },
           "hint": {
-            "value": "The sentence is in the second paragraph, right after “and all having one Father.”",
-            "reviewed": false
+            "value": "The sentence is in the section you just read, right after “and all having one Father.”",
+            "reviewed": true
           },
           "explanation": {
             "value": "“All Israelites are called real brothers by virtue of the source of their souls in the One G–d”: the brotherhood comes from the souls, which share one root.",
-            "reviewed": false
+            "reviewed": true
           }
         }
       }
@@ -135,7 +135,7 @@
       "answer": "false",
       "unitRef": "LA.32.009",
       "hint": {
-        "value": "בפסקה השנייה כתוב ״רק ש...מחולקים״. מה מחולק שם?",
+        "value": "בקטע שקראתם עכשיו כתוב ״רק ש...מחולקים״. מה מחולק שם?",
         "reviewed": true
       },
       "explanation": {
@@ -146,15 +146,15 @@
         "en": {
           "prompt": {
             "value": "According to the Tanya, the souls of Israel are separate from each other, and only the bodies are united.",
-            "reviewed": false
+            "reviewed": true
           },
           "hint": {
-            "value": "The second paragraph says “only the … are separated.” What is separated there?",
-            "reviewed": false
+            "value": "The section you just read says “only the … are separated.” What is separated there?",
+            "reviewed": true
           },
           "explanation": {
             "value": "The opposite: the souls are all of a kind and share one root; “only the bodies are separated.”",
-            "reviewed": false
+            "reviewed": true
           }
         }
       }
@@ -273,8 +273,8 @@
       "answer": "a",
       "unitRef": "LA.32.013",
       "hint": {
-        "value": "לפי הפסקה השלישית, מהו ״יסוד ושורש כל התורה״?",
-        "reviewed": true
+        "value": "לפי הקטע שקראתם עכשיו, מהו ״יסוד ושורש כל התורה״?",
+        "reviewed": false
       },
       "explanation": {
         "value": "יסוד התורה הוא לרומם את הנשמה מעל הגוף, ולהמשיך את אור ה׳ אל מקור הנשמות, והוא שורה רק כשהנשמות מאוחדות. אהבת ישראל היא בדיוק זה.",
@@ -298,7 +298,7 @@
             }
           ],
           "hint": {
-            "value": "According to the third paragraph, what is “the basis and root of the entire Torah”?",
+            "value": "According to the section you just read, what is “the basis and root of the entire Torah”?",
             "reviewed": false
           },
           "explanation": {
@@ -370,7 +370,7 @@
       "category": "literal",
       "prompt": {
         "value": "לפי התניא, מי יודע את גדולתן ומעלתן של הנפש והרוח בשורשן?",
-        "reviewed": false
+        "reviewed": true
       },
       "options": [
         { "id": "a", "text": "אין מי שיודע: שורשן ומקורן באלקים חיים" },
@@ -381,17 +381,17 @@
       "unitRef": "LA.32.004",
       "hint": {
         "value": "קראו שוב את ״והנפש והרוח מי יודע גדולתן...״: איפה נמצא שורשן?",
-        "reviewed": false
+        "reviewed": true
       },
       "explanation": {
         "value": "״והנפש והרוח, מי יודע גדולתן ומעלתן בשרשן ומקורן באלקים חיים״: שורש כל נשמה בה׳, ולכן אין מי שיודע כמה היא גדולה.",
-        "reviewed": false
+        "reviewed": true
       },
       "translations": {
         "en": {
           "prompt": {
             "value": "According to the Tanya, who knows the greatness and excellence of the soul and spirit in their root?",
-            "reviewed": false
+            "reviewed": true
           },
           "options": [
             { "id": "a", "text": "No one knows: their root and source are in the living G–d" },
@@ -400,58 +400,61 @@
           ],
           "hint": {
             "value": "Read again “who can know their greatness and excellence…”: where is their root?",
-            "reviewed": false
+            "reviewed": true
           },
           "explanation": {
             "value": "“As for the soul and spirit, who can know their greatness and excellence in their root and source in the living G–d?” The root of every soul is in G-d, so no one knows how great it is.",
-            "reviewed": false
+            "reviewed": true
           }
         }
       }
     },
     {
-      "id": "q-l1-hillel",
+      "id": "q-l1-root",
       "track": "solo",
       "level": 1,
       "kind": "choice",
       "category": "literal",
       "prompt": {
-        "value": "מה אמר הלל הזקן על מצוות ״ואהבת לרעך כמוך״?",
-        "reviewed": false
+        "value": "לפי התניא, מהו ״יסוד ושורש כל התורה״?",
+        "reviewed": true
       },
       "options": [
-        { "id": "a", "text": "״זהו כל התורה כולה, ואידך פירושא הוא״" },
-        { "id": "b", "text": "שזו המצווה הקלה ביותר בתורה" },
-        { "id": "c", "text": "שרק חכמים יכולים לקיים אותה" }
+        { "id": "a", "text": "להגביה ולהעלות את הנפש מעל הגוף" },
+        { "id": "b", "text": "לשמור על הגוף בריא וחזק, כדי שיוכל לעבוד את ה׳" },
+        { "id": "c", "text": "לזכור את כל המצוות ואת כל פרטיהן" }
       ],
       "answer": "a",
-      "unitRef": "LA.32.011",
+      "unitRef": "LA.32.013",
       "hint": {
-        "value": "קראו את תחילת הפסקה השלישית: ״וזהו שאמר הלל הזקן...״.",
-        "reviewed": false
+        "value": "קראו את המשפט שמתחיל ״כי יסוד ושורש כל התורה...״: את מה מגביהים, ומעל מה?",
+        "reviewed": true
       },
       "explanation": {
-        "value": "הלל אמר על מצווה זו: ״זהו כל התורה כולה, ואידך פירושא הוא״. היא כל התורה, ושאר התורה הוא פירוש שלה.",
-        "reviewed": false
+        "value": "״יסוד ושורש כל התורה – הוא להגביה ולהעלות הנפש על הגוף״, עד שורש כל העולמות. מי שהנשמה עיקר אצלו אוהב כל יהודי, ולכן אהבת ישראל היא כל התורה.",
+        "reviewed": true
       },
       "translations": {
         "en": {
           "prompt": {
-            "value": "What did Hillel the Elder say about the commandment “You shall love your fellow as yourself”?",
-            "reviewed": false
+            "value": "According to the Tanya, what are “the basis and root of the entire Torah”?",
+            "reviewed": true
           },
           "options": [
-            { "id": "a", "text": "“This is the whole Torah, while the rest is but commentary”" },
-            { "id": "b", "text": "That it is the easiest commandment in the Torah" },
-            { "id": "c", "text": "That only sages can keep it" }
+            {
+              "id": "a",
+              "text": "To raise and exalt the soul high above the body"
+            },
+            { "id": "b", "text": "To keep the body healthy and strong, so that it can serve G-d" },
+            { "id": "c", "text": "To remember all the commandments and all their details" }
           ],
           "hint": {
-            "value": "Read the start of the third paragraph: “This is what Hillel the Elder meant…”",
-            "reviewed": false
+            "value": "Read the sentence that begins “For the basis and root of the entire Torah…”: what is raised, and above what?",
+            "reviewed": true
           },
           "explanation": {
-            "value": "Hillel said of this commandment: “This is the whole Torah, while the rest is but commentary.” It is the whole Torah, and the rest of the Torah explains it.",
-            "reviewed": false
+            "value": "“The basis and root of the entire Torah are to raise and exalt the soul high above the body.” One for whom the soul is what matters loves every Jew; that is why loving one’s fellow is the whole Torah.",
+            "reviewed": true
           }
         }
       }
@@ -464,28 +467,28 @@
       "category": "literal",
       "prompt": {
         "value": "לפי התניא, הקב״ה שורה גם במקום שיש בו פירוד בין הנשמות.",
-        "reviewed": false
+        "reviewed": true
       },
       "answer": "false",
       "unitRef": "LA.32.016",
       "hint": {
         "value": "מה כתוב על ״אתר פגים״, מקום שיש בו פגם?",
-        "reviewed": false
+        "reviewed": true
       },
       "explanation": {
         "value": "״קודשא בריך הוא לא שריא באתר פגים״: ה׳ אינו שורה במקום פגום. לכן אורו נמשך רק כשהנשמות מאוחדות.",
-        "reviewed": false
+        "reviewed": true
       },
       "translations": {
         "en": {
           "prompt": {
             "value": "According to the Tanya, the Holy One, blessed is He, dwells even in a place where there is disunity among the souls.",
-            "reviewed": false
+            "reviewed": true
           },
-          "hint": { "value": "What does it say about “an imperfect place”?", "reviewed": false },
+          "hint": { "value": "What does it say about “an imperfect place”?", "reviewed": true },
           "explanation": {
             "value": "“The Holy One, blessed is He, does not dwell in an imperfect place”: G-d does not dwell where there is a flaw. So His light comes down only when the souls are united.",
-            "reviewed": false
+            "reviewed": true
           }
         }
       }
@@ -498,28 +501,28 @@
       "category": "literal",
       "prompt": {
         "value": "לפי השיעור כולו, ממה באה אהבה אמיתית בין יהודים?",
-        "reviewed": false
+        "reviewed": true
       },
       "options": [
         { "id": "a", "text": "מכך שהנשמה עיקר, ולכל הנשמות שורש אחד ואב אחד" },
-        { "id": "b", "text": "ממתנות ומטובות שנותנים זה לזה" },
+        { "id": "b", "text": "מטובות ומתנות שנותנים זה לזה" },
         { "id": "c", "text": "מכך שגרים קרוב זה לזה" }
       ],
       "answer": "a",
       "unitRef": "LA.32.008",
       "hint": {
         "value": "חשבו על ״אחים ממש״: ממה באה האחווה, מהגוף או מהנשמה?",
-        "reviewed": false
+        "reviewed": true
       },
       "explanation": {
         "value": "כשהנשמה עיקר, רואים שכל ישראל אחים ממש, כי לכולם אב אחד. אהבה שבאה מהגוף תלויה בדבר, ונגמרת.",
-        "reviewed": false
+        "reviewed": true
       },
       "translations": {
         "en": {
           "prompt": {
             "value": "According to the whole lesson, where does true love between Jews come from?",
-            "reviewed": false
+            "reviewed": true
           },
           "options": [
             {
@@ -531,11 +534,11 @@
           ],
           "hint": {
             "value": "Think of “real brothers”: where does the brotherhood come from, the body or the soul?",
-            "reviewed": false
+            "reviewed": true
           },
           "explanation": {
             "value": "When the soul is what matters, we see that all Israel are real brothers, because all have one Father. A love that comes from the body depends on a thing, and ends.",
-            "reviewed": false
+            "reviewed": true
           }
         }
       },

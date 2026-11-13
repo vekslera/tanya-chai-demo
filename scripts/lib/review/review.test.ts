@@ -6,6 +6,7 @@ import { diskFiles } from '../env.ts';
 import { loadChapter } from '../load.ts';
 import { reviewDocument } from './index.ts';
 import { item, quote } from './item.ts';
+import { sectionTitle } from './sections.ts';
 
 const real = loadChapter(diskFiles());
 
@@ -16,6 +17,15 @@ describe('review items', () => {
     );
     expect(item('x', { value: 'v', reviewed: false })).toBe('- **x** (⬜ to review)\n  v');
     expect(quote(real.units.slice(0, 2))).toMatch(/^> \S/);
+  });
+});
+
+describe('sectionTitle', () => {
+  it('names a section by its number and its units', () => {
+    expect(sectionTitle(real, [{ from: 'LA.32.009', to: 'LA.32.013' }], 0)).toBe(
+      '1 (LA.32.009–013)',
+    );
+    expect(sectionTitle(real, [{ from: 'LA.32.008', to: 'LA.32.008' }], 0)).toBe('1 (LA.32.008)');
   });
 });
 
@@ -41,9 +51,11 @@ describe('reviewDocument', () => {
     const { text } = reviewDocument(all, all.portion!, rules);
     expect(text).not.toMatch('Source line');
     expect(text).toMatch('### Level 9:  ()');
-    // Each question with where it is asked.
-    expect(text).toMatch('(choice, literal, after section 1)');
-    expect(text).toMatch('(choice, literal, summary)');
+    // Each question with where it is asked, and the text of its section.
+    const first = all.portion!.questions[0]!;
+    expect(text).toMatch(`#### ${first.id}: after section 1 (LA.32.001–003)`);
+    expect(text).toMatch('choice, literal; relies on LA.32.001\n\n> ');
+    expect(text).toMatch('#### q-l1-summary: summary question, after the last section');
   });
 
   it('quotes the text of each other language before its ביאור', () => {

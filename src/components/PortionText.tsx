@@ -1,9 +1,4 @@
-import {
-  sentenceText,
-  sentenceTranslation,
-  type PortionParagraph,
-  type PortionSentence,
-} from '../domain/portion';
+import { sentenceText, sentenceTranslation, type PortionSentence } from '../domain/portion';
 import type { AnswerState } from '../domain/quiz';
 import './PortionText.css';
 
@@ -40,23 +35,26 @@ export function QuoteCard({
   );
 }
 
+/** A run of sentences shown together: the part of one section. */
+export type TextBlock = { key: string; sentences: PortionSentence[] };
+
 /**
- * The portion's text in compact form, sentence by sentence: used in the back-to-text sheet, and
- * as the answer surface of findSentence questions (each sentence is then a button).
+ * The portion's text in compact form, sentence by sentence, in blocks (one per section): the
+ * answer surface of findSentence questions, where each sentence is a button.
  */
 export function CompactText({
-  paragraphs,
+  blocks,
   highlight,
-  highlightParagraph,
+  highlightBlock,
   states = {},
   onSelect,
   language,
 }: {
-  paragraphs: PortionParagraph[];
+  blocks: TextBlock[];
   /** The ID of a sentence to mark. */
   highlight?: string;
-  /** The key of a paragraph to mark as a hint. */
-  highlightParagraph?: string;
+  /** The key of a block to mark as a hint. */
+  highlightBlock?: string;
   states?: Record<string, AnswerState>;
   onSelect?: (sentenceId: string) => void;
   /** Show each sentence's translation in this language. */
@@ -64,10 +62,10 @@ export function CompactText({
 }) {
   return (
     <div className="compact-text">
-      {paragraphs.map((p) => (
+      {blocks.map((p) => (
         <p
           key={p.key}
-          className={`compact-paragraph${p.key === highlightParagraph ? ' compact-paragraph--hint' : ''}`}
+          className={`compact-block${p.key === highlightBlock ? ' compact-block--hint' : ''}`}
         >
           {p.sentences.map((s) => {
             const cls = [

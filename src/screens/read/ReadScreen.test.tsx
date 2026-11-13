@@ -72,7 +72,7 @@ describe('ReadScreen', () => {
       config.quiz.findSentence.choices,
     );
     await click(wrongSentences()[0]!);
-    expect(document.querySelector('.compact-paragraph--hint')).toBeTruthy();
+    expect(document.querySelector('.compact-block--hint')).toBeTruthy();
     await click(sentence('LA.1.003'));
     expect(screen.getByText(he.quiz.praise[1]!)).toBeTruthy();
 
