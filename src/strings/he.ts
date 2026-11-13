@@ -169,7 +169,13 @@ export const he = {
     licenseLink: 'נוסח הרישיון',
     contentCredit,
     contactTitle: 'יצירת קשר',
-    contact: '[TO FILL BY ALEX]',
+    /** Alex's contact details: the email opens a message, the number is for a direct message. */
+    contact: {
+      emailLabel: 'דוא״ל',
+      email: 'vekslera@gmail.com',
+      phoneLabel: 'הודעה ישירה',
+      phone: '+972 (52) 835 3205',
+    },
     themeTitle: 'תצוגה',
     themes: { auto: 'לפי המכשיר', light: 'בהירה', dark: 'כהה' },
     resetTitle: 'התחלה מחדש',

@@ -52,7 +52,15 @@ export function AboutScreen({ strict = __CONTENT_STRICT__ }: { strict?: boolean 
 
       <section className="about-section">
         <h2>{he.about.contactTitle}</h2>
-        <p>{he.about.contact}</p>
+        <p>
+          {he.about.contact.emailLabel}:{' '}
+          <a href={`mailto:${he.about.contact.email}`}>
+            <bdi dir="ltr">{he.about.contact.email}</bdi>
+          </a>
+        </p>
+        <p>
+          {he.about.contact.phoneLabel}: <bdi dir="ltr">{he.about.contact.phone}</bdi>
+        </p>
       </section>
 
       <ThemeSection />

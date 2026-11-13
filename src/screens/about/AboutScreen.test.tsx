@@ -12,7 +12,11 @@ describe('AboutScreen', () => {
     await renderApp(ROUTES.about);
     const link = screen.getByRole('link', { name: he.about.licenseLink });
     expect(link.getAttribute('href')).toBe('https://example.org/license');
-    expect(screen.getAllByRole('link')).toHaveLength(1);
+    expect(screen.getAllByRole('link')).toHaveLength(2);
+    // The contact details: the email opens a message.
+    const email = screen.getByRole('link', { name: he.about.contact.email });
+    expect(email.getAttribute('href')).toBe(`mailto:${he.about.contact.email}`);
+    expect(screen.getByText(he.about.contact.phone)).toBeTruthy();
     expect(screen.getByText(he.about.contentCredit)).toBeTruthy();
   });
 
