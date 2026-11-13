@@ -41,4 +41,20 @@ describe('AboutScreen', () => {
     await click(button(he.about.reset));
     expect(screen.queryByText(he.about.resetDone)).toBeNull();
   });
+
+  it('chooses the look, the device’s own by default, and keeps it on starting over', async () => {
+    const { storage } = await renderApp(ROUTES.about);
+    const option = (theme: 'auto' | 'light' | 'dark') =>
+      screen.getByRole('radio', { name: he.about.themes[theme] });
+    expect(option('auto').getAttribute('aria-checked')).toBe('true');
+    expect(document.documentElement.dataset.theme).toBeUndefined();
+    await click(option('dark'));
+    expect(option('dark').getAttribute('aria-checked')).toBe('true');
+    expect(document.documentElement.dataset.theme).toBe('dark');
+    await click(button(he.about.reset));
+    await click(button(he.about.resetYes));
+    expect(JSON.parse(storage.get(config.storage.key)!).theme).toBe('dark');
+    await click(option('auto'));
+    expect(document.documentElement.dataset.theme).toBeUndefined();
+  });
 });

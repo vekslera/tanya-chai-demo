@@ -1,7 +1,7 @@
 .quote-card {
   margin: 0;
   padding: 14px 16px;
-  background: var(--white);
+  background: var(--surface);
   border-radius: var(--radius-sm);
   border-inline-start: 3px solid var(--gold);
   box-shadow: var(--shadow);
@@ -10,7 +10,7 @@
 .quote-card-label {
   font-size: 13px;
   font-weight: 500;
-  color: var(--navy-muted);
+  color: var(--text-muted);
   margin-block-end: 4px;
 }
 
@@ -57,8 +57,8 @@ button.compact-sentence {
   text-align: start;
   font: inherit;
   line-height: 1.8;
-  color: var(--navy);
-  background: var(--white);
+  color: var(--text);
+  background: var(--surface);
   border: 2px solid var(--track);
   border-radius: var(--radius-sm);
   cursor: pointer;
@@ -79,5 +79,5 @@ button.compact-sentence.compact-sentence--highlight {
 
 button.compact-sentence.compact-sentence--wrong {
   border-color: var(--tint);
-  color: var(--navy-muted);
+  color: var(--text-muted);
 }

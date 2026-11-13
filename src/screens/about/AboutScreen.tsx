@@ -7,9 +7,10 @@ import { ROUTES } from '../../routes';
 import { he } from '../../strings/he';
 import { AboutSources } from './AboutSources';
 import { ResetSection } from './ResetSection';
+import { ThemeSection } from './ThemeSection';
 import './About.css';
 
-/** About (S10): what Tanya Chai is, the paths, sources and rights, contact, and a reset. */
+/** About (S7): what Tanya Chai is, the paths, sources and rights, contact, the look, and a reset. */
 export function AboutScreen({ strict = __CONTENT_STRICT__ }: { strict?: boolean }) {
   const { unreviewed, portion } = usePortion();
   // The טיוטה badge marks a development build with content still waiting for approval (SPEC §8.4).
@@ -53,6 +54,8 @@ export function AboutScreen({ strict = __CONTENT_STRICT__ }: { strict?: boolean 
         <h2>{he.about.contactTitle}</h2>
         <p>{he.about.contact}</p>
       </section>
+
+      <ThemeSection />
 
       <ResetSection />
 

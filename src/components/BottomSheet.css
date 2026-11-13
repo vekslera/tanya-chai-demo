@@ -10,7 +10,7 @@
 .sheet-backdrop {
   position: absolute;
   inset: 0;
-  background: rgba(30, 42, 90, 0.35);
+  background: var(--overlay);
   animation: sheet-fade 0.2s var(--ease);
 }
 
@@ -24,7 +24,7 @@
   background: var(--bg-alt);
   border-start-start-radius: 20px;
   border-start-end-radius: 20px;
-  box-shadow: 0 -8px 32px rgba(30, 42, 90, 0.15);
+  box-shadow: var(--sheet-shadow);
   padding-block-end: env(safe-area-inset-bottom);
   animation: sheet-up 0.28s var(--ease);
   outline: none;

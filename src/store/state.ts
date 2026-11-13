@@ -12,6 +12,7 @@ import {
   type QuizSession,
 } from '../domain/quizSession';
 import type { ScoringRules } from '../domain/scoring';
+import type { Theme } from '../domain/theme';
 import { INTRO_INDEX } from '../domain/together';
 import type { Level, Track } from '../domain/types';
 
@@ -22,6 +23,8 @@ export type DemoState = Progress & {
   quiz: QuizSession | null;
   /** Whether the lesson is read with its English: the translation, and its ביאור. */
   english: boolean;
+  /** Light or dark, or the device's own mode (S7). */
+  theme: Theme;
   /** The first-time line under the ביאור switch (S2) was seen. */
   seenBiurTip: boolean;
   seenShinun: boolean;
@@ -31,8 +34,9 @@ export type DemoState = Progress & {
 
 export function initialStateFrom({
   defaultLevel,
+  defaultTheme,
   demo,
-}: Pick<AppConfig, 'defaultLevel' | 'demo'>): DemoState {
+}: Pick<AppConfig, 'defaultLevel' | 'defaultTheme' | 'demo'>): DemoState {
   return {
     ...demo.initialProgress,
     level: defaultLevel,
@@ -41,6 +45,7 @@ export function initialStateFrom({
     togetherIndex: INTRO_INDEX,
     quiz: null,
     english: false,
+    theme: defaultTheme,
     seenBiurTip: false,
     seenShinun: false,
     lastCompletion: null,
@@ -57,6 +62,7 @@ export type Action =
   | { type: 'nextQuestion' }
   | { type: 'completeQuiz' }
   | { type: 'toggleEnglish' }
+  | { type: 'setTheme'; theme: Theme }
   | { type: 'setTogetherIndex'; index: number }
   | { type: 'seenShinun' }
   | { type: 'reset' };
@@ -101,12 +107,15 @@ export function createReducer({ scoring, initialState }: StoreRules): Reducer {
       }
       case 'toggleEnglish':
         return { ...state, english: !state.english };
+      case 'setTheme':
+        return { ...state, theme: action.theme };
       case 'setTogetherIndex':
         return { ...state, togetherIndex: action.index };
       case 'seenShinun':
         return { ...state, seenShinun: true };
       case 'reset':
-        return initialState;
+        // Starting over clears the progress, not the chosen look.
+        return { ...initialState, theme: state.theme };
     }
   };
 }

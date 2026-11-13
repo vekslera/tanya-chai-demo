@@ -163,7 +163,8 @@ Memorization is a secondary path, so this screen is built last and stays hidden 
 - **What is Tanya Chai:** 3–4 short lines.
 - **The paths, one line each:** מתמיד, לימוד אבות ובנים, משכיל, and שינון as a secondary path. Organizational or business models are not named.
 - **Sources and credits:** the Hebrew text from Sefaria; the English translation with the exact attribution line required by its license (from the API metadata, §8.1); the ביאור and questions written for Tanya Chai.
-- `התחל מחדש`: resets all local demo state.
+- **תצוגה:** the look, a choice of three: `לפי המכשיר` (the default, `defaultTheme` in `app.config.json`: the device's own light or dark mode), `בהירה` or `כהה`. It is kept in the state (`theme`), and starting over keeps it (§4.1).
+- `התחל מחדש`: resets all local demo state, except the chosen look.
 - A contact line placeholder: `[TO FILL BY ALEX]`.
 - Version and build date (from the build).
 
@@ -210,7 +211,7 @@ A father learns the portion with his son on one device. The screen gives the fat
 
 | Token | Value | Use |
 | --- | --- | --- |
-| `--navy` | `#1E2A5A` | Text, headings, תניא |
+| `--navy` | `#1E2A5A` | The brand's navy: text, headings and תניא in the light look (`--text`, below), text on gold in both |
 | `--gold` | `#E8A317` | Accents, the right chamber, contour, primary buttons |
 | `--gold-deep` | `#B47A00` | Gold text on light backgrounds, חי |
 | `--tint` | `#C9CEDB` | Left chamber, hidden-word pills, subtle fills |
@@ -222,6 +223,24 @@ A father learns the portion with his son on one device. The screen gives the fat
 | `--error` | `#B4463C` | Used sparingly; the wrong-answer state is mostly expressed by the hint and highlight |
 
 The contrast of `--gold` on `--bg` is too low for body text, so use `--gold-deep` for gold text. Primary buttons are `--navy` background with white text, or `--gold` background with `--navy` text.
+
+**Light and dark.** The app has a light look (the beige background above) and a dark one (the navy background of the brand's dark logo, `logo-mark-dark.svg`). It follows the device's own mode unless the learner chooses one in About (S7). The tokens are defined by role, each once, with its light and dark values together through CSS `light-dark()`; `color-scheme` on the root follows the device, or the choice (`data-theme="light"` or `"dark"`, set from the state):
+
+| Role token | Light | Dark | Use |
+| --- | --- | --- | --- |
+| `--bg` | `#FBFAF6` | `#1E2A5A` | Page background |
+| `--bg-alt` | `#F3F0E7` | `#27346B` | Cards, bottom sheets |
+| `--surface` | `#FFFFFF` | `#2D3A75` | Options, quote cards, sentences to tap |
+| `--text` | `#1E2A5A` | `#F3F0E7` | Text, headings, תניא |
+| `--text-muted` | `#4A5478` | `#B9C0D6` | The ביאור, secondary text |
+| `--gold-deep` | `#B47A00` | `#F0B437` | Gold text, חי |
+| `--tint` | `#C9CEDB` | `#56628F` | Borders, pills, subtle fills |
+| `--track` | `#EEECE6` | `#3A4673` | The contour's track (the brand's dark track), dividers |
+| `--primary` / `--on-primary` | `#1E2A5A` / white | `#FBFAF6` / `#1E2A5A` | The main button, the chosen option of a switch |
+| `--gold-soft` | gold at 14% | `#4F3C16` | The dedication band, tips, badges, highlights (a translucent gold turns grey on navy) |
+| `--error` | `#B4463C` | `#EF8378` | |
+
+The brand's own colors stay the same in both (`--navy`, `--gold`, `--chamber` for the left chamber, `--purify`): a correct option is gold with navy text in both looks. The printed ביאור משולב is on paper, so the print takes the light values.
 
 ### 4.2 Typography
 
@@ -342,6 +361,7 @@ type DemoState = {
     biur?: Record<string, boolean>; // by section ID: the ביאור shown or hidden there by its switch (S2)
   } | null;
   english: boolean;               // the lesson is read with its English (S3)
+  theme: "auto" | "light" | "dark"; // the look (S7, §4.1); "auto" follows the device
   seenBiurTip: boolean;           // the first-time line under the ביאור switch (S2) was seen
   seenShinun: boolean;
   lastCompletion: Completion | null; // what the completion screen shows and animates; not saved, so opening the demo again never starts on the completion screen

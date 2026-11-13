@@ -10,6 +10,7 @@
     { "id": 2, "showBiur": true }
   ],
   "defaultLevel": 2,
+  "defaultTheme": "auto",
   "demo": {
     "initialProgress": { "streak": 12, "points": 340, "heartProgress": 62, "familyStreak": 5 },
     "estimatedMinutes": 6,

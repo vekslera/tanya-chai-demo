@@ -1,5 +1,6 @@
 import { useEffect, type ComponentType } from 'react';
 import { SHINUN_ENABLED } from './features';
+import { useDocumentTheme } from './hooks/useDocumentTheme';
 import { useRoute } from './router';
 import { ROUTES, type Route } from './routes';
 import { AboutScreen } from './screens/about/AboutScreen';
@@ -8,6 +9,7 @@ import { HomeScreen } from './screens/home/HomeScreen';
 import { ReadScreen } from './screens/read/ReadScreen';
 import { ShinunScreen } from './screens/shinun/ShinunScreen';
 import { TogetherScreen } from './screens/together/TogetherScreen';
+import { useStore } from './store/StoreProvider';
 
 /** The screen of each route. With the Shinun flag off its route does not exist. */
 export function screensFor(shinun: boolean): Partial<Record<Route, ComponentType>> {
@@ -23,9 +25,11 @@ export function screensFor(shinun: boolean): Partial<Record<Route, ComponentType
 
 const SCREENS = screensFor(SHINUN_ENABLED);
 
-/** The current route's screen, scrolled to the top; an unknown route shows Home. */
+/** The current route's screen, scrolled to the top, in the chosen look; an unknown route shows
+ * Home. */
 export function Screens() {
   const route = useRoute();
+  useDocumentTheme(useStore().state.theme);
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [route]);

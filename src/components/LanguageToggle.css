@@ -32,12 +32,12 @@
   justify-content: center;
   padding-inline: 6px;
   border-radius: 999px;
-  color: var(--navy-muted);
+  color: var(--text-muted);
 }
 
 .lang-toggle .lang-toggle-on {
-  background: var(--navy);
-  color: var(--white);
+  background: var(--primary);
+  color: var(--on-primary);
 }
 
 /* A path without English yet: the switch is shown, dimmed. */
@@ -53,8 +53,8 @@
   z-index: 5;
   padding: 4px 10px;
   border-radius: var(--radius-sm);
-  background: var(--navy);
-  color: var(--white);
+  background: var(--primary);
+  color: var(--on-primary);
   font-family: var(--font-ui);
   font-size: 13px;
   white-space: nowrap;

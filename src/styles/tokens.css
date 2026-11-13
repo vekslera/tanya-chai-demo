@@ -1,21 +1,33 @@
 /* Design tokens (SPEC §4.1). */
 :root {
+  /* Light or dark: the device's own mode, unless the learner chose one (SPEC §4.1, S7). */
+  color-scheme: light dark;
+
+  /* The brand's colors, the same in both modes (resources/brand/logo/README.md). */
   --navy: #1e2a5a;
   --gold: #e8a317;
-  --gold-deep: #b47a00;
-  --tint: #c9cedb;
-  --track: #eeece6;
-  --bg: #fbfaf6;
-  --bg-alt: #f3f0e7;
-  --purify: #f3dda2;
-  --success: var(--gold);
-  --error: #b4463c;
-
-  /* Derived, used for secondary text and soft fills. */
-  --navy-muted: #4a5478;
-  --navy-soft: rgba(30, 42, 90, 0.08);
-  --gold-soft: rgba(232, 163, 23, 0.14);
   --white: #ffffff;
+  --chamber: #c9cedb; /* the left chamber: the dark logo keeps it */
+  --purify: #f3dda2;
+  --gold-line: rgba(232, 163, 23, 0.45);
+
+  /* Each role in light, then dark: light-dark() follows color-scheme. */
+  --bg: light-dark(#fbfaf6, #1e2a5a);
+  --bg-alt: light-dark(#f3f0e7, #27346b);
+  --surface: light-dark(#ffffff, #2d3a75); /* options, quote cards, the sentences to tap */
+  --text: light-dark(#1e2a5a, #f3f0e7);
+  --text-muted: light-dark(#4a5478, #b9c0d6);
+  --gold-deep: light-dark(#b47a00, #f0b437); /* gold text: deeper on light, brighter on dark */
+  --tint: light-dark(#c9cedb, #56628f); /* borders, pills, subtle fills */
+  --track: light-dark(#eeece6, #3a4673); /* the contour's track, dividers */
+  --primary: light-dark(#1e2a5a, #fbfaf6); /* the main button, the chosen language */
+  --on-primary: light-dark(#ffffff, #1e2a5a);
+  --error: light-dark(#b4463c, #ef8378);
+  --success: var(--gold);
+  /* On navy a translucent gold turns grey: a solid warm amber instead. */
+  --gold-soft: light-dark(rgba(232, 163, 23, 0.14), #4f3c16);
+  --hover-soft: light-dark(rgba(30, 42, 90, 0.08), rgba(243, 240, 231, 0.1));
+  --overlay: light-dark(rgba(30, 42, 90, 0.35), rgba(8, 12, 30, 0.6));
 
   --font-text: 'Frank Ruhl Libre', 'David', 'Times New Roman', serif;
   --font-ui: 'Rubik', 'Arial Hebrew', Arial, sans-serif;
@@ -38,6 +50,18 @@
   --icon: 24px;
   --icon-sm: 20px;
 
-  --shadow: 0 1px 2px rgba(30, 42, 90, 0.06), 0 4px 16px rgba(30, 42, 90, 0.06);
+  --shadow:
+    0 1px 2px light-dark(rgba(30, 42, 90, 0.06), rgba(0, 0, 0, 0.25)),
+    0 4px 16px light-dark(rgba(30, 42, 90, 0.06), rgba(0, 0, 0, 0.25));
+  --sheet-shadow: 0 -8px 32px light-dark(rgba(30, 42, 90, 0.15), rgba(0, 0, 0, 0.4));
   --ease: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* The learner's own choice (S7). */
+:root[data-theme='light'] {
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
 }

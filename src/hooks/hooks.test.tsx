@@ -1,7 +1,9 @@
 import { act, renderHook } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import type { Theme } from '../domain/theme';
 import { prefersReducedMotion } from './reducedMotion';
 import { easeOut, useCountUp } from './useCountUp';
+import { useDocumentTheme } from './useDocumentTheme';
 import { useNotice } from './useNotice';
 import { useTimeline } from './useTimeline';
 
@@ -78,5 +80,19 @@ describe('useNotice', () => {
     expect(result.current[0]).toBe(true);
     act(() => void vi.advanceTimersByTime(400));
     expect(result.current[0]).toBe(false);
+  });
+});
+
+describe('useDocumentTheme', () => {
+  it('sets the chosen look on the page, and leaves the device’s own for "auto"', () => {
+    const { rerender, unmount } = renderHook(({ theme }) => useDocumentTheme(theme), {
+      initialProps: { theme: 'dark' as Theme },
+    });
+    expect(document.documentElement.dataset.theme).toBe('dark');
+    rerender({ theme: 'light' });
+    expect(document.documentElement.dataset.theme).toBe('light');
+    rerender({ theme: 'auto' });
+    expect(document.documentElement.dataset.theme).toBeUndefined();
+    unmount();
   });
 });
