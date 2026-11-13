@@ -50,14 +50,17 @@ describe('ReadScreen', () => {
     expect(screen.queryByText('ביאור ראשון')).toBeNull();
   });
 
-  it('heads each section with its number and its ביאור switch, with a tip the first time', async () => {
-    const { storage } = await renderApp(ROUTES.read, { storage: reading() });
+  it('heads each section with its number and its ביאור switch, with a tip in every lesson', async () => {
+    const { unmount } = await renderApp(ROUTES.read, { storage: reading() });
     expect(screen.getByText(he.read.section(1, 2))).toBeTruthy();
     expect(checked()).toEqual(['false']);
     expect(screen.getByText(he.read.biurTip)).toBeTruthy();
+    // Until the switch is used, or the first question is done.
     await click(switches()[0]!);
     expect(screen.queryByText(he.read.biurTip)).toBeNull();
-    expect(saved(storage).seenBiurTip).toBe(true);
+    unmount();
+    await renderApp(ROUTES.read, { storage: reading(undefined, 1, 1) });
+    expect(screen.queryByText(he.read.biurTip)).toBeNull();
   });
 
   it('turns the current section’s ביאור on before its question: the question follows', async () => {

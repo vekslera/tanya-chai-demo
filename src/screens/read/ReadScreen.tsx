@@ -75,7 +75,7 @@ export function ReadScreen() {
             total={sections.length}
             showBiur={biur.shown(i)}
             onToggleBiur={() => biur.toggle(i)}
-            tip={i === 0 && !state.seenBiurTip}
+            tip={i === 0 && quiz.index === 0 && !quiz.biur}
             english={state.english}
             onTerm={setTerm}
             onFootnote={(span, n) => setFootnote({ span, n })}

@@ -5,6 +5,12 @@
   text-align: center;
 }
 
+.home-top {
+  display: flex;
+  justify-content: flex-end;
+  align-self: stretch;
+}
+
 .home-brand {
   --heart-size: 168px;
   display: flex;

@@ -83,6 +83,7 @@ The questions are part of the learning, as in a story: each comes right after th
 
 - The animated logo symbol (`resources/brand/logo/logo-mark-animated.svg`, inlined as a React component), with the wordmark below it: תניא in navy, חי in deep gold, Frank Ruhl Libre 900. The name is always written without gershayim.
 - A card reading `שיעור לדוגמה: ט׳ אדר`, with the chapter label `ליקוטי אמרים, פרק ל״ב` and the estimated time (`כ־6 דקות`).
+- **The look:** a small button in the top corner (inline end) switches to the other look: a moon in the light look, a sun in the dark one (`מעבר לתצוגה כהה` / `מעבר לתצוגה בהירה`). Switching back to the device's own mode returns the choice to "auto". The full choice is in About (S7).
 - Status row: the streak, with a small heart-pulse icon and the text `רצף: 12 ימים` (no fire emoji). Points are not shown here.
 - Primary button: `התחל ללמוד`, which opens the lesson (S3) directly: there is no choice to make before reading (S2).
 - Secondary button: `לימוד אבות ובנים` (S8).
@@ -102,7 +103,7 @@ The learner does not choose a level before reading: a learner may not know befor
 - **Where:** a small row at the head of each section: the section's number (`קטע 4 מתוך 7`) and a `ביאור` switch (`role="switch"`). It is in the reading flow, so it is seen at every section, not only at the top of the screen.
 - **The current section** (the last one shown, whose question is waiting): its switch sets the level for this section and the next ones, and is remembered for the next lesson (`level` in the state; the default is level 2). Its question follows: when the switch is turned before the question is tried, the question becomes the other level's question for this section. Once the question has been tried, it stays as it is, and the new level applies from the next question, so a question never changes in the middle of an answer.
 - **Earlier sections** keep the level their question was actually asked at. Their switches still work, for going back and reading them with or without the ביאור, but they change only what that section shows, never the questions.
-- **The first time:** under the first section's switch, one line: `אפשר להדליק ולכבות את הביאור בכל קטע. עם הביאור, הניקוד כפול.` It is shown until the switch is first used or the first question is done (`seenBiurTip`).
+- **At the start of every lesson:** under the first section's switch, one line: `אפשר להדליק ולכבות את הביאור בכל קטע. עם הביאור, הניקוד כפול.` It stays until the switch is used or the first question is done in that lesson; the demo is used many times, so it is not a first-time-only line.
 - Each level has questions on the same sections (S4), so either level's question can follow any section. The level names (`he.level.options`) title the questions in the review document (§8.4).
 
 #### S3: Read (`#/read`)
@@ -362,7 +363,6 @@ type DemoState = {
   } | null;
   english: boolean;               // the lesson is read with its English (S3)
   theme: "auto" | "light" | "dark"; // the look (S7, §4.1); "auto" follows the device
-  seenBiurTip: boolean;           // the first-time line under the ביאור switch (S2) was seen
   seenShinun: boolean;
   lastCompletion: Completion | null; // what the completion screen shows and animates; not saved, so opening the demo again never starts on the completion screen
 };

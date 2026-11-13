@@ -5,6 +5,7 @@ import { prefersReducedMotion } from './reducedMotion';
 import { easeOut, useCountUp } from './useCountUp';
 import { useDocumentTheme } from './useDocumentTheme';
 import { useNotice } from './useNotice';
+import { usePrefersDark } from './usePrefersDark';
 import { useTimeline } from './useTimeline';
 
 const setReducedMotion = (matches: boolean) => {
@@ -94,5 +95,28 @@ describe('useDocumentTheme', () => {
     rerender({ theme: 'auto' });
     expect(document.documentElement.dataset.theme).toBeUndefined();
     unmount();
+  });
+});
+
+describe('usePrefersDark', () => {
+  it('follows the device’s dark mode, and is false when it cannot be told', () => {
+    const listeners = new Set<() => void>();
+    let matches = false;
+    window.matchMedia = vi.fn(() => ({
+      get matches() {
+        return matches;
+      },
+      addEventListener: (_: string, f: () => void) => listeners.add(f),
+      removeEventListener: (_: string, f: () => void) => listeners.delete(f),
+    })) as never;
+    const { result, unmount } = renderHook(() => usePrefersDark());
+    expect(result.current).toBe(false);
+    matches = true;
+    act(() => listeners.forEach((f) => f()));
+    expect(result.current).toBe(true);
+    unmount();
+    expect(listeners.size).toBe(0);
+    delete (window as { matchMedia?: unknown }).matchMedia;
+    expect(renderHook(() => usePrefersDark()).result.current).toBe(false);
   });
 });
