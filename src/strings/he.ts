@@ -166,6 +166,8 @@ export const he = {
     contentCredit,
     contactTitle: 'יצירת קשר',
     contact: '[TO FILL BY ALEX]',
+    themeTitle: 'תצוגה',
+    themes: { auto: 'לפי המכשיר', light: 'בהירה', dark: 'כהה' },
     resetTitle: 'התחלה מחדש',
     reset: 'התחל מחדש',
     resetConfirm: 'כל ההתקדמות בהדגמה תתאפס. להמשיך?',

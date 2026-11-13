@@ -45,7 +45,7 @@
 
 .about-paths dd {
   margin: 0;
-  color: var(--navy-muted);
+  color: var(--text-muted);
 }
 
 .about-sources {
@@ -55,6 +55,34 @@
   flex-direction: column;
   gap: 8px;
   font-size: 15px;
+}
+
+/* The look: three choices side by side, the chosen one filled. */
+.theme-choice {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 999px;
+  border: 1px solid var(--tint);
+  align-self: flex-start;
+}
+
+.theme-option {
+  min-height: 40px;
+  padding-inline: 16px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font-ui);
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.theme-option[aria-checked='true'] {
+  background: var(--primary);
+  color: var(--on-primary);
+  font-weight: 500;
 }
 
 .about-confirm {
@@ -78,5 +106,5 @@
 .about-version {
   margin-block-start: 8px;
   font-size: 13px;
-  color: var(--navy-muted);
+  color: var(--text-muted);
 }

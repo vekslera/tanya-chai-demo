@@ -28,6 +28,7 @@ describe('the print style', () => {
     expect(family("'Frank Ruhl Libre', David, serif", 'David')).toBe('David');
     expect(() => family('Rubik, Arial', 'Courier')).toThrow('not in the stack');
     expect(hex('#1e2a5a')).toBe('1E2A5A');
+    expect(hex('light-dark(#b47a00, #f0b437)')).toBe('B47A00');
     expect(() => hex('rgba(0, 0, 0, 0.1)')).toThrow('#rrggbb');
   });
 

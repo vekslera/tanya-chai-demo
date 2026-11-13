@@ -20,14 +20,14 @@
 }
 
 .progress-dot--current {
-  background: var(--navy);
-  border-color: var(--navy);
+  background: var(--primary);
+  border-color: var(--primary);
 }
 
 .quiz-count {
   margin-block-start: 12px;
   font-size: 14px;
-  color: var(--navy-muted);
+  color: var(--text-muted);
 }
 
 /* A level-2 question earns more (S4): a small gold badge after the count. */
@@ -51,7 +51,7 @@
 .quiz-help {
   margin-block-end: 8px;
   font-size: 14px;
-  color: var(--navy-muted);
+  color: var(--text-muted);
 }
 
 .options {
@@ -70,8 +70,8 @@
   text-align: start;
   font-size: 17px;
   line-height: 1.45;
-  background: var(--white);
-  color: var(--navy);
+  background: var(--surface);
+  color: var(--text);
   border: 2px solid var(--track);
   border-radius: var(--radius-sm);
   cursor: pointer;
@@ -101,7 +101,7 @@
 }
 
 .option--wrong {
-  color: var(--navy-muted);
+  color: var(--text-muted);
   border-color: var(--track);
   background: var(--bg-alt);
 }

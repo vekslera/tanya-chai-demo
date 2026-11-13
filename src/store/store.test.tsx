@@ -16,6 +16,7 @@ describe('initialStateFrom', () => {
       level: config.defaultLevel,
       completedSolo: false,
       seenBiurTip: false,
+      theme: config.defaultTheme,
       togetherIndex: -1,
       quiz: null,
     });
@@ -90,7 +91,10 @@ describe('reducer', () => {
     expect(s.togetherIndex).toBe(3);
     s = reducer(s, { type: 'seenShinun' });
     expect(s.seenShinun).toBe(true);
-    expect(reducer(s, { type: 'reset' })).toBe(initialState);
+    expect(reducer(s, { type: 'reset' })).toEqual(initialState);
+    // Starting over keeps the chosen look.
+    s = reducer(s, { type: 'setTheme', theme: 'dark' });
+    expect(reducer(s, { type: 'reset' })).toEqual({ ...initialState, theme: 'dark' });
   });
 });
 

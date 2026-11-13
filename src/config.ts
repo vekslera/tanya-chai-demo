@@ -6,6 +6,7 @@ import type { Progress } from './domain/progress';
 import type { QuizRules } from './domain/quiz';
 import type { LevelRule } from './domain/reading';
 import type { ScoringRules } from './domain/scoring';
+import type { Theme } from './domain/theme';
 import type { Level } from './domain/types';
 
 export type DemoProgress = Pick<Progress, 'streak' | 'points' | 'heartProgress' | 'familyStreak'>;
@@ -18,6 +19,8 @@ export type AppConfig = {
   storage: { key: string };
   levels: LevelRule[];
   defaultLevel: Level;
+  /** The look before the learner chooses one: "auto" follows the device (S7). */
+  defaultTheme: Theme;
   demo: {
     /** The demo starts with this progress, so the screens show a learner in the middle of a streak. */
     initialProgress: DemoProgress;
