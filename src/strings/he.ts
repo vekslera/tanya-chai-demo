@@ -8,10 +8,10 @@ const days = (n: number) => (n === 1 ? 'יום אחד' : `${n} ימים`);
 const contentCredit =
   'הביאור, המילון, השאלות והכלים ללימוד אבות ובנים נכתבו עבור תניא חי. כל הזכויות שמורות.';
 
-/** The title and description of each level in app.config.json, by level ID. */
-const levelOptions: Record<number, { title: string; description: string }> = {
-  1: { title: 'טקסט בלבד', description: 'קוראים את לשון התניא כפי שהיא' },
-  2: { title: 'טקסט עם ביאור', description: 'ביאור קצר ופשוט אחרי כל משפט' },
+/** The name of each level in app.config.json, by level ID: the ביאור off or on (S2). */
+const levelOptions: Record<number, { title: string }> = {
+  1: { title: 'טקסט בלבד' },
+  2: { title: 'טקסט עם ביאור' },
 };
 
 export const he = {
@@ -31,17 +31,19 @@ export const he = {
     start: 'התחל ללמוד',
     together: 'לימוד אבות ובנים',
     about: 'אודות תניא חי',
-  },
-
-  level: {
-    title: 'איך תרצו ללמוד היום?',
-    options: levelOptions,
-    selected: 'הבחירה האחרונה',
     maskil: 'ללימוד מעמיק עם מפרשים: מסלול משכיל, בקרוב',
   },
 
+  level: {
+    options: levelOptions,
+  },
+
   read: {
-    backToLevel: 'חזרה לבחירת אופן הלימוד',
+    backToHome: 'חזרה למסך הבית',
+    /** The head of each section (S2): its number, and its ביאור switch. */
+    section: (n: number, total: number) => `קטע ${n} מתוך ${total}`,
+    biurSwitch: 'ביאור',
+    biurTip: 'אפשר להדליק ולכבות את הביאור בכל קטע. עם הביאור, הניקוד כפול.',
     progress: 'התקדמות הקריאה',
     biurLabel: 'ביאור',
     glossaryHint: 'הקישו על מילה מסומנת לביאור',
@@ -81,6 +83,7 @@ export const he = {
     next: 'להמשך הלימוד',
     finish: 'לסיום השיעור',
     points: (n: number) => `+${n}`,
+    factor: (n: number) => (n === 2 ? 'ניקוד כפול' : `ניקוד פי ${n}`),
     chosenWrong: 'תשובה שנבחרה',
   },
 
@@ -94,13 +97,12 @@ export const he = {
     pointsWord: 'נקודות',
     pointsDetail: (earned: number, bonus: number) =>
       `${earned} על השאלות ו־${bonus} על סיום השיעור`,
-    pointsAlready: 'על רמה זו כבר התקבלו נקודות, ולכן הפעם לא נוספו',
+    pointsAlready: 'על שיעור זה כבר התקבלו נקודות, ולכן הפעם לא נוספו',
     pointsAlreadyTogether: 'על לימוד אבות ובנים כבר התקבלו נקודות, ולכן הפעם לא נוספו',
     communityLabel: 'כל הלומדים יחד השבוע:',
     communityUnit: 'שיעורים',
     heartLine: 'הקו המוזהב מקיף את הלב ככל שמתקדמים בלימוד',
     heartLabel: (p: number) => `התקדמות בלימוד: ${p}%`,
-    otherLevel: 'נסה רמה אחרת',
     together: 'לימוד אבות ובנים',
     shinun: 'טעימה משינון',
     about: 'אודות',

@@ -3,7 +3,6 @@ import type { Track } from './domain/types';
 
 export const ROUTES = {
   home: '/',
-  level: '/level',
   read: '/read',
   done: '/done',
   together: '/together',

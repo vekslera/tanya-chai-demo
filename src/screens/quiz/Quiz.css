@@ -30,6 +30,16 @@
   color: var(--navy-muted);
 }
 
+/* A level-2 question earns more (S4): a small gold badge after the count. */
+.quiz-factor {
+  margin-inline-start: 8px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: var(--gold-soft);
+  color: var(--gold-deep);
+  font-weight: 500;
+}
+
 .quiz-prompt {
   margin-block: 6px 18px;
   font-family: var(--font-ui);

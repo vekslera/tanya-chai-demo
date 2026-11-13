@@ -4,21 +4,20 @@ import { portionData } from '../test/fixtures';
 import { completionView, doneDelays } from './completion';
 import { assemblePortion } from './portion';
 import type { Completion, Progress } from './progress';
-import { hasEnglish, readingProgress, showsBiur } from './reading';
+import { hasEnglish, levelFor, readingProgress, showsBiur } from './reading';
 import { cardOfUnit, togetherStep } from './together';
 
 const before: Progress = {
   streak: 3,
   points: 0,
   heartProgress: 10,
-  completedLevels: [],
+  completedSolo: false,
   completedTogether: false,
   familyStreak: 1,
 };
 const after: Progress = { ...before, streak: 4, heartProgress: 13, familyStreak: 2 };
 const solo: Completion = {
   track: 'solo',
-  level: 1,
   earned: 15,
   bonus: 20,
   awarded: true,
@@ -82,12 +81,18 @@ describe('together', () => {
 });
 
 describe('reading', () => {
+  const levels = [
+    { id: 1, showBiur: false },
+    { id: 2, showBiur: true },
+  ];
+
   it('shows the ביאור on the configured levels only', () => {
-    const levels = [
-      { id: 1, showBiur: false },
-      { id: 2, showBiur: true },
-    ];
     expect([1, 2, 3].map((l) => showsBiur(levels, l))).toEqual([false, true, false]);
+    expect(showsBiur(levels)).toBe(false);
+  });
+
+  it('gives the level a section switch sets', () => {
+    expect([levelFor(levels, true), levelFor(levels, false)]).toEqual([2, 1]);
   });
 
   it('computes the progress and the unlock', () => {

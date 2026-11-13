@@ -11,10 +11,11 @@ describe('HomeScreen', () => {
     expect(screen.getByText('שיעור לבדיקה')).toBeTruthy();
     expect(screen.getByText(he.home.estimatedTime(config.demo.estimatedMinutes))).toBeTruthy();
     expect(screen.getByText(he.home.streak(config.demo.initialProgress.streak))).toBeTruthy();
+    expect(screen.getByText(he.home.maskil)).toBeTruthy();
   });
 
   it.each([
-    [he.home.start, ROUTES.level],
+    [he.home.start, ROUTES.read],
     [he.home.together, ROUTES.together],
     [he.home.about, ROUTES.about],
   ])('"%s" goes to %s', async (label, route) => {

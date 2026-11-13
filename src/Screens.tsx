@@ -5,7 +5,6 @@ import { ROUTES, type Route } from './routes';
 import { AboutScreen } from './screens/about/AboutScreen';
 import { DoneScreen } from './screens/done/DoneScreen';
 import { HomeScreen } from './screens/home/HomeScreen';
-import { LevelScreen } from './screens/level/LevelScreen';
 import { ReadScreen } from './screens/read/ReadScreen';
 import { ShinunScreen } from './screens/shinun/ShinunScreen';
 import { TogetherScreen } from './screens/together/TogetherScreen';
@@ -14,7 +13,6 @@ import { TogetherScreen } from './screens/together/TogetherScreen';
 export function screensFor(shinun: boolean): Partial<Record<Route, ComponentType>> {
   return {
     [ROUTES.home]: HomeScreen,
-    [ROUTES.level]: LevelScreen,
     [ROUTES.read]: ReadScreen,
     [ROUTES.done]: DoneScreen,
     [ROUTES.together]: TogetherScreen,

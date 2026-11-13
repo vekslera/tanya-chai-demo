@@ -15,6 +15,9 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['src/test/setup.ts'],
     include: ['src/**/*.test.{ts,tsx}', 'scripts/**/*.test.ts', '*.test.ts'],
+    // The tests that walk a whole path through the real app take a few seconds; more under the
+    // coverage run's load.
+    testTimeout: 20000,
     coverage: {
       provider: 'v8',
       include: ['src/**', 'scripts/**', '*.vite.ts'],

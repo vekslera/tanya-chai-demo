@@ -18,6 +18,7 @@ export const en = {
     next: 'Continue learning',
     finish: 'Finish the lesson',
     points: (n: number) => `+${n}`,
+    factor: (n: number) => (n === 2 ? 'Double points' : `${n}× points`),
     chosenWrong: 'chosen answer',
   },
   print: {

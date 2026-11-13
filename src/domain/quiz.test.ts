@@ -10,6 +10,7 @@ import {
   questionIdsFor,
   questionIn,
   sentenceChoices,
+  switchLevel,
   TRUE,
 } from './quiz';
 import type { Question } from './types';
@@ -87,8 +88,19 @@ describe('questionIdsFor', () => {
   it('selects by track, and by level on the solo track, in the order they are asked', () => {
     const reversed = [...questions].reverse();
     expect(questionIdsFor(reversed, sectionOf, 'solo', 1)).toEqual(['q-choice', 'q-find', 'q-tf']);
-    expect(questionIdsFor(reversed, sectionOf, 'solo', 2)).toEqual(['q-l2']);
+    expect(questionIdsFor(reversed, sectionOf, 'solo', 2)).toEqual(['q-l2', 'q-l2-tf']);
     expect(questionIdsFor(questions, sectionOf, 'together')).toEqual(['q-child-tf', 'q-child']);
+  });
+});
+
+describe('switchLevel', () => {
+  const sectionOf = (q: Question) => (q.summary || q.unitRef > 'LA.1.002' ? 1 : 0);
+
+  it('keeps the questions asked, then follows the other level from the next section on', () => {
+    expect(switchLevel(questions, sectionOf, [], 2)).toEqual(['q-l2', 'q-l2-tf']);
+    expect(switchLevel(questions, sectionOf, ['q-choice'], 2)).toEqual(['q-choice', 'q-l2-tf']);
+    expect(switchLevel(questions, sectionOf, ['q-l2'], 1)).toEqual(['q-l2', 'q-find', 'q-tf']);
+    expect(switchLevel(questions, sectionOf, ['q-l2', 'q-l2-tf'], 1)).toEqual(['q-l2', 'q-l2-tf']);
   });
 });
 

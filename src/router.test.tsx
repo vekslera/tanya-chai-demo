@@ -19,14 +19,14 @@ describe('router', () => {
     navigate(ROUTES.about);
     expect(window.location.hash).toBe('#/about');
     const length = window.history.length;
-    navigate(ROUTES.level, { replace: true });
-    expect(window.location.hash).toBe('#/level');
+    navigate(ROUTES.read, { replace: true });
+    expect(window.location.hash).toBe('#/read');
     expect(window.history.length).toBe(length);
   });
 
   it('redirects only while the screen is still current', () => {
     navigate(ROUTES.done, { replace: true });
-    redirectFrom(ROUTES.read, ROUTES.level);
+    redirectFrom(ROUTES.read, ROUTES.about);
     expect(currentRoute()).toBe(ROUTES.done);
     redirectFrom(ROUTES.done, ROUTES.home);
     expect(currentRoute()).toBe(ROUTES.home);

@@ -89,7 +89,7 @@ describe('TogetherScreen', () => {
     const data = portionData();
     data.portion.together = [data.portion.together[0]!];
     data.portion.questions.find((q) => q.id === 'q-child')!.summary = true;
-    const quiz = { ...startSession('together', undefined, ['q-child-tf', 'q-child'], 1), index: 1 };
+    const quiz = { ...startSession('together', ['q-child-tf', 'q-child'], 1), index: 1 };
     const storage = memoryStorage({
       [config.storage.key]: JSON.stringify({ togetherIndex: 2, quiz }),
     });
