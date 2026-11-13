@@ -694,7 +694,7 @@
       "options": [
         {
           "id": "a",
-          "text": "כשהנשמה עיקר, כולנו אחד; וזו גם מטרת התורה: שאור ה׳ ישרה בנו כשאנו מאוחדים"
+          "text": "אהבת ישראל: כשהנשמה עיקר כולנו אחים, ובאחדות זו שורה אור ה׳"
         },
         { "id": "b", "text": "כולם מלמדים על חשיבות התפילה בציבור" },
         { "id": "c", "text": "כולם מלמדים להתרחק מהגוף בצומות ובסיגופים" }
@@ -706,7 +706,7 @@
         "reviewed": false
       },
       "explanation": {
-        "value": "השיעור מתחיל בנשמה שהיא העיקר, ממשיך בכך שכל ישראל אחים מצד שורשם, ומסיים במטרת התורה: להמשיך את אור ה׳, שמאיר כשכולנו ״כאחד״.",
+        "value": "השיעור כולו הוא על אהבת ישראל: הנשמה היא העיקר, ולכן כל ישראל אחים מצד שורשם. אהבה זו היא יסוד כל התורה, ובה מתקיימת מטרתה: שאור ה׳ מאיר כשכולנו ״כאחד״.",
         "reviewed": false
       },
       "translations": {
@@ -718,7 +718,7 @@
           "options": [
             {
               "id": "a",
-              "text": "When the soul is what matters, we are all one; and this is also the aim of the Torah: that G-d’s light rest upon us when we are united"
+              "text": "Love of one’s fellow Jew: when the soul is what matters we are all brothers, and G-d’s light rests on us in this unity"
             },
             { "id": "b", "text": "They all teach the importance of praying together" },
             {
@@ -731,7 +731,7 @@
             "reviewed": false
           },
           "explanation": {
-            "value": "The lesson begins with the soul as what matters, goes on to all Israel being brothers by their root, and ends with the aim of the Torah: to bring down G-d’s light, which shines when we are all “as one.”",
+            "value": "The whole lesson is about love of one’s fellow Jew: the soul is what matters, so all Israel are brothers by their root. This love is the basis of the whole Torah, and through it the Torah’s aim is fulfilled: G-d’s light shines when we are all “as one.”",
             "reviewed": false
           }
         }

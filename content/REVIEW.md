@@ -521,23 +521,23 @@ choice, concept; relies on LA.32.013
 
 - **prompt** (⬜ to review)
   מה מחבר את חלקי השיעור: הגוף והנשמה, ״אחים ממש״, דברי הלל, ו״ברכנו אבינו כולנו כאחד״?
-  - **✔** כשהנשמה עיקר, כולנו אחד; וזו גם מטרת התורה: שאור ה׳ ישרה בנו כשאנו מאוחדים
+  - **✔** אהבת ישראל: כשהנשמה עיקר כולנו אחים, ובאחדות זו שורה אור ה׳
   - ✘ כולם מלמדים על חשיבות התפילה בציבור
   - ✘ כולם מלמדים להתרחק מהגוף בצומות ובסיגופים
 - **hint** (⬜ to review)
   חשבו מה משותף לאהבת ישראל ולמטרת התורה כולה.
 - **explanation** (⬜ to review)
-  השיעור מתחיל בנשמה שהיא העיקר, ממשיך בכך שכל ישראל אחים מצד שורשם, ומסיים במטרת התורה: להמשיך את אור ה׳, שמאיר כשכולנו ״כאחד״.
+  השיעור כולו הוא על אהבת ישראל: הנשמה היא העיקר, ולכן כל ישראל אחים מצד שורשם. אהבה זו היא יסוד כל התורה, ובה מתקיימת מטרתה: שאור ה׳ מאיר כשכולנו ״כאחד״.
 
 - **prompt.en** (⬜ to review)
   What connects the parts of the lesson: body and soul, “real brothers,” Hillel’s words, and “Bless us, our Father, all of us as one”?
-  - **✔** When the soul is what matters, we are all one; and this is also the aim of the Torah: that G-d’s light rest upon us when we are united
+  - **✔** Love of one’s fellow Jew: when the soul is what matters we are all brothers, and G-d’s light rests on us in this unity
   - ✘ They all teach the importance of praying together
   - ✘ They all teach to keep away from the body through fasting and self-denial
 - **hint.en** (⬜ to review)
   Think about what love of one’s fellow Jew and the aim of the whole Torah have in common.
 - **explanation.en** (⬜ to review)
-  The lesson begins with the soul as what matters, goes on to all Israel being brothers by their root, and ends with the aim of the Torah: to bring down G-d’s light, which shines when we are all “as one.”
+  The whole lesson is about love of one’s fellow Jew: the soul is what matters, so all Israel are brothers by their root. This love is the basis of the whole Torah, and through it the Torah’s aim is fulfilled: G-d’s light shines when we are all “as one.”
 
 ### Avos uBanim: לימוד אבות ובנים
 
