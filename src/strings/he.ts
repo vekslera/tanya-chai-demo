@@ -97,8 +97,6 @@ export const he = {
     pointsWord: 'נקודות',
     pointsDetail: (earned: number, bonus: number) =>
       `${earned} על השאלות ו־${bonus} על סיום השיעור`,
-    pointsAlready: 'על שיעור זה כבר התקבלו נקודות, ולכן הפעם לא נוספו',
-    pointsAlreadyTogether: 'על לימוד אבות ובנים כבר התקבלו נקודות, ולכן הפעם לא נוספו',
     communityLabel: 'כל הלומדים יחד השבוע:',
     communityUnit: 'שיעורים',
     heartLine: 'הקו המוזהב מקיף את הלב ככל שמתקדמים בלימוד',

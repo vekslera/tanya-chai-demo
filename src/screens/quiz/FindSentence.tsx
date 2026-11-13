@@ -44,7 +44,6 @@ export function FindSentence({
       <p className="quiz-help">{t.findSentenceHelp}</p>
       <CompactText
         blocks={shown}
-        highlightBlock={phase === 'retry' ? sections[section]!.id : undefined}
         states={Object.fromEntries(marked.map((id) => [id, answerState(id, q, chosen, !open)]))}
         onSelect={onAnswer}
         language={language}

@@ -45,11 +45,6 @@
   margin-block-end: 14px;
   padding: 2px 4px;
   border-radius: 8px;
-  transition: background-color 0.3s var(--ease);
-}
-
-.compact-block--hint {
-  background: var(--gold-soft);
 }
 
 /* findSentence: every sentence is a tappable block. */
@@ -69,8 +64,11 @@ button.compact-sentence {
   cursor: pointer;
 }
 
-button.compact-sentence:hover {
-  border-color: var(--tint);
+/* Only where a pointer hovers: on a touch screen the hover would stay on the tapped sentence. */
+@media (hover: hover) {
+  button.compact-sentence:hover {
+    border-color: var(--tint);
+  }
 }
 
 button.compact-sentence.compact-sentence--correct,

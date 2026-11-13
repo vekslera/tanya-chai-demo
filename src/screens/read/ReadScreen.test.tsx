@@ -140,8 +140,12 @@ describe('ReadScreen', () => {
     expect(document.querySelectorAll('button[data-unit]')).toHaveLength(
       config.quiz.findSentence.choices,
     );
+    // A wrong sentence: a hint line, and nothing that marks where the answer is.
     await click(wrongSentences()[0]!);
-    expect(document.querySelector('.compact-block--hint')).toBeTruthy();
+    expect(screen.getByText('hint q-find')).toBeTruthy();
+    expect(
+      document.querySelector('.compact-sentence--highlight, .compact-sentence--correct'),
+    ).toBeNull();
     await click(sentence('LA.1.003'));
     expect(screen.getByText(he.quiz.praise[1]!)).toBeTruthy();
 

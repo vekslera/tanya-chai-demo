@@ -29,7 +29,7 @@ describe('complete', () => {
       completedSolo: true,
       completedTogether: false,
     });
-    expect(completion).toMatchObject({ awarded: true, earned: 25, bonus: 20, before: seed });
+    expect(completion).toMatchObject({ earned: 25, bonus: 20, before: seed });
   });
 
   it('increments the streak once per session, not per track', () => {
@@ -38,16 +38,17 @@ describe('complete', () => {
     expect(second).toMatchObject({ streak: 13, heartProgress: 68, completedSolo: true });
   });
 
-  it('never awards the lesson twice', () => {
-    const first = complete(seed, 'solo', 30, rules).progress;
-    const again = complete(first, 'solo', 30, rules);
-    expect(again.progress).toBe(first);
-    expect(again.completion).toMatchObject({ awarded: false, bonus: 0 });
-  });
-
-  it('never awards Avos uBanim twice', () => {
-    const first = complete(seed, 'together', 30, rules).progress;
-    expect(complete(first, 'together', 30, rules).completion.awarded).toBe(false);
+  it('awards every completion again, the streak only once', () => {
+    for (const track of ['solo', 'together'] as const) {
+      const first = complete(seed, track, 30, rules).progress;
+      const again = complete(first, track, 30, rules);
+      expect(again.completion).toMatchObject({ earned: 30, bonus: 20 });
+      expect(again.progress).toMatchObject({
+        points: first.points + 50,
+        heartProgress: first.heartProgress + 3,
+        streak: first.streak,
+      });
+    }
   });
 
   it('Avos uBanim increments the family streak', () => {
