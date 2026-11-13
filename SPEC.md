@@ -15,7 +15,7 @@ The message of the whole project is **chayus in learning and understanding** of 
 
 The demo has to make four things felt within a few minutes:
 
-1. **Learning at your own level.** The same portion can be studied as the text alone or with a short ביאור, and the questions change with the level. Deeper study with classical commentaries belongs to the Maskil path and is only pointed to in the demo.
+1. **Learning at your own level.** The same portion can be studied as the text alone or with a short ביאור, chosen section by section while reading, and the questions change with the level. Deeper study with classical commentaries belongs to the Maskil path and is only pointed to in the demo.
 2. **Immediate, warm feedback.** Each answer points back to the sentence in the text it relies on.
 3. **A living sense of progress.** At the end come a streak, the gold heart contour of the logo advancing, and a counter of the learning completed together by the community.
 4. **Avos uBanim.** A father gets ready-made tools for learning the portion with his son: a ביאור for the father, suggested words for explaining each thought to a child, a question for the conversation, and simple questions the son answers. The demo does not rely on the father's own skill to explain Tanya.
@@ -68,9 +68,9 @@ The ביאור follows their meaning: how they understand each unit. It is writt
 ## 3. User flow
 
 ```
-Home ──► Choose level ──► Read: section ► question ► section ► … ► summary question ──► Completion
-  │                                                                                      │
-  │                                                                      (flag, off) Shinun taste
+Home ──► Read: section (ביאור on/off) ► question ► section ► … ► summary question ──► Completion
+  │                                                                                   │
+  │                                                                   (flag, off) Shinun taste
   ├──► Avos uBanim: card ► son's question ► card ► … ► summary question ──► Completion (shared)
   └──► About & credits
 ```
@@ -84,39 +84,43 @@ The questions are part of the learning, as in a story: each comes right after th
 - The animated logo symbol (`resources/brand/logo/logo-mark-animated.svg`, inlined as a React component), with the wordmark below it: תניא in navy, חי in deep gold, Frank Ruhl Libre 900. The name is always written without gershayim.
 - A card reading `שיעור לדוגמה: ט׳ אדר`, with the chapter label `ליקוטי אמרים, פרק ל״ב` and the estimated time (`כ־6 דקות`).
 - Status row: the streak, with a small heart-pulse icon and the text `רצף: 12 ימים` (no fire emoji). Points are not shown here.
-- Primary button: `התחל ללמוד`.
+- Primary button: `התחל ללמוד`, which opens the lesson (S3) directly: there is no choice to make before reading (S2).
 - Secondary button: `לימוד אבות ובנים` (S8).
 - Link: `אודות תניא חי`.
+- Below them, a quiet line, not a button: `ללימוד מעמיק עם מפרשים: מסלול משכיל, בקרוב`. The demo has no extended level: deeper study with classical commentaries belongs to Maskil.
 - The streak and points start from seeded demo values (streak 12, points 340) stored in `localStorage`. A reset option lives in About.
 
-#### S2: Choose level (`#/level`)
+#### S2: The ביאור, on or off in each section (on the reading screen, S3)
 
-There are two large, tappable cards, each with a one-line description:
+The learner does not choose a level before reading: a learner may not know beforehand how they prefer to learn, and may change their mind during the lesson. Each section has its own level, chosen by a switch at its head:
 
-| Level | Title | Description | Questions |
-| --- | --- | --- | --- |
-| 1 | `טקסט בלבד` | `קוראים את לשון התניא כפי שהיא` | 3 literal questions (what does the text say) |
-| 2 | `טקסט עם ביאור` | `ביאור קצר ופשוט אחרי כל משפט` | 2 understanding questions + 1 concept question |
+| Level | The switch | Questions |
+| --- | --- | --- |
+| 1 | off: the text only (`טקסט בלבד`) | literal questions (what does the text say) |
+| 2 | on: a short ביאור after each sentence (`טקסט עם ביאור`) | understanding and concept questions, at double points (S4) |
 
-Below them, a quiet line, not a button: `ללימוד מעמיק עם מפרשים: מסלול משכיל, בקרוב`. The demo has no extended level: deeper study with classical commentaries belongs to Maskil.
-
-The last choice is remembered. The default selection is level 2.
+- **Where:** a small row at the head of each section: the section's number (`קטע 4 מתוך 7`) and a `ביאור` switch (`role="switch"`). It is in the reading flow, so it is seen at every section, not only at the top of the screen.
+- **The current section** (the last one shown, whose question is waiting): its switch sets the level for this section and the next ones, and is remembered for the next lesson (`level` in the state; the default is level 2). Its question follows: when the switch is turned before the question is tried, the question becomes the other level's question for this section. Once the question has been tried, it stays as it is, and the new level applies from the next question, so a question never changes in the middle of an answer.
+- **Earlier sections** keep the level their question was actually asked at. Their switches still work, for going back and reading them with or without the ביאור, but they change only what that section shows, never the questions.
+- **The first time:** under the first section's switch, one line: `אפשר להדליק ולכבות את הביאור בכל קטע. עם הביאור, הניקוד כפול.` It is shown until the switch is first used or the first question is done (`seenBiurTip`).
+- Each level has questions on the same sections (S4), so either level's question can follow any section. The level names (`he.level.options`) title the questions in the review document (§8.4).
 
 #### S3: Read (`#/read`)
 
-- **Header:** a back arrow (pointing right, as in RTL), the portion label, the `HE`/`EN` language switch, and a thin reading-progress bar (sentences scrolled into view).
+- **Header:** a back arrow (pointing right, as in RTL) to the home screen, the portion label, the `HE`/`EN` language switch, and a thin reading-progress bar (sentences scrolled into view).
 - **Body:** the text in **short sections** (`sections` in the portion file: 7 in the demo portion, the same parts as the Avos uBanim cards, S8), separated by a thin rule. Each section is split into **sentences** (§6.2), each a block with a little breathing room. Frank Ruhl Libre 400, 20–22px on phones, line-height 2.0, since the text carries nikud.
-- **Level 1:** text only.
-- **Level 2:** the short ביאור (1–2 lines) appears after each sentence. Rubik, smaller, muted navy, with a thin gold rule on the right edge.
+- **The section's head:** its number and its ביאור switch (S2).
+- **ביאור off (level 1):** text only.
+- **ביאור on (level 2):** the short ביאור (1–2 lines) appears after each sentence. Rubik, smaller, muted navy, with a thin gold rule on the right edge.
 - **Glossary terms:** marked with a dotted gold underline. Tapping one opens a bottom sheet with the term, a 1–3 line ביאור, and (if present) a source line. At least these terms: `נבזה ונמאס`, `נפש` / `הנפש והרוח`, `באלקים חיים`, `אחים ממש`, `אב אחד`. Final list per §8.3.
-- **Language switch:** one `HE`/`EN` switch at the top of the screen, a choice for the whole lesson, kept in the state (`english`). In Hebrew mode (`HE`, the default) the screen is as above. In English mode (`EN`), each sentence's English translation comes right after its Hebrew, in exactly the same portions (LTR, `lang` set to `translationLanguage` in `app.config.json`, serif, smaller), so the English is never far from the text it translates. On level 2, the ביאור that follows is the English ביאור (§8.3), **instead of** the Hebrew one; a sentence without an English ביאור keeps its Hebrew one. The switch is hidden when the portion has no English.
+- **Language switch:** one `HE`/`EN` switch at the top of the screen, a choice for the whole lesson, kept in the state (`english`). In Hebrew mode (`HE`, the default) the screen is as above. In English mode (`EN`), each sentence's English translation comes right after its Hebrew, in exactly the same portions (LTR, `lang` set to `translationLanguage` in `app.config.json`, serif, smaller), so the English is never far from the text it translates. With the ביאור on, the ביאור that follows is the English ביאור (§8.3), **instead of** the Hebrew one; a sentence without an English ביאור keeps its Hebrew one. The switch is hidden when the portion has no English.
 - **Sections and questions:** the screen shows the sections read so far. After a section comes its question (S4), in a card under the text; once it is answered, `להמשך הלימוד` opens the next section, scrolled into view. After the last section comes the summary question, and then `לסיום השיעור` leads to the completion screen (S5). The progress bar shows the questions answered.
 - **Bottom bar:** sticky, with the dedication.
 - **Dedication:** when the portion has a `dedication`, a short line under the button, centered: small (15px, `--fs-dedication`) but clearly visible, in navy, medium weight, on a light gold band (`--gold-soft`). It appears on the reading screens of every learning path (S3 and the S8 cards), not on the finish screen. Its wording comes from `src/strings/he.ts` by kind: `הלימוד היומי מוקדש לעילוי נשמת …` (`leiluiNishmas`), `הלימוד היומי מוקדש לזכות …` (`lizchus`), or `השותף שלך בלימוד היומי: …` (`partner`).
 
 #### S4: Questions (on the reading screen, S3)
 
-- Each level has its own questions, on the same sections: one after each section but the last, and a summary question (`summary: true`) after the last (7 in the demo portion: 6 + 1). A question follows the section that holds its `unitRef`. The card shows `שאלה 3 מתוך 7`, or `שאלת סיכום`.
+- Each level has its own questions, on the same sections: one after each section but the last, and a summary question (`summary: true`) after the last (7 in the demo portion: 6 + 1). A question follows the section that holds its `unitRef`, at that section's level (S2). The card shows `שאלה 3 מתוך 7`, or `שאלת סיכום`, and on level 2 also `ניקוד כפול`.
 - **Question types:**
   - `choice`: 3–4 options. Options are shuffled per session, except options marked `fixedOrder`.
   - `trueFalse`: `נכון` / `לא נכון`.
@@ -125,7 +129,7 @@ The last choice is remembered. The default selection is level 2.
   - **Correct:** the option turns gold, a short positive line appears (`יפה מאוד` / `בדיוק` and similar, rotating), plus the explanation, and the source sentence from the text is shown in a quote card with a gold highlight.
   - **Wrong (first attempt):** a gentle shake (none under reduced motion) and a hint line. The relevant sentence is highlighted (in a `findSentence` question, the section that holds it), and the user may try once more.
   - **Wrong (second attempt):** the correct answer is revealed, with its explanation and the highlighted sentence.
-- **Points:** 10 for a correct first attempt, 5 for a correct second attempt, 0 otherwise.
+- **Points:** 10 for a correct first attempt, 5 for a correct second attempt, 0 otherwise; a level-2 question earns double (`scoring.levelFactor` in `app.config.json`), to encourage learning in depth.
 - **Language:** the questions follow the lesson's language (S3). In English mode the whole question card is in English (LTR): the question's English texts (`translations.en`: prompt, options, hint and explanation), the card's own strings (`src/strings/en.ts`), and the cited sentences of the Tanya in the English translation, both in the quote card and as the `findSentence` choices. When a question or its explanation quotes the Tanya, it quotes the English translation word for word. Every Matmid question has its English (`contentRules.questions.translatedTracks`), and each language is approved on its own (`prompt.en`, `hint.en`, `explanation.en` in the review document). Avos uBanim is in Hebrew only for now.
 
 #### S5: Completion (`#/done`)
@@ -138,8 +142,8 @@ The last choice is remembered. The default selection is level 2.
 - A short line explaining the heart: `הקו המוזהב מקיף את הלב ככל שמתקדמים בלימוד`.
 - **Streak rule note** (small, under the streak): `הרצף נשמר בשבת ובחג, ואת השיעור משלימים במוצאי שבת`.
 - **Buttons:**
-  - `נסה רמה אחרת`, which goes back to S2 (points are not awarded twice for the same level).
   - `לימוד אבות ובנים`, which opens S8.
+  - `למסך הבית`. The lesson is simply completed, whatever the level of each section; learning it again awards no points a second time.
   - `טעימה משינון` (only if the Shinun flag is on).
   - `אודות`.
 
@@ -321,16 +325,24 @@ The build at the site's root uses the key as it is; the `dev` build under `/dev/
 
 ```ts
 type DemoState = {
-  level: number;                  // one of the levels in app.config.json
+  level: number;                  // the level of the current section and the next ones (S2), one of the levels in app.config.json
   streak: number;                 // seeded from demo.initialProgress
   points: number;                 // seeded from demo.initialProgress
   heartProgress: number;          // seeded from demo.initialProgress, 0..scoring.heartMax
-  completedLevels: number[];      // prevents double awarding
-  completedTogether: boolean;     // Avos uBanim done once (awards like a level)
+  completedSolo: boolean;         // the Matmid lesson done once, at any level: prevents double awarding
+  completedTogether: boolean;     // Avos uBanim done once (awards like the Matmid lesson)
   familyStreak: number;           // seeded from demo.initialProgress; shown only in the Avos uBanim completion
   togetherIndex: number;          // current card in S8
-  quiz: { track: "solo" | "together"; questionIds: string[]; index: number; attempts: Record<string, number>; earned: number } | null;
+  quiz: {
+    track: "solo" | "together";
+    questionIds: string[];        // the questions asked so far, then those of the current level
+    index: number;
+    attempts: Record<string, number>;
+    earned: number;
+    biur?: Record<string, boolean>; // by section ID: the ביאור shown or hidden there by its switch (S2)
+  } | null;
   english: boolean;               // the lesson is read with its English (S3)
+  seenBiurTip: boolean;           // the first-time line under the ביאור switch (S2) was seen
   seenShinun: boolean;
   lastCompletion: Completion | null; // what the completion screen shows and animates
 };
@@ -338,7 +350,7 @@ type DemoState = {
 
 **Rules:**
 
-- Completing a level, or Avos uBanim, for the first time awards the points and the completion bonus, increments the streak once per session (not per level), and advances `heartProgress` by `scoring.heartStep`, capped at `scoring.heartMax`. Completing Avos uBanim also increments `familyStreak`. The demo's values: 10 and 5 points for a correct answer on the first and second attempt, a bonus of 20, and a step of 3 up to 100.
+- Completing the Matmid lesson, or Avos uBanim, for the first time awards the points and the completion bonus, increments the streak once per session (not per path), and advances `heartProgress` by `scoring.heartStep`, capped at `scoring.heartMax`. Completing Avos uBanim also increments `familyStreak`. The demo's values: 10 and 5 points for a correct answer on the first and second attempt, doubled on level 2 (`scoring.levelFactor`), a bonus of 20, and a step of 3 up to 100.
 - The streak is a demo value. The Shabbos rule is displayed but not computed.
 
 ### 5.4 Architecture and code rules

@@ -40,6 +40,90 @@
   border-block-start: 1px solid var(--track);
 }
 
+/* The head of a section: its number, and its ביאור switch (S2). */
+.section-head {
+  margin-block-end: 6px;
+}
+
+.section-head-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.section-number {
+  font-size: var(--fs-small);
+  color: var(--navy-muted);
+}
+
+.biur-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: var(--tap);
+  padding-inline: 4px;
+  border: 0;
+  background: transparent;
+  font-family: var(--font-ui);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--navy);
+  cursor: pointer;
+}
+
+.biur-switch-track {
+  position: relative;
+  inline-size: 40px;
+  block-size: 24px;
+  border-radius: 999px;
+  background: var(--tint);
+  transition: background 0.2s var(--ease);
+}
+
+.biur-switch-thumb {
+  position: absolute;
+  inset-block-start: 3px;
+  inset-inline-start: 3px;
+  inline-size: 18px;
+  block-size: 18px;
+  border-radius: 50%;
+  background: var(--white);
+  box-shadow: var(--shadow);
+  transition: inset-inline-start 0.2s var(--ease);
+}
+
+.biur-switch[aria-checked='true'] .biur-switch-track {
+  background: var(--gold);
+}
+
+.biur-switch[aria-checked='true'] .biur-switch-thumb {
+  inset-inline-start: 19px;
+}
+
+.biur-switch:focus-visible {
+  outline: 2px solid var(--navy);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .biur-switch-track,
+  .biur-switch-thumb {
+    transition: none;
+  }
+}
+
+/* The first-time line under the first section's switch. */
+.section-tip {
+  margin-block: 2px 4px;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--gold-soft);
+  font-size: var(--fs-small);
+  color: var(--navy);
+}
+
 .section-paragraph + .section-paragraph {
   margin-block-start: 12px;
 }

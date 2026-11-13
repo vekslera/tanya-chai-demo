@@ -34,7 +34,7 @@ export function QuizFeedback({
           <p className="feedback-line feedback-line--praise">
             <span>{t.praise[quiz.index % t.praise.length]}</span>
             <bdi className="points-badge" dir="ltr">
-              {t.points(pointsFor(chosen.length, config.scoring))}
+              {t.points(pointsFor(chosen.length, config.scoring, q.level))}
             </bdi>
           </p>
           <p className="feedback-explanation">{q.explanation.value}</p>

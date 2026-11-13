@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { config } from '../../config';
 import { canAnswer, questionIn } from '../../domain/quiz';
+import { factorFor } from '../../domain/scoring';
 import { useStore } from '../../store/StoreProvider';
 import { quizStrings } from '../../strings/quiz';
 import { FindSentence } from '../quiz/FindSentence';
@@ -22,6 +23,7 @@ export function ReadQuestion({ session }: { session: QuizSessionView }) {
   const t = quizStrings(translation ?? config.language);
   const view = { ...session, question: questionIn(session.question, translation) };
   const { quiz, question: q, phase, isLast } = view;
+  const factor = factorFor(q.level, config.scoring);
 
   const answer = (choice: string) => {
     const result = session.answer(choice);
@@ -32,6 +34,7 @@ export function ReadQuestion({ session }: { session: QuizSessionView }) {
     <section className="read-question" {...(translation ? { dir: 'ltr', lang: translation } : {})}>
       <p className="quiz-count">
         {q.summary ? t.summary : t.progress(quiz.index + 1, quiz.questionIds.length)}
+        {factor > 1 && <span className="quiz-factor">{t.factor(factor)}</span>}
       </p>
       <h2 className="quiz-prompt">{q.prompt.value}</h2>
 

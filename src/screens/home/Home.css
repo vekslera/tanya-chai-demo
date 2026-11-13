@@ -47,3 +47,10 @@
   align-items: center;
   gap: 12px;
 }
+
+/* Maskil is pointed to, not offered: a quiet line, not a button (S1). */
+.home-maskil {
+  text-align: center;
+  font-size: 14px;
+  color: var(--navy-muted);
+}

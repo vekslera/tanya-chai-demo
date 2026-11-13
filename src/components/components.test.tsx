@@ -219,9 +219,9 @@ describe('small components', () => {
   });
 
   it('TopBar goes back', () => {
-    render(<TopBar back="/level" title="כותרת" end={<i>end</i>} />);
+    render(<TopBar back="/about" title="כותרת" end={<i>end</i>} />);
     fireEvent.click(screen.getByRole('button', { name: he.common.back }));
-    expect(navigate).toHaveBeenCalledWith('/level');
+    expect(navigate).toHaveBeenCalledWith('/about');
   });
 
   it('Wordmark writes the name', () => {

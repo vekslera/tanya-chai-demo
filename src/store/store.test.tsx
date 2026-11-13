@@ -14,7 +14,8 @@ describe('initialStateFrom', () => {
     expect(initialState).toMatchObject({
       ...config.demo.initialProgress,
       level: config.defaultLevel,
-      completedLevels: [],
+      completedSolo: false,
+      seenBiurTip: false,
       togetherIndex: -1,
       quiz: null,
     });
@@ -25,7 +26,6 @@ describe('reducer', () => {
   const started = reducer(initialState, {
     type: 'startQuiz',
     track: 'solo',
-    level: 1,
     questionIds: ['q1', 'q2'],
     seed: 1,
   });
@@ -37,12 +37,17 @@ describe('reducer', () => {
       choice: 'a',
       correct: true,
       maxAttempts: 2,
+      level: 2,
     });
     s = reducer(s, { type: 'nextQuestion' });
-    expect(s.quiz).toMatchObject({ index: 1, earned: config.scoring.pointsByAttempt[0] });
+    expect(s.quiz).toMatchObject({
+      index: 1,
+      earned: config.scoring.pointsByAttempt[0]! * config.scoring.levelFactor[2]!,
+    });
+    expect(s.seenBiurTip).toBe(true);
     s = reducer(s, { type: 'completeQuiz' });
     expect(s.quiz).toBeNull();
-    expect(s.completedLevels).toEqual([1]);
+    expect(s.completedSolo).toBe(true);
     expect(s.lastCompletion?.awarded).toBe(true);
   });
 
@@ -51,14 +56,32 @@ describe('reducer', () => {
       { type: 'answer', questionId: 'q', choice: 'a', correct: true, maxAttempts: 2 },
       { type: 'nextQuestion' },
       { type: 'completeQuiz' },
+      { type: 'showBiur', section: 's', shown: true },
     ] as const) {
       expect(reducer(initialState, action)).toBe(initialState);
     }
   });
 
+  it('switches the ביאור of a section, and the level with its questions', () => {
+    let s = reducer(started, { type: 'showBiur', section: 's1', shown: false });
+    expect(s).toMatchObject({ seenBiurTip: true, quiz: { biur: { s1: false } } });
+    s = reducer(s, { type: 'setLevel', level: 1, questionIds: ['q1', 'q3'] });
+    expect(s).toMatchObject({ level: 1, quiz: { questionIds: ['q1', 'q3'] } });
+  });
+
+  it('marks the ביאור tip seen only after a Matmid question', () => {
+    const together = reducer(initialState, {
+      type: 'startQuiz',
+      track: 'together',
+      questionIds: ['q1', 'q2'],
+      seed: 1,
+    });
+    expect(reducer(together, { type: 'nextQuestion' }).seenBiurTip).toBe(false);
+  });
+
   it('handles the other actions', () => {
-    let s: DemoState = reducer(initialState, { type: 'setLevel', level: 1 });
-    expect(s.level).toBe(1);
+    let s: DemoState = reducer(initialState, { type: 'setLevel', level: 1, questionIds: [] });
+    expect(s).toMatchObject({ level: 1, quiz: null });
     s = reducer(s, { type: 'toggleEnglish' });
     expect(s.english).toBe(true);
     s = reducer(s, { type: 'toggleEnglish' });
@@ -100,7 +123,7 @@ describe('persistence', () => {
 function Points() {
   const { state, dispatch } = useStore();
   return (
-    <button type="button" onClick={() => dispatch({ type: 'setLevel', level: 1 })}>
+    <button type="button" onClick={() => dispatch({ type: 'setLevel', level: 1, questionIds: [] })}>
       {state.points}:{state.level}
     </button>
   );

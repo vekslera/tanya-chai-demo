@@ -5,11 +5,19 @@ import {
   isLastQuestion,
   isResumable,
   nextQuestion,
+  showBiur,
   startSession,
+  withQuestions,
 } from './quizSession';
 
-const rules = { pointsByAttempt: [10, 5], completionBonus: 20, heartStep: 3, heartMax: 100 };
-const start = () => startSession('solo', 1, ['q1', 'q2'], 9);
+const rules = {
+  pointsByAttempt: [10, 5],
+  levelFactor: { 2: 2 },
+  completionBonus: 20,
+  heartStep: 3,
+  heartMax: 100,
+};
+const start = () => startSession('solo', ['q1', 'q2'], 9);
 
 describe('quiz session', () => {
   it('starts at the first question with nothing answered', () => {
@@ -46,12 +54,26 @@ describe('quiz session', () => {
     expect(isLastQuestion(s)).toBe(true);
   });
 
-  it('is resumable only for the same track and level, with questions left', () => {
+  it('doubles the points of a level-2 question', () => {
+    const s = answer(
+      start(),
+      { questionId: 'q1', choice: 'a', correct: true, maxAttempts: 2, level: 2 },
+      rules,
+    );
+    expect(s.earned).toBe(20);
+  });
+
+  it('shows or hides the ביאור of a section, and takes other questions to come', () => {
+    const s = showBiur(showBiur(start(), 's1', true), 's2', false);
+    expect(s.biur).toEqual({ s1: true, s2: false });
+    expect(withQuestions(s, ['q1', 'q3']).questionIds).toEqual(['q1', 'q3']);
+  });
+
+  it('is resumable only for the same track, with questions left', () => {
     const s = start();
-    expect(isResumable(s, 'solo', 1)).toBe(true);
-    expect(isResumable(s, 'solo', 2)).toBe(false);
+    expect(isResumable(s, 'solo')).toBe(true);
     expect(isResumable(s, 'together')).toBe(false);
-    expect(isResumable(null, 'solo', 1)).toBe(false);
-    expect(isResumable(nextQuestion(nextQuestion(s)), 'solo', 1)).toBe(false);
+    expect(isResumable(null, 'solo')).toBe(false);
+    expect(isResumable(nextQuestion(nextQuestion(s)), 'solo')).toBe(false);
   });
 });

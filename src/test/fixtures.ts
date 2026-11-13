@@ -91,6 +91,14 @@ export const questions: Question[] = [
     fixedOrder: true,
   }),
   q({
+    id: 'q-l2-tf',
+    level: 2,
+    kind: 'trueFalse',
+    category: 'concept',
+    answer: 'true',
+    summary: true,
+  }),
+  q({
     id: 'q-child',
     track: 'together',
     level: undefined,

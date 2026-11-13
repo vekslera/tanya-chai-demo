@@ -14,9 +14,14 @@ const reading = (questionIds = ['q-choice', 'q-find', 'q-tf'], level = 1, index 
   memoryStorage({
     [config.storage.key]: JSON.stringify({
       level,
-      quiz: { ...startSession('solo', level, questionIds, 1), index },
+      quiz: { ...startSession('solo', questionIds, 1), index },
     }),
   });
+/** The ביאור switch of each section shown, and whether it is on. */
+const switches = () => screen.getAllByRole('switch', { name: he.read.biurSwitch });
+const checked = () => switches().map((s) => s.getAttribute('aria-checked'));
+const saved = (storage: { get(key: string): string | null }) =>
+  JSON.parse(storage.get(config.storage.key)!);
 const option = (text: string) => button(new RegExp(text));
 const sentence = (id: string) => document.querySelector(`button[data-unit="${id}"]`)!;
 const shownSections = () =>
@@ -32,9 +37,9 @@ afterEach(() => {
 });
 
 describe('ReadScreen', () => {
-  it('leaves for the level screen without questions under way', async () => {
+  it('leaves for the home screen without questions under way', async () => {
     await renderApp(ROUTES.read);
-    expect(hash()).toBe(ROUTES.level);
+    expect(hash()).toBe(ROUTES.home);
   });
 
   it('shows the ביאור on level 2 only', async () => {
@@ -42,6 +47,70 @@ describe('ReadScreen', () => {
     expect(screen.getByText('ביאור ראשון')).toBeTruthy();
     unmount();
     await renderApp(ROUTES.read, { storage: reading(['q-choice'], 1) });
+    expect(screen.queryByText('ביאור ראשון')).toBeNull();
+  });
+
+  it('heads each section with its number and its ביאור switch, with a tip the first time', async () => {
+    const { storage } = await renderApp(ROUTES.read, { storage: reading() });
+    expect(screen.getByText(he.read.section(1, 2))).toBeTruthy();
+    expect(checked()).toEqual(['false']);
+    expect(screen.getByText(he.read.biurTip)).toBeTruthy();
+    await click(switches()[0]!);
+    expect(screen.queryByText(he.read.biurTip)).toBeNull();
+    expect(saved(storage).seenBiurTip).toBe(true);
+  });
+
+  it('turns the current section’s ביאור on before its question: the question follows', async () => {
+    const { storage } = await renderApp(ROUTES.read, { storage: reading() });
+    expect(screen.queryByText('ביאור ראשון')).toBeNull();
+    expect(screen.queryByText(he.quiz.factor(2))).toBeNull();
+    await click(switches()[0]!);
+    expect(checked()).toEqual(['true']);
+    expect(screen.getByText('ביאור ראשון')).toBeTruthy();
+    // The level-2 question of this section, at double points.
+    expect(screen.getByText('prompt q-l2')).toBeTruthy();
+    expect(screen.getByText(he.quiz.progress(1, 2))).toBeTruthy();
+    expect(screen.getByText(he.quiz.factor(2))).toBeTruthy();
+    expect(saved(storage).level).toBe(2);
+    await click(option('נכון ברמה 2'));
+    const points = config.scoring.pointsByAttempt[0]! * config.scoring.levelFactor[2]!;
+    expect(screen.getByText(he.quiz.points(points))).toBeTruthy();
+    // And off again: back to level 1, for the next question.
+    await click(switches()[0]!);
+    expect(screen.queryByText('ביאור ראשון')).toBeNull();
+    expect(saved(storage).level).toBe(1);
+    expect(saved(storage).quiz.questionIds).toEqual(['q-l2', 'q-find', 'q-tf']);
+  });
+
+  it('keeps a question already tried; the new level applies from the next one', async () => {
+    Element.prototype.scrollIntoView = vi.fn();
+    const { storage } = await renderApp(ROUTES.read, { storage: reading() });
+    await click(option('תשובה שנייה'));
+    await click(switches()[0]!);
+    expect(screen.getByText('ביאור ראשון')).toBeTruthy();
+    expect(screen.getByText('prompt q-choice')).toBeTruthy();
+    expect(saved(storage).quiz.questionIds).toEqual(['q-choice', 'q-l2-tf']);
+    await click(option('תשובה נכונה'));
+    await click(button(he.quiz.next));
+    // The next section opens at level 2, with its question.
+    expect(checked()).toEqual(['true', 'true']);
+    expect(screen.getByText('prompt q-l2-tf')).toBeTruthy();
+    expect(screen.getByText(he.quiz.summary)).toBeTruthy();
+    expect(screen.getByText(he.quiz.factor(2))).toBeTruthy();
+  });
+
+  it('lets an earlier section be read with or without its ביאור, changing only that section', async () => {
+    const { storage } = await renderApp(ROUTES.read, { storage: reading(undefined, 1, 1) });
+    // Each section shows the level its question was asked at.
+    expect(checked()).toEqual(['false', 'false']);
+    await click(switches()[0]!);
+    expect(checked()).toEqual(['true', 'false']);
+    expect(screen.getByText('ביאור ראשון')).toBeTruthy();
+    expect(saved(storage)).toMatchObject({
+      level: 1,
+      quiz: { questionIds: ['q-choice', 'q-find', 'q-tf'], index: 1 },
+    });
+    await click(switches()[0]!);
     expect(screen.queryByText('ביאור ראשון')).toBeNull();
   });
 
@@ -86,7 +155,7 @@ describe('ReadScreen', () => {
     expect(screen.getByText(he.quiz.points(config.scoring.pointsByAttempt[1]!))).toBeTruthy();
     await click(button(he.quiz.finish));
     expect(hash()).toBe(ROUTES.done);
-    expect(JSON.parse(storage.get(config.storage.key)!).completedLevels).toEqual([1]);
+    expect(saved(storage).completedSolo).toBe(true);
   });
 
   it('praises a correct answer with its points', async () => {
@@ -144,7 +213,7 @@ describe('ReadScreen', () => {
 
   it('asks the questions in English in English mode, quoting the English', async () => {
     Element.prototype.scrollIntoView = vi.fn();
-    const quiz = { ...startSession('solo', 1, ['q-choice', 'q-find', 'q-tf'], 1), index: 0 };
+    const quiz = { ...startSession('solo', ['q-choice', 'q-find', 'q-tf'], 1), index: 0 };
     const storage = memoryStorage({
       [config.storage.key]: JSON.stringify({ level: 1, english: true, quiz }),
     });

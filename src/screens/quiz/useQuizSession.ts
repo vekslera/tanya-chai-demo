@@ -44,7 +44,14 @@ export function useQuizSession(track: Track, route: Route, fallback?: Route) {
     answer(choice: string): AnswerResult | null {
       if (!canAnswer(phase) || chosen.includes(choice)) return null;
       const correct = choice === question.answer;
-      dispatch({ type: 'answer', questionId: question.id, choice, correct, maxAttempts });
+      dispatch({
+        type: 'answer',
+        questionId: question.id,
+        choice,
+        correct,
+        maxAttempts,
+        level: question.level,
+      });
       return correct ? 'correct' : 'wrong';
     },
     next() {

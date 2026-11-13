@@ -15,6 +15,8 @@ export type QuizStrings = {
   next: string;
   finish: string;
   points: (n: number) => string;
+  /** A question whose points are multiplied, by its level (S4). */
+  factor: (n: number) => string;
   chosenWrong: string;
 };
 

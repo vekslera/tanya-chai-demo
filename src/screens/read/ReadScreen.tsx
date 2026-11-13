@@ -3,9 +3,8 @@ import { Dedication } from '../../components/Dedication';
 import { GlossarySheet } from '../../components/GlossarySheet';
 import { LanguageToggle } from '../../components/LanguageToggle';
 import { TopBar } from '../../components/TopBar';
-import { config } from '../../config';
 import { usePortion } from '../../content/PortionProvider';
-import { hasEnglish, readingProgress, showsBiur } from '../../domain/reading';
+import { hasEnglish, readingProgress } from '../../domain/reading';
 import type { GlossaryEntry } from '../../domain/types';
 import { ROUTES } from '../../routes';
 import { useStore } from '../../store/StoreProvider';
@@ -15,16 +14,19 @@ import { FootnoteSheet, type Footnote } from './FootnoteSheet';
 import { ReadQuestion } from './ReadQuestion';
 import { ReadSection } from './ReadSection';
 import { ReadProgress } from './ReadProgress';
+import { useSectionBiur } from './useSectionBiur';
 import './Read.css';
 
 /**
- * The portion in short sections, each followed by its question (S3, S4): the text so far, with the
- * ביאור on level 2, the English in English mode, and the next section once the question is done.
+ * The portion in short sections, each followed by its question (S3, S4): the text so far, each
+ * section with its ביאור switch (S2), the English in English mode, and the next section once the
+ * question is done.
  */
 export function ReadScreen() {
   const { state, dispatch } = useStore();
   const { portion, sections } = usePortion();
-  const session = useQuizSession('solo', ROUTES.read, ROUTES.level);
+  const session = useQuizSession('solo', ROUTES.read, ROUTES.home);
+  const biur = useSectionBiur(session);
   const [term, setTerm] = useState<GlossaryEntry | null>(null);
   const [footnote, setFootnote] = useState<Footnote | null>(null);
   const body = useRef<HTMLDivElement>(null);
@@ -47,8 +49,8 @@ export function ReadScreen() {
   return (
     <main className="screen read">
       <TopBar
-        back={ROUTES.level}
-        backLabel={he.read.backToLevel}
+        back={ROUTES.home}
+        backLabel={he.read.backToHome}
         title={portion.label.he}
         end={
           hasEnglish(sections) && (
@@ -65,11 +67,15 @@ export function ReadScreen() {
       <p className="read-location">{portion.location.he}</p>
 
       <div ref={body} className="read-body">
-        {sections.slice(0, shown).map((s) => (
+        {sections.slice(0, shown).map((s, i) => (
           <ReadSection
             key={s.id}
             section={s}
-            showBiur={showsBiur(config.levels, state.level)}
+            n={i + 1}
+            total={sections.length}
+            showBiur={biur.shown(i)}
+            onToggleBiur={() => biur.toggle(i)}
+            tip={i === 0 && !state.seenBiurTip}
             english={state.english}
             onTerm={setTerm}
             onFootnote={(span, n) => setFootnote({ span, n })}

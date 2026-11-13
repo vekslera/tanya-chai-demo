@@ -4,10 +4,17 @@ import { SentenceText } from '../../components/Sentence';
 import { config } from '../../config';
 import { spaceAfter, type PortionSection } from '../../domain/portion';
 import type { GlossaryEntry, TranslationSpan } from '../../domain/types';
+import { SectionHead } from './SectionHead';
 
 type Props = {
   section: PortionSection;
+  /** The section's number, from 1, and how many there are. */
+  n: number;
+  total: number;
   showBiur: boolean;
+  onToggleBiur: () => void;
+  /** The first-time line under the ביאור switch (S2). */
+  tip?: boolean;
   /** The lesson is read with its English: each sentence's translation, and its ביאור. */
   english: boolean;
   onTerm: (entry: GlossaryEntry) => void;
@@ -15,13 +22,15 @@ type Props = {
 };
 
 /**
- * One short section, sentence by sentence: the text, its English in English mode, and its ביאור
- * when shown, in English in English mode.
+ * One short section: its head with the ביאור switch, then sentence by sentence: the text, its
+ * English in English mode, and its ביאור when shown, in English in English mode.
  */
-export function ReadSection({ section, showBiur, english, onTerm, onFootnote }: Props) {
+export function ReadSection(props: Props) {
+  const { section, n, total, showBiur, onToggleBiur, tip, english, onTerm, onFootnote } = props;
   const lang = config.translationLanguage;
   return (
     <section className="read-section" data-section={section.id}>
+      <SectionHead n={n} total={total} biur={showBiur} onToggle={onToggleBiur} tip={tip} />
       {section.paragraphs.map((p) => (
         <div key={p.key} className="section-paragraph">
           {p.sentences.map((s) => {

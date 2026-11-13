@@ -13,7 +13,7 @@ const Action = ({ to, primary, label }: { to: Route; primary?: boolean; label: s
   </button>
 );
 
-/** Where to go next: another level or Avos uBanim after Matmid, home after Avos uBanim. */
+/** Where to go next: Avos uBanim or home after Matmid, home after Avos uBanim. */
 export function DoneActions({
   together,
   shinun = SHINUN_ENABLED,
@@ -27,8 +27,8 @@ export function DoneActions({
         <Action to={ROUTES.home} primary label={he.done.home} />
       ) : (
         <>
-          <Action to={ROUTES.level} primary label={he.done.otherLevel} />
-          <Action to={ROUTES.together} label={he.done.together} />
+          <Action to={ROUTES.together} primary label={he.done.together} />
+          <Action to={ROUTES.home} label={he.done.home} />
         </>
       )}
       {shinun && <Action to={ROUTES.shinun} label={he.done.shinun} />}

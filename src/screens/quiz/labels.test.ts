@@ -29,4 +29,9 @@ describe('quizStrings', () => {
     expect(quizStrings('he')).toBe(he.quiz);
     expect(quizStrings('fr')).toBe(he.quiz);
   });
+
+  it('names doubled points, and any other factor', () => {
+    expect([he.quiz.factor(2), he.quiz.factor(3)]).toEqual(['ניקוד כפול', 'ניקוד פי 3']);
+    expect([en.quiz.factor(2), en.quiz.factor(3)]).toEqual(['Double points', '3× points']);
+  });
 });

@@ -20,7 +20,6 @@ export const FALSE = 'false';
 /** An answer option. True/false options carry no text: the view labels them. */
 export type Option = { id: string; text?: string };
 
-/** The options as shown: true/false fixed; choice options shuffled per session unless fixed. */
 /** A question in a language: its translation's texts when it has them, else as written. */
 export function questionIn(q: Question, language?: string): Question {
   const t = language ? q.translations?.[language] : undefined;
@@ -29,6 +28,7 @@ export function questionIn(q: Question, language?: string): Question {
     : q;
 }
 
+/** The options as shown: true/false fixed; choice options shuffled per session unless fixed. */
 export function optionsOf(q: Question, seed: number): Option[] {
   if (q.kind === 'trueFalse') return [{ id: TRUE }, { id: FALSE }];
   const options = q.options ?? [];
@@ -54,6 +54,10 @@ export function sentenceChoices(
   return unitIds.slice(start, start + size);
 }
 
+/** Where a question is asked: by its section, the summary question after the last one's. */
+const rankOf = (q: Question, sectionOf: (q: Question) => number) =>
+  sectionOf(q) * 2 + (q.summary ? 1 : 0);
+
 /**
  * The questions of a track, and of a level on the solo track, in the order they are asked: after
  * their section (`sectionOf`), the summary question last.
@@ -64,12 +68,30 @@ export function questionIdsFor(
   track: Track,
   level?: Level,
 ) {
-  const rank = (q: Question) => [sectionOf(q), q.summary ? 1 : 0] as const;
   return questions
     .filter((q) => q.track === track && (track === 'together' || q.level === level))
-    .map((q) => ({ q, r: rank(q) }))
-    .sort((a, b) => a.r[0] - b.r[0] || a.r[1] - b.r[1])
+    .map((q) => ({ q, r: rankOf(q, sectionOf) }))
+    .sort((a, b) => a.r - b.r)
     .map(({ q }) => q.id);
+}
+
+/**
+ * The solo questions when the level changes during the lesson (S2): those `asked` so far stay,
+ * then come the questions of `level` from the next section on.
+ */
+export function switchLevel(
+  questions: readonly Question[],
+  sectionOf: (q: Question) => number,
+  asked: readonly string[],
+  level: Level,
+): string[] {
+  const byId = new Map(questions.map((q) => [q.id, q]));
+  const last = asked[asked.length - 1];
+  const after = last === undefined ? -1 : rankOf(byId.get(last)!, sectionOf);
+  const next = questionIdsFor(questions, sectionOf, 'solo', level).filter(
+    (id) => rankOf(byId.get(id)!, sectionOf) > after,
+  );
+  return [...asked, ...next];
 }
 
 /** How many answers a question accepts before the correct one is revealed. */
