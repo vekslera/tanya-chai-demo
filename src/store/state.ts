@@ -25,6 +25,8 @@ export type DemoState = Progress & {
   english: boolean;
   /** Light or dark, or the device's own mode (S7). */
   theme: Theme;
+  /** Chooses the dedication (S3): drawn anew each time a lesson is started or resumed. */
+  dedicationSeed: number;
   seenShinun: boolean;
   /** What the completion screen shows and animates. */
   lastCompletion: Completion | null;
@@ -44,6 +46,7 @@ export function initialStateFrom({
     quiz: null,
     english: false,
     theme: defaultTheme,
+    dedicationSeed: 0,
     seenShinun: false,
     lastCompletion: null,
   };
@@ -55,6 +58,7 @@ export type Action =
   /** Any section's switch: whether that section shows its ביאור. */
   | { type: 'showBiur'; section: string; shown: boolean }
   | { type: 'startQuiz'; track: Track; questionIds: string[]; seed: number }
+  | { type: 'pickDedication'; seed: number }
   | ({ type: 'answer' } & Answer)
   | { type: 'nextQuestion' }
   | { type: 'completeQuiz' }
@@ -82,6 +86,8 @@ export function createReducer({ scoring, initialState }: StoreRules): Reducer {
           : state;
       case 'startQuiz':
         return { ...state, quiz: startSession(action.track, action.questionIds, action.seed) };
+      case 'pickDedication':
+        return { ...state, dedicationSeed: action.seed };
       case 'answer':
         return state.quiz ? { ...state, quiz: answer(state.quiz, action, scoring) } : state;
       case 'nextQuestion':

@@ -117,7 +117,7 @@ The learner does not choose a level before reading: a learner may not know befor
 - **Language switch:** one `HE`/`EN` switch at the top of the screen, a choice for the whole lesson, kept in the state (`english`). In Hebrew mode (`HE`, the default) the screen is as above. In English mode (`EN`), each sentence's English translation comes right after its Hebrew, in exactly the same portions (LTR, `lang` set to `translationLanguage` in `app.config.json`, serif, smaller), so the English is never far from the text it translates. With the ביאור on, the ביאור that follows is the English ביאור (§8.3), **instead of** the Hebrew one; a sentence without an English ביאור keeps its Hebrew one. The switch is hidden when the portion has no English.
 - **Sections and questions:** the screen shows the sections read so far. After a section comes its question (S4), in a card under the text; once it is answered, `להמשך הלימוד` opens the next section, scrolled into view. After the last section comes the summary question, and then `לסיום השיעור` leads to the completion screen (S5). The progress bar shows the questions answered.
 - **Bottom bar:** sticky, with the dedication.
-- **Dedication:** when the portion has `dedications`, one of them, chosen at random for each lesson (by the lesson's seed, so it stays the same through the lesson), as a short line under the button, centered: small (15px, `--fs-dedication`) but clearly visible, in navy, medium weight, on a light gold band (`--gold-soft`). It appears on the reading screens of every learning path (S3 and the S8 cards), not on the finish screen. Its wording comes from `src/strings/he.ts` by kind: `הלימוד היומי מוקדש לעילוי נשמת …` (`leiluiNishmas`), `הלימוד היומי מוקדש לזכות …` (`lizchus`), or `השותף שלך בלימוד היומי: …` (`partner`: the sponsor of the learning, so the wording says "your partner" and is never read as another learner). The demo portion has four, and each lesson picks one of them at random: `לזכות אלכסנדר בן לייב`, `לעילוי נשמת לייב בן אליהו יצחק ז״ל`, `לעילוי נשמת גנריאטה בת יעקב יהודה ז״ל`, and the partner `תניא חי`.
+- **Dedication:** when the portion has `dedications`, one of them, drawn at random each time a lesson is started or resumed from Home (so going back and starting again shows another, while the lesson's own place and questions are kept), as a short line under the button, centered: small (15px, `--fs-dedication`) but clearly visible, in navy, medium weight, on a light gold band (`--gold-soft`). It appears on the reading screens of every learning path (S3 and the S8 cards), not on the finish screen. Its wording comes from `src/strings/he.ts` by kind: `הלימוד היומי מוקדש לעילוי נשמת …` (`leiluiNishmas`), `הלימוד היומי מוקדש לזכות …` (`lizchus`), or `השותף שלך בלימוד היומי: …` (`partner`: the sponsor of the learning, so the wording says "your partner" and is never read as another learner). The demo portion has four, and each lesson picks one of them at random: `לזכות אלכסנדר בן לייב`, `לעילוי נשמת לייב בן אליהו יצחק ז״ל`, `לעילוי נשמת גנריאטה בת יעקב יהודה ז״ל`, and the partner `תניא חי`.
 
 #### S4: Questions (on the reading screen, S3)
 
@@ -363,6 +363,7 @@ type DemoState = {
   } | null;
   english: boolean;               // the lesson is read with its English (S3)
   theme: "auto" | "light" | "dark"; // the look (S7, §4.1); "auto" follows the device
+  dedicationSeed: number; // chooses the dedication (S3); drawn anew each time a lesson is started or resumed
   seenShinun: boolean;
   lastCompletion: Completion | null; // what the completion screen shows and animates; not saved, so opening the demo again never starts on the completion screen
 };
@@ -504,7 +505,7 @@ type Portion = {                       // content/portions/adar-09.json
   questions: Question[];
   together: TogetherCard[];            // 6–8 cards, one per section, in order
   shinun?: { unitId: UnitId; rounds: number[][] }; // word indices hidden per round
-  dedications?: { kind: "leiluiNishmas" | "lizchus" | "partner"; name: string }[]; // S3, S8: one per lesson, at random
+  dedications?: { kind: "leiluiNishmas" | "lizchus" | "partner"; name: string }[]; // S3, S8: one at random, drawn anew each time a lesson is started or resumed
 };
 
 type Source = {
