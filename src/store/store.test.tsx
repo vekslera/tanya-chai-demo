@@ -77,6 +77,8 @@ describe('reducer', () => {
     expect(s.english).toBe(false);
     s = reducer(s, { type: 'setTogetherIndex', index: 3 });
     expect(s.togetherIndex).toBe(3);
+    s = reducer(s, { type: 'pickDedication', seed: 42 });
+    expect(s.dedicationSeed).toBe(42);
     s = reducer(s, { type: 'seenShinun' });
     expect(s.seenShinun).toBe(true);
     expect(reducer(s, { type: 'reset' })).toEqual(initialState);
