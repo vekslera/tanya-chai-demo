@@ -182,11 +182,11 @@ describe('portion', () => {
     ).toMatch('has no attribution');
   });
 
-  it('checks the dedication', () => {
+  it('checks the dedications', () => {
     const dedicate = (a: Parameters<typeof portion>[0], kind: string, name: string) =>
-      (portion(a).dedication = { kind: kind as 'lizchus', name });
+      (portion(a).dedications = [{ kind: kind as 'lizchus', name }]);
     expect(after((a) => dedicate(a, 'lizchus', 'פלוני')).errors).toEqual([]);
-    expect(after((a) => delete portion(a).dedication).errors).toEqual([]);
+    expect(after((a) => delete portion(a).dedications).errors).toEqual([]);
     expect(errorsAfter((a) => dedicate(a, 'toString', 'פלוני'))).toMatch(
       'unknown dedication kind "toString"',
     );

@@ -13,7 +13,12 @@
     { "from": "LA.32.014", "to": "LA.32.017" },
     { "from": "LA.32.018", "to": "LA.32.019" }
   ],
-  "dedication": { "kind": "leiluiNishmas", "name": "ישראל בן משה זוכמיר" },
+  "dedications": [
+    { "kind": "lizchus", "name": "אלכסנדר בן לייב" },
+    { "kind": "leiluiNishmas", "name": "לייב בן אליהו יצחק ז״ל" },
+    { "kind": "leiluiNishmas", "name": "גנריאטה בת יעקב יהודה ז״ל" },
+    { "kind": "partner", "name": "תניא חי" }
+  ],
   "sources": [
     {
       "id": "he-resource",

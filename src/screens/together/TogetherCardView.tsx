@@ -16,11 +16,14 @@ export function TogetherCardView({
   card,
   index,
   count,
+  seed,
   onGo,
 }: {
   card: TogetherCard;
   index: number;
   count: number;
+  /** The lesson's seed: it chooses the dedication. */
+  seed: number;
   onGo: (index: number) => void;
 }) {
   const { sections } = usePortion();
@@ -61,7 +64,7 @@ export function TogetherCardView({
         <button type="button" className="btn btn-primary btn-big" onClick={() => onGo(index + 1)}>
           {he.common.next}
         </button>
-        <Dedication />
+        <Dedication seed={seed} />
       </nav>
 
       <GlossarySheet entry={term} onClose={() => setTerm(null)} />

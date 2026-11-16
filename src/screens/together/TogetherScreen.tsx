@@ -50,6 +50,7 @@ export function TogetherScreen() {
           card={cards[step.index]!}
           index={step.index}
           count={cards.length}
+          seed={session!.quiz.seed}
           onGo={go}
         />
       );

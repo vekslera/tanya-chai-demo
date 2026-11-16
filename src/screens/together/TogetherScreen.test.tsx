@@ -77,7 +77,7 @@ describe('TogetherScreen', () => {
 
   it('shows the dedication on the cards only', async () => {
     const data = portionData();
-    data.portion.dedication = { kind: 'partner', name: 'שותף' };
+    data.portion.dedications = [{ kind: 'partner', name: 'שותף' }];
     const line = he.dedication.partner('שותף');
     await renderApp(ROUTES.together, { data });
     expect(screen.queryByText(line)).toBeNull();
