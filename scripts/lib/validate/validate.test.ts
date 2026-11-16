@@ -71,8 +71,9 @@ describe('translations', () => {
   });
 
   it('checks each span', () => {
-    const span = (a: ChapterLayers) => a.translations![0]!;
-    expect(errorsAfter((a) => (span(a).text = ' '))).toMatch('translation[0]: empty text');
+    // LA.32.003's span marks footnote [1].
+    const span = (a: ChapterLayers) => a.translations![2]!;
+    expect(errorsAfter((a) => (span(a).text = ' '))).toMatch('translation[2]: empty text');
     expect(errorsAfter((a) => ((span(a).text as unknown) = undefined))).toMatch('empty text');
     expect(errorsAfter((a) => (span(a).text = '<b>x</b>'))).toMatch('contains HTML tags');
     expect(errorsAfter((a) => (span(a).text += '!'))).toMatch(
@@ -129,10 +130,21 @@ describe('glossary and ביאור', () => {
       'unknown glossary entry',
     );
     expect(errorsAfter((a) => (c(a).glossary![0]!.match = 'אין'))).toMatch('not in the unit text');
-    const long = Array(contentRules.biurMaxWords.he! + 1)
-      .fill('מילה')
-      .join(' ');
-    expect(warningsAfter((a) => (c(a).biur!.he!.short!.value = long))).toMatch('biur.he has');
+    // The limit is per unit: LA.32.001 opens a sentence of two units, LA.32.003 is one alone.
+    const words = (n: number) => Array(n).fill('מילה').join(' ');
+    const perUnit = contentRules.biurMaxWords.he!;
+    const one = (a: ChapterLayers) => a.unitContent.find((x) => x.id === 'LA.32.003')!;
+    expect(warningsAfter((a) => (c(a).biur!.he!.short!.value = words(perUnit + 1)))).toBe('');
+    expect(warningsAfter((a) => (c(a).biur!.he!.short!.value = words(2 * perUnit + 1)))).toMatch(
+      `biur.he has ${2 * perUnit + 1} words (max ${2 * perUnit})`,
+    );
+    expect(warningsAfter((a) => (one(a).biur!.he!.short!.value = words(perUnit + 1)))).toMatch(
+      'content LA.32.003: biur.he has',
+    );
+    // A unit that continues a sentence has no ביאור of its own.
+    expect(errorsAfter((a) => a.unitContent.push({ id: 'LA.32.002', biur: c(a).biur }))).toMatch(
+      "content LA.32.002: continues LA.32.001's sentence",
+    );
     expect(after((a) => (c(a).biur = { he: {} })).errors).toEqual([]);
   });
 
@@ -170,11 +182,11 @@ describe('portion', () => {
     ).toMatch('has no attribution');
   });
 
-  it('checks the dedication', () => {
+  it('checks the dedications', () => {
     const dedicate = (a: Parameters<typeof portion>[0], kind: string, name: string) =>
-      (portion(a).dedication = { kind: kind as 'lizchus', name });
+      (portion(a).dedications = [{ kind: kind as 'lizchus', name }]);
     expect(after((a) => dedicate(a, 'lizchus', 'פלוני')).errors).toEqual([]);
-    expect(after((a) => delete portion(a).dedication).errors).toEqual([]);
+    expect(after((a) => delete portion(a).dedications).errors).toEqual([]);
     expect(errorsAfter((a) => dedicate(a, 'toString', 'פלוני'))).toMatch(
       'unknown dedication kind "toString"',
     );
@@ -199,6 +211,19 @@ describe('questions', () => {
     );
   });
 
+  it('checks the translations of each question, required on the translated tracks', () => {
+    const english = (a: ChapterLayers) => q(a, 'q-l1-easy-way').translations!.en!;
+    expect(errorsAfter((a) => ((english(a).hint as unknown) = 'x'))).toMatch(
+      'hint.en is not a Reviewed',
+    );
+    expect(errorsAfter((a) => english(a).options!.pop())).toMatch(
+      'the en options do not match the options',
+    );
+    expect(errorsAfter((a) => delete q(a, 'q-l1-easy-way').translations)).toMatch(
+      'question q-l1-easy-way: has no en translation',
+    );
+  });
+
   it('checks the answers of each kind', () => {
     const choice = (a: ChapterLayers) => q(a, 'q-l1-easy-way');
     expect(errorsAfter((a) => choice(a).options!.push({ ...choice(a).options![1]! }))).toMatch(
@@ -210,6 +235,9 @@ describe('questions', () => {
     );
     expect(errorsAfter((a) => delete choice(a).options)).toMatch('0 options');
     expect(errorsAfter((a) => (q(a, 'q-l1-bodies').answer = 'yes'))).toMatch('"true" or "false"');
+    expect(errorsAfter((a) => (q(a, 'q-l1-brothers').answer = 'LA.32.007'))).toMatch(
+      'answer LA.32.007 is part of a sentence; use LA.32.006',
+    );
     expect(errorsAfter((a) => (q(a, 'q-l1-brothers').answer = 'LA.32.040'))).toMatch(
       'answer LA.32.040 is outside',
     );
@@ -221,17 +249,30 @@ describe('questions', () => {
     );
   });
 
-  it('checks the set of each level and of Avos uBanim', () => {
+  it('checks the set of each level and of Avos uBanim: one after each section, then a summary', () => {
     expect(errorsAfter((a) => (q(a, 'q-l1-easy-way').category = 'concept'))).toMatch(
-      'level 1 needs exactly 3 literal question(s)',
+      'question q-l1-easy-way: level 1 questions are literal',
     );
-    expect(errorsAfter((a) => (q(a, 'q-l2-why-easy').level = 1))).toMatch('level 2 needs exactly');
+    const moved = errorsAfter((a) => (q(a, 'q-l2-why-easy').level = 1));
+    expect(moved).toMatch('level 1: 2 questions after section 3 (expected 1)');
+    expect(moved).toMatch('level 2: 0 questions after section 3 (expected 1)');
+    expect(errorsAfter((a) => delete q(a, 'q-l1-summary').summary)).toMatch(
+      'level 1: 0 summary questions (expected 1)',
+    );
+    expect(errorsAfter((a) => (q(a, 'q-l1-imperfect').unitRef = 'LA.32.018'))).toMatch(
+      'level 1: 1 questions after section 7 (expected 0)',
+    );
+    expect(errorsAfter((a) => (q(a, 'q-l1-imperfect').unitRef = 'LA.32.040'))).toMatch(
+      'level 1: 0 questions after section 6 (expected 1)',
+    );
     const child = (a: ChapterLayers) => q(a, 'q-c-hillel');
     expect(errorsAfter((a) => (child(a).category = 'literal'))).toMatch(
       'together questions are category "child"',
     );
     expect(errorsAfter((a) => (child(a).kind = 'findSentence'))).toMatch('choice or trueFalse');
-    expect(errorsAfter((a) => (child(a).track = 'solo'))).toMatch('together track has 2 questions');
+    expect(errorsAfter((a) => (child(a).track = 'solo'))).toMatch(
+      'together: 0 questions after section 5 (expected 1)',
+    );
   });
 });
 
@@ -254,12 +295,30 @@ describe('cards and Shinun', () => {
     );
   });
 
-  it('checks the number of cards, their coverage and their talks', () => {
-    expect(errorsAfter((a) => (portion(a).together = portion(a).together.slice(0, 5)))).toMatch(
-      '5 cards',
+  it('checks the sections: the whole portion, in order, each from a sentence’s start', () => {
+    const section = (a: ChapterLayers, i = 0) => portion(a).sections[i]!;
+    expect(errorsAfter((a) => (section(a).to = section(a).from))).toMatch(
+      'the sections do not cover its units exactly once',
     );
-    expect(errorsAfter((a) => (card(a).to = card(a).from))).toMatch('do not cover the portion');
-    expect(errorsAfter((a) => (card(a).to = 'LA.99.001'))).toMatch('unknown unit');
+    expect(errorsAfter((a) => (section(a).to = 'LA.99.001'))).toMatch('section 1: unknown unit');
+    expect(
+      errorsAfter((a) => {
+        section(a).to = 'LA.32.001';
+        section(a, 1).from = 'LA.32.002';
+      }),
+    ).toBe("section 2: starts inside LA.32.001's sentence");
+    expect(
+      errorsAfter((a) => delete (portion(a) as Partial<ReturnType<typeof portion>>).sections),
+    ).toMatch('7 cards for 0 sections');
+  });
+
+  it('checks the number of cards, one per section, and their talks', () => {
+    expect(errorsAfter((a) => (portion(a).together = portion(a).together.slice(0, 5)))).toMatch(
+      'together: 5 cards for 7 sections',
+    );
+    expect(errorsAfter((a) => (portion(a).together = portion(a).together.slice(0, 4)))).toMatch(
+      '4 cards (expected',
+    );
     expect(warningsAfter((a) => portion(a).together.forEach((c) => delete c.talk))).toMatch(
       '0 cards with a talk',
     );

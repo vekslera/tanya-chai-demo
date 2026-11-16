@@ -43,7 +43,7 @@ describe('BidiText', () => {
 describe('EnglishText', () => {
   it('turns footnote marks into buttons', () => {
     const onFootnote = vi.fn();
-    const span = portion.paragraphs[0]!.translation!;
+    const span = portion.sections[0]!.english[0]!;
     const { container } = render(<EnglishText span={span} onFootnote={onFootnote} />);
     fireEvent.click(screen.getByRole('button', { name: he.read.footnote('1') }));
     expect(onFootnote).toHaveBeenCalledWith('1');
@@ -51,7 +51,7 @@ describe('EnglishText', () => {
   });
 
   it('shows a span without footnotes as text', () => {
-    const span = portion.paragraphs[1]!.translation!;
+    const span = portion.sections[1]!.english[0]!;
     const { container } = render(<EnglishText span={span} onFootnote={vi.fn()} />);
     expect(container.textContent).toBe('Brothers.');
   });
@@ -73,36 +73,43 @@ describe('SentenceText', () => {
 });
 
 describe('PortionText', () => {
+  const blocks = portion.sections.map((s) => ({ key: s.id, sentences: s.sentences }));
   it('quotes one sentence', () => {
-    render(<QuoteCard unit={unit} label="מתוך" />);
+    const sentence = portion.sentenceOf(unit.id)!;
+    render(<QuoteCard sentence={sentence} label="מתוך" />);
     expect(screen.getByText('מתוך')).toBeTruthy();
-    render(<QuoteCard unit={unit} />);
+    render(<QuoteCard sentence={sentence} />);
     expect(screen.getAllByText(unit.display)).toHaveLength(2);
   });
 
+  it('quotes a sentence’s translation when asked, and the text itself without one', () => {
+    render(<QuoteCard sentence={portion.sentenceOf('LA.1.001')!} language="en" />);
+    const english = screen.getByText('Love [and soul].').closest('blockquote')!;
+    expect([english.getAttribute('dir'), english.getAttribute('lang')]).toEqual(['ltr', 'en']);
+    // LA.1.002 has no English span of its own.
+    render(<QuoteCard sentence={portion.sentenceOf('LA.1.002')!} language="en" />);
+    const hebrew = screen.getByText(portion.unit('LA.1.002')!.display).closest('blockquote')!;
+    expect(hebrew.getAttribute('dir')).toBeNull();
+  });
+
+  it('shows the sentences in their translation when asked', () => {
+    const { container } = render(<CompactText blocks={blocks} language="en" onSelect={() => {}} />);
+    expect(screen.getByRole('button', { name: 'Brothers.' }).getAttribute('lang')).toBe('en');
+    render(<CompactText blocks={blocks} language="en" />);
+    expect(container.textContent).toContain('Love [and soul].');
+    expect(screen.getAllByText(/Brothers\./)).toHaveLength(2);
+  });
+
   it('shows the text compact, with highlights', () => {
-    const { container } = render(
-      <CompactText
-        paragraphs={portion.paragraphs}
-        highlight="LA.1.002"
-        highlightParagraph="LA.1.2"
-      />,
-    );
+    const { container } = render(<CompactText blocks={blocks} highlight="LA.1.002" />);
     expect(container.querySelector('.compact-sentence--highlight')?.textContent).toContain(
       'שׁוֹרֶשׁ',
     );
-    expect(container.querySelectorAll('.compact-paragraph--hint')).toHaveLength(1);
   });
 
   it('makes each sentence a button with its state when it can be selected', () => {
     const onSelect = vi.fn();
-    render(
-      <CompactText
-        paragraphs={portion.paragraphs}
-        states={{ 'LA.1.002': 'wrong' }}
-        onSelect={onSelect}
-      />,
-    );
+    render(<CompactText blocks={blocks} states={{ 'LA.1.002': 'wrong' }} onSelect={onSelect} />);
     const wrong = screen.getByRole('button', { name: portion.unit('LA.1.002')!.display });
     expect(wrong.className).toContain('compact-sentence--wrong');
     expect(wrong.getAttribute('aria-pressed')).toBe('true');
@@ -209,9 +216,9 @@ describe('small components', () => {
   });
 
   it('TopBar goes back', () => {
-    render(<TopBar back="/level" title="כותרת" end={<i>end</i>} />);
+    render(<TopBar back="/about" title="כותרת" end={<i>end</i>} />);
     fireEvent.click(screen.getByRole('button', { name: he.common.back }));
-    expect(navigate).toHaveBeenCalledWith('/level');
+    expect(navigate).toHaveBeenCalledWith('/about');
   });
 
   it('Wordmark writes the name', () => {

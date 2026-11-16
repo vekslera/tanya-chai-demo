@@ -5,7 +5,7 @@ import {
   footnoteSegments,
   type FootnoteSegment,
 } from '../../../src/domain/footnotes.ts';
-import { assemblePortion } from '../../../src/domain/portion.ts';
+import { assemblePortion, sentenceText } from '../../../src/domain/portion.ts';
 import type { Portion, Source } from '../../../src/domain/types.ts';
 import { en } from '../../../src/strings/en.ts';
 import { he } from '../../../src/strings/he.ts';
@@ -52,7 +52,7 @@ export function printModel(
   const text = all.texts[language];
   if (!strings || !text) throw new Error(`print: no ${language} strings or text`);
   const { print, appName } = strings;
-  const { units, paragraphs } = assemblePortion({
+  const { units, sentences, paragraphs } = assemblePortion({
     ...all,
     units: text.units,
     language,
@@ -66,11 +66,11 @@ export function printModel(
     title: `${appName.full}: ${print.title}`,
     subtitle: `${inLanguage(portion.location)} · ${inLanguage(portion.label)}`,
     legend: print.legend,
-    draft: units.some((u) => u.biur && !u.biur.reviewed) ? print.draft : null,
+    draft: sentences.some((s) => s.biur && !s.biur.reviewed) ? print.draft : null,
     paragraphs: paragraphs.map((p) =>
-      p.units.map((u) => ({
-        text: footnoteSegments(u.display, text.footnotes),
-        ...(u.biur ? { biur: u.biur.value } : {}),
+      p.sentences.map((s) => ({
+        text: footnoteSegments(sentenceText(s), text.footnotes),
+        ...(s.biur ? { biur: s.biur.value } : {}),
       })),
     ),
     footnotes: Object.fromEntries(marked.map((n) => [n, text.footnotes[n]!])),

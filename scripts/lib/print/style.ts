@@ -27,10 +27,11 @@ export function family(stack: string, name: string): string {
   return name;
 }
 
-/** A #rrggbb color as Word writes it. */
+/** A #rrggbb color as Word writes it. Paper is light: of a light-dark() pair, the light color. */
 export function hex(color: string): string {
-  if (!/^#[0-9a-f]{6}$/i.test(color)) throw new Error(`print: ${color} is not a #rrggbb color`);
-  return color.slice(1).toUpperCase();
+  const light = /^light-dark\(\s*([^,\s]+)\s*,/.exec(color)?.[1] ?? color;
+  if (!/^#[0-9a-f]{6}$/i.test(light)) throw new Error(`print: ${color} is not a #rrggbb color`);
+  return light.slice(1).toUpperCase();
 }
 
 export function printStyle(css: string, biurPt: number, { fonts }: PrintLanguage): PrintStyle {
@@ -39,8 +40,8 @@ export function printStyle(css: string, biurPt: number, { fonts }: PrintLanguage
   const pt = (size: string) => (biurPt * parseFloat(get(size))) / parseFloat(get('--fs-biur'));
   const text = family(get('--font-text'), fonts.text);
   const biur = family(get('--font-ui'), fonts.biur);
-  const navy = hex(get('--navy'));
-  const muted = hex(get('--navy-muted'));
+  const navy = hex(get('--text'));
+  const muted = hex(get('--text-muted'));
   return {
     text: { font: text, color: navy, sizePt: pt('--fs-tanya'), bold: true },
     biur: { font: biur, color: muted, sizePt: pt('--fs-biur'), bold: false },

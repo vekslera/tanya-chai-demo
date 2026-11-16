@@ -10,6 +10,8 @@ export type Unit = ChapterRef & {
   seq: number;
   paragraph: number;
   text: string;
+  /** The sentence's first unit, on a unit that continues a sentence (SPEC §6.2). */
+  sentence?: UnitId;
 };
 
 export type DateKey = string;
@@ -46,7 +48,8 @@ export type GlossaryEntry = {
   source?: string;
 };
 
-export type TogetherCard = Range & {
+/** An Avos uBanim card: the card at a position covers the portion's section at that position. */
+export type TogetherCard = {
   id: string;
   forParent: Reviewed<string>;
   toChild: Reviewed<string>;
@@ -67,6 +70,14 @@ export type Source = {
 export type Level = number;
 export type Track = 'solo' | 'together';
 
+/** A question's texts in another language: the same question, with the same option IDs. */
+export type QuestionTexts = {
+  prompt: Reviewed<string>;
+  options?: { id: string; text: string }[];
+  hint: Reviewed<string>;
+  explanation: Reviewed<string>;
+};
+
 export type Question = {
   id: string;
   track: Track;
@@ -80,6 +91,10 @@ export type Question = {
   hint: Reviewed<string>;
   explanation: Reviewed<string>;
   fixedOrder?: boolean;
+  /** Asked once the whole portion was read, about all of it; the others follow their section. */
+  summary?: true;
+  /** The question in other languages, by language: asked in the translation's mode (SPEC S4). */
+  translations?: Record<string, QuestionTexts>;
 };
 
 /** Who the day's learning is dedicated to; its wording is in the strings, by kind. */
@@ -91,9 +106,12 @@ export type Portion = {
   label: { he: string; en: string };
   location: { he: string; en: string };
   boundariesConfirmed: boolean;
+  /** The short sections the portion is learned in, in order (SPEC S3, S8). */
+  sections: Range[];
   sources: Source[];
   questions: Question[];
   together: TogetherCard[];
   shinun?: { unitId: UnitId; rounds: number[][] };
-  dedication?: Dedication;
+  /** The demo's dedications: each lesson shows one of them, at random (SPEC S3). */
+  dedications?: Dedication[];
 };

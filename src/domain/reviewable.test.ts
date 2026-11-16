@@ -15,6 +15,7 @@ describe('reviewableItems', () => {
       'glossary/plain',
     ]);
     expect(ids).toContain('q-choice/hint');
+    expect(ids).toContain('q-choice/hint.en');
     expect(ids).toContain('card-1/talk');
     // card-2 has no talk question.
     expect(ids).not.toContain('card-2/talk');

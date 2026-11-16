@@ -1,10 +1,12 @@
 // Assembles a daily portion from its layers (SPEC §6.5): the schedule picks the units, and the
 // learning content and translations attach to them by unit ID. Pure: the data is passed in.
+import { FOOTNOTE_MARK } from './footnotes.ts';
 import { reviewableItems, unreviewedOf } from './reviewable.ts';
 import type {
   DailySchedule,
   GlossaryEntry,
   Portion,
+  Question,
   Range,
   Reviewed,
   TranslationSpan,
@@ -12,15 +14,27 @@ import type {
   UnitContent,
   UnitId,
 } from './types.ts';
-import { chapterKey, unitsIn } from './units.ts';
+import { chapterKey, sentenceOf, unitsIn } from './units.ts';
 
 export type GlossaryMark = { entry: GlossaryEntry; match: string };
 
 export type PortionUnit = Unit & {
   /** The exact text, without the spaces around it. */
   display: string;
-  biur?: Reviewed<string>;
   glossary: GlossaryMark[];
+};
+
+/** A sentence of the text: one unit, or consecutive units of a paragraph, its ביאור and English. */
+export type PortionSentence = {
+  /** Its first unit's ID. */
+  id: UnitId;
+  units: PortionUnit[];
+  /** The ביאור of the whole sentence, kept on its first unit. */
+  biur?: Reviewed<string>;
+  /** Its ביאור in the translation's language, shown with the translation. */
+  translationBiur?: Reviewed<string>;
+  /** The English spans that start in it, in order; empty without a translation. */
+  english: TranslationSpan[];
 };
 
 export type PortionParagraph = {
@@ -28,13 +42,27 @@ export type PortionParagraph = {
   key: string;
   paragraph: number;
   units: PortionUnit[];
-  translation?: TranslationSpan;
+  sentences: PortionSentence[];
+};
+
+/** A short section of the portion: its text, sentence by sentence, and its English. */
+export type PortionSection = {
+  /** Its first unit's ID. */
+  id: UnitId;
+  units: PortionUnit[];
+  /** Its part of each paragraph it touches. */
+  paragraphs: PortionParagraph[];
+  sentences: PortionSentence[];
+  /** The English of its sentences, in order; empty without a translation. */
+  english: TranslationSpan[];
 };
 
 /** Everything a portion is assembled from. `units` and `translations` cover its chapters. */
 export type PortionData = {
   /** The language of the ביאור to attach. */
   language: string;
+  /** The language of the translation, whose ביאור is attached too. */
+  translationLanguage?: string;
   portion: Portion;
   schedule: DailySchedule;
   units: Unit[];
@@ -46,13 +74,37 @@ export type PortionData = {
 export type AssembledPortion = {
   portion: Portion;
   units: PortionUnit[];
+  sentences: PortionSentence[];
   paragraphs: PortionParagraph[];
+  sections: PortionSection[];
+  /** After which section a question is asked: its unit's, or the last for the summary. */
+  questionSection: (q: Question) => number;
   unit: (id: UnitId) => PortionUnit | undefined;
+  /** The sentence a unit belongs to. */
+  sentenceOf: (id: UnitId) => PortionSentence | undefined;
   /** The portion's units within a range, in order. */
   unitsOf: (range: Range) => PortionUnit[];
   /** Items still waiting for approval (the טיוטה badge, SPEC §8.4). */
   unreviewed: number;
 };
+
+/** What separates a unit from the next one in its paragraph: a space, or nothing (after "—"). */
+export const spaceAfter = (u: Unit) => (/\s$/.test(u.text) ? ' ' : '');
+
+/** A sentence's text, exactly as in the resource. */
+export const sentenceText = (s: PortionSentence) =>
+  s.units
+    .map((u) => u.text)
+    .join('')
+    .trim();
+
+/** A sentence's translation, without its footnote marks; empty without one. */
+export const sentenceTranslation = (s: PortionSentence) =>
+  s.english
+    .map((span) => span.text)
+    .join('')
+    .replace(FOOTNOTE_MARK, '')
+    .trim();
 
 /** The key of a unit's paragraph, unique across chapters. */
 export const paragraphKey = (u: Unit) => `${chapterKey(u)}.${u.paragraph}`;
@@ -80,7 +132,6 @@ export function assemblePortion(data: PortionData): AssembledPortion {
       return {
         ...u,
         display: u.text.trim(),
-        biur: c?.biur?.[data.language]?.short,
         glossary: (c?.glossary ?? []).flatMap((m) => {
           const entry = glossaryById.get(m.entryId);
           return entry ? [{ entry, match: m.match }] : [];
@@ -89,22 +140,74 @@ export function assemblePortion(data: PortionData): AssembledPortion {
     });
 
   const paragraphs: PortionParagraph[] = [];
+  const sentences: PortionSentence[] = [];
+  const placed = new Set<TranslationSpan>();
   for (const u of portionUnits) {
     const key = paragraphKey(u);
     let p = paragraphs[paragraphs.length - 1];
     if (p?.key !== key) {
-      p = { key, paragraph: u.paragraph, units: [], translation: translationOf.get(u.id) };
+      p = { key, paragraph: u.paragraph, units: [], sentences: [] };
       paragraphs.push(p);
     }
     p.units.push(u);
+    const id = sentenceOf(u);
+    let s = p.sentences[p.sentences.length - 1];
+    if (s?.id !== id) {
+      const biur = contentById.get(id)?.biur;
+      s = {
+        id,
+        units: [],
+        biur: biur?.[data.language]?.short,
+        translationBiur: data.translationLanguage
+          ? biur?.[data.translationLanguage]?.short
+          : undefined,
+        english: [],
+      };
+      p.sentences.push(s);
+      sentences.push(s);
+    }
+    s.units.push(u);
+    // A span is shown once, with the sentence it starts in.
+    const span = translationOf.get(u.id);
+    if (span && !placed.has(span)) {
+      placed.add(span);
+      s.english.push(span);
+    }
   }
 
+  const sections = portion.sections.map((range): PortionSection => {
+    const units = unitsIn(portionUnits, range);
+    const inSection = new Set(units.map((u) => u.id));
+    const parts = paragraphs
+      .map((x) => ({
+        ...x,
+        units: x.units.filter((u) => inSection.has(u.id)),
+        sentences: x.sentences.filter((s) => inSection.has(s.id)),
+      }))
+      .filter((x) => x.units.length > 0);
+    const inParts = parts.flatMap((x) => x.sentences);
+    return {
+      id: units[0]!.id,
+      units,
+      paragraphs: parts,
+      sentences: inParts,
+      english: inParts.flatMap((x) => x.english),
+    };
+  });
+
+  const sectionIndex = new Map(sections.flatMap((s, i) => s.units.map((u) => [u.id, i] as const)));
+
   const byId = new Map(portionUnits.map((u) => [u.id, u]));
+  const sentenceById = new Map(sentences.flatMap((s) => s.units.map((u) => [u.id, s] as const)));
   return {
     portion,
     units: portionUnits,
+    sentences,
     paragraphs,
+    sections,
+    questionSection: (q) => (q.summary ? sections.length - 1 : sectionIndex.get(q.unitRef)!),
     unit: (id) => byId.get(id),
+    sentenceOf: (id) => sentenceById.get(id),
     unitsOf: (range) => unitsIn(portionUnits, range),
     unreviewed: unreviewedOf(reviewableItems(data)).length,
   };

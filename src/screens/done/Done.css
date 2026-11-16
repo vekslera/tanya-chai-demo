@@ -21,7 +21,7 @@
 .done-heart-line {
   max-width: 280px;
   font-size: 14px;
-  color: var(--navy-muted);
+  color: var(--text-muted);
 }
 
 .done-streak {
@@ -48,7 +48,7 @@
   display: inline-block;
   font-size: 52px;
   font-weight: 900;
-  color: var(--navy);
+  color: var(--text);
 }
 
 .done-streak-number.pulse {
@@ -64,7 +64,7 @@
 .done-streak-rule {
   margin-block-start: 6px;
   font-size: 13px;
-  color: var(--navy-muted);
+  color: var(--text-muted);
 }
 
 @keyframes streak-pulse {
@@ -89,7 +89,7 @@
 
 .done-points-detail {
   font-size: 14px;
-  color: var(--navy-muted);
+  color: var(--text-muted);
 }
 
 .done-community {
@@ -106,7 +106,7 @@
   border-radius: 999px;
   border: 1px solid var(--tint);
   font-size: 12px;
-  color: var(--navy-muted);
+  color: var(--text-muted);
 }
 
 .done-actions {

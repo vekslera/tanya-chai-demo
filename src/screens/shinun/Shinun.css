@@ -1,7 +1,7 @@
 .shinun-round {
   margin-block-start: 12px;
   font-size: 14px;
-  color: var(--navy-muted);
+  color: var(--text-muted);
 }
 
 .shinun-instruction {
@@ -31,7 +31,7 @@
   border: 0;
   border-radius: 999px;
   background: var(--tint);
-  color: var(--navy);
+  color: var(--text);
   font: inherit;
   line-height: 1.6;
   cursor: pointer;

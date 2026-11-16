@@ -5,7 +5,7 @@ import { parseResource } from './resource.ts';
 import { resolveMatch, sameLetters, skipLetters } from './matches.ts';
 import { overlaps, runs, toWords } from './overlap.ts';
 import { translationSpans } from './translations.ts';
-import { buildUnits, checkUnits, lettersOnly, paragraphs } from './units.ts';
+import { buildUnits, checkUnits, lettersOnly, paragraphs, type Split } from './units.ts';
 
 describe('lettersOnly', () => {
   it('drops nikud, punctuation and gershayim', () => {
@@ -27,7 +27,7 @@ describe('paragraphs', () => {
 
 describe('buildUnits', () => {
   const raw = '  שָׁלוֹם, עוֹלָם – גָּדוֹל. [וְעוֹד] דָּבָר־אַחֵר \r\nשׁוּרָה שְׁנִיָּה\r\n';
-  const splits = [
+  const splits: Split[] = [
     { id: 'LA.1.001', startsWith: 'שלום עולם' },
     { id: 'LA.1.002', startsWith: 'ועוד דבר' },
     { id: 'LA.1.003', startsWith: 'שורה' },
@@ -48,6 +48,16 @@ describe('buildUnits', () => {
       [2, 1003],
     ]);
     expect(checkUnits({ units, lines, splits })).toEqual([]);
+  });
+
+  it('joins a unit to the previous one’s sentence, within a paragraph only', () => {
+    const joined = build([
+      splits[0]!,
+      { ...splits[1]!, continues: true },
+      { ...splits[2]!, continues: true },
+    ]);
+    expect(joined.units.map((u) => u.sentence)).toEqual([undefined, 'LA.1.001', undefined]);
+    expect(joined.errors).toEqual(['LA.1.003: continues a sentence, but starts a paragraph']);
   });
 
   it('treats a maqaf as a space', () => {
@@ -149,25 +159,37 @@ describe('translationSpans', () => {
     chapter: 1,
   }).units;
 
-  it('makes one span per paragraph, with the footnotes it marks', () => {
-    const english = parseResource('One[1], two[9].\nThree.\n\n[1] Note.\n');
-    expect(translationSpans(units, 2, english)).toEqual({
+  /** An English text layer with three units, as loadText builds it. */
+  const english = (raw: string, ids = ['LA.1.001', 'LA.1.002', 'LA.1.003']) => {
+    const starts = ['One', 'two', 'Three'];
+    const splits = ids.map((id, i) => ({ id, startsWith: starts[i]! }));
+    const { paragraphs, footnotes } = parseResource(raw);
+    const text = paragraphs.join('\n');
+    const built = buildUnits({ raw: text, splits, part: 'LA', chapter: 1, language: 'en' });
+    return { ...built, splits, footnotes };
+  };
+
+  it('makes one span per unit, with the footnotes it marks', () => {
+    const raw = 'One[1], two[9].\nThree.\n\n[1] Note.\n';
+    expect(translationSpans(units, english(raw))).toEqual({
       spans: [
         {
           from: 'LA.1.001',
-          to: 'LA.1.002',
-          text: 'One[1], two[9].',
+          to: 'LA.1.001',
+          text: 'One[1], ',
           sourceId: 'en-resource',
           footnotes: { 1: 'Note.' },
         },
+        { from: 'LA.1.002', to: 'LA.1.002', text: 'two[9].', sourceId: 'en-resource' },
         { from: 'LA.1.003', to: 'LA.1.003', text: 'Three.', sourceId: 'en-resource' },
       ],
     });
   });
 
-  it('refuses a different number of paragraphs', () => {
-    expect(translationSpans(units, 3, parseResource('One.\n'))).toEqual({
-      error: 'the English has 1 paragraphs, the Hebrew 3. Ask Alex how to align them.',
+  it('refuses English units that differ from the Hebrew', () => {
+    const other = english('One two.\nThree.\n', ['LA.1.001', 'LA.1.002', 'LA.1.009']);
+    expect(translationSpans(units, other)).toEqual({
+      error: 'the English units do not have the same IDs as the Hebrew units',
     });
   });
 });

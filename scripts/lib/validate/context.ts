@@ -1,12 +1,17 @@
 // What every check shares: the chapter's layers, the findings so far, and unit lookups.
 import type { Range, Reviewed, Unit } from '../../../src/domain/types.ts';
-import { unitsIn } from '../../../src/domain/units.ts';
+import { sentenceOf, unitsIn } from '../../../src/domain/units.ts';
 import type { ChapterLayers } from '../load.ts';
 
 export type Findings = { errors: string[]; warnings: string[] };
 
 export function createContext(all: ChapterLayers) {
   const byId = new Map(all.units.map((u) => [u.id, u]));
+  /** How many units each sentence has, by its first unit's ID. */
+  const sentenceSize = new Map<string, number>();
+  for (const u of all.units) {
+    sentenceSize.set(sentenceOf(u), (sentenceSize.get(sentenceOf(u)) ?? 0) + 1);
+  }
   const errors: string[] = [];
   const warnings: string[] = [];
 
@@ -30,6 +35,7 @@ export function createContext(all: ChapterLayers) {
   return {
     all,
     byId,
+    sentenceSize,
     errors,
     warnings,
     unitRef,

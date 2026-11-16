@@ -1,7 +1,8 @@
-// Checks of the questions: each one on its own, then the set of each level and of Avos uBanim.
+// Checks of the questions: each one on its own, then the set of each level and of Avos uBanim,
+// one question after each section but the last and a summary question (SPEC S4, S9).
 import { QUESTION_FIELDS } from '../../../src/domain/reviewable.ts';
 import type { Portion, Question } from '../../../src/domain/types.ts';
-import type { ContentRules } from '../config.ts';
+import { translationLanguage, type ContentRules } from '../config.ts';
 import { isReviewed, type Context } from './context.ts';
 
 function checkAnswer(
@@ -29,34 +30,82 @@ function checkAnswer(
     if (ctx.unitRef(where, q.answer) && !inPortion.has(q.answer)) {
       ctx.errors.push(`${where}: answer ${q.answer} is outside the portion`);
     }
+    const continued = ctx.byId.get(q.answer)?.sentence;
+    if (continued) {
+      ctx.errors.push(`${where}: answer ${q.answer} is part of a sentence; use ${continued}`);
+    }
   } else {
     ctx.errors.push(`${where}: unknown kind ${(q as { kind: string }).kind}`);
   }
 }
 
-/** Each level has exactly the configured number of questions of each category. */
-function checkLevels(ctx: Context, questions: Question[], rules: ContentRules) {
-  for (const [level, categories] of Object.entries(rules.levelQuestions)) {
-    const qs = questions.filter((q) => q.track === 'solo' && String(q.level) === level);
-    const expected = Object.values(categories).reduce((a, b) => a + b, 0);
-    const counts = Object.entries(categories).every(
-      ([cat, n]) => qs.filter((q) => q.category === cat).length === n,
-    );
-    if (qs.length !== expected || !counts) {
-      const wanted = Object.entries(categories)
-        .map(([cat, n]) => `${n} ${cat}`)
-        .join(' and ');
-      ctx.errors.push(`level ${level} needs exactly ${wanted} question(s)`);
+/**
+ * A question's texts in other languages: each a full set, with the same options; required in the
+ * translation's language on the tracks that are translated.
+ */
+function checkTranslations(ctx: Context, q: Question, where: string, rules: ContentRules) {
+  const translations = Object.entries(q.translations ?? {});
+  for (const [language, t] of translations) {
+    for (const key of QUESTION_FIELDS) {
+      if (!isReviewed(t[key])) {
+        ctx.errors.push(`${where}: ${key}.${language} is not a Reviewed<string>`);
+      }
+    }
+    const ids = (o?: { id: string }[]) => (o ?? []).map((x) => x.id).join();
+    if (ids(t.options) !== ids(q.options)) {
+      ctx.errors.push(`${where}: the ${language} options do not match the options`);
+    }
+  }
+  const required = rules.questions.translatedTracks.includes(q.track);
+  if (required && !q.translations?.[translationLanguage]) {
+    ctx.errors.push(`${where}: has no ${translationLanguage} translation`);
+  }
+}
+
+/**
+ * The questions of one level, or of Avos uBanim, follow the sections: `perSection` after each
+ * section but the last (by the section of their unit), then one summary question.
+ */
+function checkPlacement(
+  ctx: Context,
+  group: string,
+  questions: Question[],
+  sectionOf: (q: Question) => number | undefined,
+  sections: number,
+  rules: ContentRules,
+) {
+  const summaries = questions.filter((q) => q.summary).length;
+  if (summaries !== 1) ctx.errors.push(`${group}: ${summaries} summary questions (expected 1)`);
+  const placed = questions.filter((q) => !q.summary).map(sectionOf);
+  for (let i = 0; i < sections; i++) {
+    const n = placed.filter((s) => s === i).length;
+    const expected = i < sections - 1 ? rules.questions.perSection : 0;
+    if (n !== expected) {
+      ctx.errors.push(`${group}: ${n} questions after section ${i + 1} (expected ${expected})`);
     }
   }
 }
 
-function checkTogether(ctx: Context, questions: Question[], rules: ContentRules) {
-  const { count, category, kinds } = rules.togetherQuestions;
-  const together = questions.filter((q) => q.track === 'together');
-  if (together.length !== count) {
-    ctx.errors.push(`together track has ${together.length} questions (expected ${count})`);
+/** Each level's questions, and the son's, by category and kind; and where they are asked. */
+function checkGroups(ctx: Context, p: Portion, rules: ContentRules) {
+  // A section with an unknown end is reported by checkSections; here it holds no unit.
+  const known = (s: { from: string; to: string }) => ctx.byId.has(s.from) && ctx.byId.has(s.to);
+  const sections = (p.sections ?? []).map(
+    (s) => new Set(known(s) ? ctx.unitsOf(s).map((u) => u.id) : []),
+  );
+  const sectionOf = (q: Question) => {
+    const i = sections.findIndex((s) => s.has(q.unitRef));
+    return i < 0 ? undefined : i;
+  };
+  for (const [level, categories] of Object.entries(rules.questions.levelCategories)) {
+    const qs = p.questions.filter((q) => q.track === 'solo' && String(q.level) === level);
+    for (const q of qs.filter((x) => !categories.includes(x.category))) {
+      ctx.errors.push(`question ${q.id}: level ${level} questions are ${categories.join(' or ')}`);
+    }
+    checkPlacement(ctx, `level ${level}`, qs, sectionOf, sections.length, rules);
   }
+  const { category, kinds } = rules.questions.together;
+  const together = p.questions.filter((q) => q.track === 'together');
   for (const q of together) {
     if (q.category !== category) {
       ctx.errors.push(`question ${q.id}: together questions are category "${category}"`);
@@ -65,6 +114,7 @@ function checkTogether(ctx: Context, questions: Question[], rules: ContentRules)
       ctx.errors.push(`question ${q.id}: together questions are ${kinds.join(' or ')}`);
     }
   }
+  checkPlacement(ctx, 'together', together, sectionOf, sections.length, rules);
 }
 
 export function checkQuestions(
@@ -85,7 +135,7 @@ export function checkQuestions(
       ctx.errors.push(`${where}: unitRef ${q.unitRef} is outside the portion`);
     }
     checkAnswer(ctx, q, where, inPortion, rules);
+    checkTranslations(ctx, q, where, rules);
   }
-  checkLevels(ctx, p.questions, rules);
-  checkTogether(ctx, p.questions, rules);
+  checkGroups(ctx, p, rules);
 }

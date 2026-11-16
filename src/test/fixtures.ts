@@ -16,7 +16,16 @@ export const units: Unit[] = [
     text: 'וְהַנֶּפֶשׁ שׁוֹרֶשׁ.',
   },
   { id: 'LA.1.003', seq: 1003, part: 'LA', chapter: 1, paragraph: 2, text: 'אַחִים מַמָּשׁ ' },
-  { id: 'LA.1.004', seq: 1004, part: 'LA', chapter: 1, paragraph: 2, text: 'אָב אֶחָד.' },
+  // Continues LA.1.003's sentence.
+  {
+    id: 'LA.1.004',
+    seq: 1004,
+    part: 'LA',
+    chapter: 1,
+    paragraph: 2,
+    text: 'אָב אֶחָד.',
+    sentence: 'LA.1.003',
+  },
 ];
 
 const q = (over: Partial<Question> & Pick<Question, 'id'>): Question => ({
@@ -32,6 +41,16 @@ const q = (over: Partial<Question> & Pick<Question, 'id'>): Question => ({
   ...over,
 });
 
+/** A question's English texts, named after its ID. */
+const english = (id: string, options?: { id: string; text: string }[]) => ({
+  en: {
+    prompt: reviewed(`prompt ${id} en`),
+    hint: reviewed(`hint ${id} en`),
+    explanation: reviewed(`explanation ${id} en`),
+    ...(options ? { options } : {}),
+  },
+});
+
 export const questions: Question[] = [
   q({
     id: 'q-choice',
@@ -41,9 +60,26 @@ export const questions: Question[] = [
       { id: 'c', text: 'תשובה שלישית' },
     ],
     fixedOrder: true,
+    translations: english('q-choice', [
+      { id: 'a', text: 'Right answer' },
+      { id: 'b', text: 'Second answer' },
+      { id: 'c', text: 'Third answer' },
+    ]),
   }),
-  q({ id: 'q-find', kind: 'findSentence', answer: 'LA.1.003', unitRef: 'LA.1.003' }),
-  q({ id: 'q-tf', kind: 'trueFalse', answer: 'false' }),
+  q({
+    id: 'q-find',
+    kind: 'findSentence',
+    answer: 'LA.1.003',
+    unitRef: 'LA.1.003',
+    translations: english('q-find'),
+  }),
+  q({
+    id: 'q-tf',
+    kind: 'trueFalse',
+    answer: 'false',
+    summary: true,
+    translations: english('q-tf'),
+  }),
   q({
     id: 'q-l2',
     level: 2,
@@ -53,6 +89,14 @@ export const questions: Question[] = [
       { id: 'b', text: 'לא ברמה 2' },
     ],
     fixedOrder: true,
+  }),
+  q({
+    id: 'q-l2-tf',
+    level: 2,
+    kind: 'trueFalse',
+    category: 'concept',
+    answer: 'true',
+    summary: true,
   }),
   q({
     id: 'q-child',
@@ -120,6 +164,10 @@ export function portionData(): PortionData {
       label: { he: 'שיעור לבדיקה', en: 'Test lesson' },
       location: { he: 'פרק א', en: 'chapter 1' },
       boundariesConfirmed: true,
+      sections: [
+        { from: 'LA.1.001', to: 'LA.1.002' },
+        { from: 'LA.1.003', to: 'LA.1.004' },
+      ],
       sources: [
         {
           id: 'he-resource',
@@ -133,16 +181,12 @@ export function portionData(): PortionData {
       together: [
         {
           id: 'card-1',
-          from: 'LA.1.001',
-          to: 'LA.1.002',
           forParent: reviewed('לאבא 1'),
           toChild: reviewed('לילד 1'),
           talk: reviewed('שיחה 1'),
         },
         {
           id: 'card-2',
-          from: 'LA.1.003',
-          to: 'LA.1.004',
           forParent: reviewed('לאבא 2'),
           toChild: reviewed('לילד 2'),
         },

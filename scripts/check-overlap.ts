@@ -29,6 +29,11 @@ export function run({ files, log }: ScriptEnv, length = contentRules.overlapRunW
     : [];
   for (const q of all.portion?.questions ?? []) {
     for (const o of q.options ?? []) drafts.push({ id: `${q.id}/option-${o.id}`, text: o.text });
+    for (const [language, t] of Object.entries(q.translations ?? {})) {
+      for (const o of t.options ?? []) {
+        drafts.push({ id: `${q.id}/option-${o.id}.${language}`, text: o.text });
+      }
+    }
   }
   const flagged = overlaps(drafts, reference, runs(toWords(all.lines.join('\n')), length), length);
   for (const f of flagged) log.info(`FLAG ${f.id}: ${f.hits.join(' | ')}`);

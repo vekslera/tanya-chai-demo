@@ -12,7 +12,7 @@ html {
 body {
   margin: 0;
   background: var(--bg);
-  color: var(--navy);
+  color: var(--text);
   font-family: var(--font-ui);
   font-size: var(--fs-ui);
   line-height: 1.5;
@@ -111,8 +111,8 @@ a {
 }
 
 .btn-primary {
-  background: var(--navy);
-  color: var(--white);
+  background: var(--primary);
+  color: var(--on-primary);
 }
 
 .btn-gold {
@@ -122,8 +122,8 @@ a {
 
 .btn-secondary {
   background: transparent;
-  border-color: var(--navy);
-  color: var(--navy);
+  border-color: var(--text);
+  color: var(--text);
 }
 
 .btn-block {
@@ -149,7 +149,7 @@ a {
 }
 
 .muted {
-  color: var(--navy-muted);
+  color: var(--text-muted);
 }
 
 .small {
@@ -189,12 +189,12 @@ a {
   border: 0;
   border-radius: 50%;
   background: transparent;
-  color: var(--navy);
+  color: var(--text);
   cursor: pointer;
 }
 
 .icon-btn:hover {
-  background: var(--navy-soft);
+  background: var(--hover-soft);
 }
 
 @media (prefers-reduced-motion: reduce) {

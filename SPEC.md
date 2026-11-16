@@ -1,6 +1,6 @@
 # Tanya Chai (תניא חי): Demo Specification
 
-**Version:** 1.3 (draft for build; demo portion ט׳ אדר, two levels, Avos uBanim cards by thought)
+**Version:** 1.4 (demo portion ט׳ אדר; two levels, chosen section by section; Hebrew and English; light and dark; Avos uBanim cards by thought; all content approved)
 **Owner:** Alex Veksler
 **Repository:** `vekslera/tanya-chai-demo` (public; code under Apache-2.0, content under its own terms, see §9)
 **Target URL:** `https://demo.tanyachai.app` (initially `https://vekslera.github.io/tanya-chai-demo/`)
@@ -15,7 +15,7 @@ The message of the whole project is **chayus in learning and understanding** of 
 
 The demo has to make four things felt within a few minutes:
 
-1. **Learning at your own level.** The same portion can be studied as the text alone or with a short ביאור, and the questions change with the level. Deeper study with classical commentaries belongs to the Maskil path and is only pointed to in the demo.
+1. **Learning at your own level.** The same portion can be studied as the text alone or with a short ביאור, chosen section by section while reading, and the questions change with the level. Deeper study with classical commentaries belongs to the Maskil path and is only pointed to in the demo.
 2. **Immediate, warm feedback.** Each answer points back to the sentence in the text it relies on.
 3. **A living sense of progress.** At the end come a streak, the gold heart contour of the logo advancing, and a counter of the learning completed together by the community.
 4. **Avos uBanim.** A father gets ready-made tools for learning the portion with his son: a ביאור for the father, suggested words for explaining each thought to a child, a question for the conversation, and simple questions the son answers. The demo does not rely on the father's own skill to explain Tanya.
@@ -68,12 +68,14 @@ The ביאור follows their meaning: how they understand each unit. It is writt
 ## 3. User flow
 
 ```
-Home ──► Choose level ──► Read ──► Questions ──► Completion
-  │                        ▲  │                     │
-  │                        └──┘ (back to text)      └──► (flag, off) Shinun taste
-  ├──► Avos uBanim ──► Son's questions ──► Completion (shared)
+Home ──► Read: section (ביאור on/off) ► question ► section ► … ► summary question ──► Completion
+  │                                                                                   │
+  │                                                                   (flag, off) Shinun taste
+  ├──► Avos uBanim: card ► son's question ► card ► … ► summary question ──► Completion (shared)
   └──► About & credits
 ```
+
+The questions are part of the learning, as in a story: each comes right after the section it asks about, and a summary question about the whole lesson comes after the last section.
 
 ### 3.1 Screens
 
@@ -81,49 +83,55 @@ Home ──► Choose level ──► Read ──► Questions ──► Complet
 
 - The animated logo symbol (`resources/brand/logo/logo-mark-animated.svg`, inlined as a React component), with the wordmark below it: תניא in navy, חי in deep gold, Frank Ruhl Libre 900. The name is always written without gershayim.
 - A card reading `שיעור לדוגמה: ט׳ אדר`, with the chapter label `ליקוטי אמרים, פרק ל״ב` and the estimated time (`כ־6 דקות`).
+- **The look:** a small button in the top corner (inline end) switches to the other look: a moon in the light look, a sun in the dark one (`מעבר לתצוגה כהה` / `מעבר לתצוגה בהירה`). Switching back to the device's own mode returns the choice to "auto". The full choice is in About (S7).
 - Status row: the streak, with a small heart-pulse icon and the text `רצף: 12 ימים` (no fire emoji). Points are not shown here.
-- Primary button: `התחל ללמוד`.
+- Primary button: `התחל ללמוד`, which opens the lesson (S3) directly: there is no choice to make before reading (S2).
 - Secondary button: `לימוד אבות ובנים` (S8).
 - Link: `אודות תניא חי`.
+- Below them, a quiet line, not a button: `ללימוד מעמיק עם מפרשים: מסלול משכיל, בקרוב`. The demo has no extended level: deeper study with classical commentaries belongs to Maskil.
 - The streak and points start from seeded demo values (streak 12, points 340) stored in `localStorage`. A reset option lives in About.
 
-#### S2: Choose level (`#/level`)
+#### S2: The ביאור, on or off in each section (on the reading screen, S3)
 
-There are two large, tappable cards, each with a one-line description:
+The learner does not choose a level before reading: a learner may not know beforehand how they prefer to learn, and may change their mind during the lesson. Each section has its own level, chosen by a switch at its head:
 
-| Level | Title | Description | Questions |
-| --- | --- | --- | --- |
-| 1 | `טקסט בלבד` | `קוראים את לשון התניא כפי שהיא` | 3 literal questions (what does the text say) |
-| 2 | `טקסט עם ביאור` | `ביאור קצר ופשוט אחרי כל משפט` | 2 understanding questions + 1 concept question |
+| Level | The switch | Questions |
+| --- | --- | --- |
+| 1 | off: the text only (`טקסט בלבד`) | literal questions (what does the text say) |
+| 2 | on: a short ביאור after each sentence (`טקסט עם ביאור`) | understanding and concept questions, at double points (S4) |
 
-Below them, a quiet line, not a button: `ללימוד מעמיק עם מפרשים: מסלול משכיל, בקרוב`. The demo has no extended level: deeper study with classical commentaries belongs to Maskil.
-
-The last choice is remembered. The default selection is level 2.
+- **Where:** a small row at the head of each section: the section's number (`קטע 4 מתוך 7`) and a `ביאור` switch (`role="switch"`). It is in the reading flow, so it is seen at every section, not only at the top of the screen.
+- **The current section** (the last one shown, whose question is waiting): its switch sets the level for this section and the next ones, and is remembered for the next lesson (`level` in the state; the default is level 2). Its question follows: when the switch is turned before the question is tried, the question becomes the other level's question for this section. Once the question has been tried, it stays as it is, and the new level applies from the next question, so a question never changes in the middle of an answer.
+- **Earlier sections** keep the level their question was actually asked at. Their switches still work, for going back and reading them with or without the ביאור, but they change only what that section shows, never the questions.
+- **At the start of every lesson:** under the first section's switch, one line: `אפשר להדליק ולכבות את הביאור בכל קטע. עם הביאור, הניקוד כפול.` It stays until the switch is used or the first question is done in that lesson; the demo is used many times, so it is not a first-time-only line.
+- Each level has questions on the same sections (S4), so either level's question can follow any section. The level names (`he.level.options`) title the questions in the review document (§8.4).
 
 #### S3: Read (`#/read`)
 
-- **Header:** a back arrow (pointing right, as in RTL), the portion label, and a thin reading-progress bar (sentences scrolled into view).
-- **Body:** the text, split into **sentences**, each a block with a little breathing room. Frank Ruhl Libre 400, 20–22px on phones, line-height 2.0, since the text carries nikud.
-- **Level 1:** text only.
-- **Level 2:** the short ביאור (1–2 lines) appears after each sentence. Rubik, smaller, muted navy, with a thin gold rule on the right edge.
+- **Header:** a back arrow (pointing right, as in RTL) to the home screen, the portion label, the `HE`/`EN` language switch, and a thin reading-progress bar (sentences scrolled into view).
+- **Body:** the text in **short sections** (`sections` in the portion file: 7 in the demo portion, the same parts as the Avos uBanim cards, S8), separated by a thin rule. Each section is split into **sentences** (§6.2), each a block with a little breathing room. Frank Ruhl Libre 400, 20–22px on phones, line-height 2.0, since the text carries nikud.
+- **The section's head:** its number and its ביאור switch (S2).
+- **ביאור off (level 1):** text only.
+- **ביאור on (level 2):** the short ביאור (1–2 lines) appears after each sentence. Rubik, smaller, muted navy, with a thin gold rule on the right edge.
 - **Glossary terms:** marked with a dotted gold underline. Tapping one opens a bottom sheet with the term, a 1–3 line ביאור, and (if present) a source line. At least these terms: `נבזה ונמאס`, `נפש` / `הנפש והרוח`, `באלקים חיים`, `אחים ממש`, `אב אחד`. Final list per §8.3.
-- **English toggle:** each paragraph has a small `EN` chip. Tapping it reveals the English translation of that paragraph below the Hebrew (LTR, `lang="en"`, serif, smaller). The toggle is per paragraph, not global. A global "show all English" action is in the overflow menu.
-- **Bottom bar:** a sticky primary button, `לשאלות` (enabled once the user has scrolled to the end, or after 20 seconds).
-- **Dedication:** when the portion has a `dedication`, a quiet line under the button (small, muted navy, centered). It appears on the reading screens of every learning path (S3 and the S8 cards), not on the finish screen. Its wording comes from `src/strings/he.ts` by kind: `הלימוד היומי מוקדש לעילוי נשמת …` (`leiluiNishmas`), `הלימוד היומי מוקדש לזכות …` (`lizchus`), or `השותף שלך בלימוד היומי: …` (`partner`).
+- **Language switch:** one `HE`/`EN` switch at the top of the screen, a choice for the whole lesson, kept in the state (`english`). In Hebrew mode (`HE`, the default) the screen is as above. In English mode (`EN`), each sentence's English translation comes right after its Hebrew, in exactly the same portions (LTR, `lang` set to `translationLanguage` in `app.config.json`, serif, smaller), so the English is never far from the text it translates. With the ביאור on, the ביאור that follows is the English ביאור (§8.3), **instead of** the Hebrew one; a sentence without an English ביאור keeps its Hebrew one. The switch is hidden when the portion has no English.
+- **Sections and questions:** the screen shows the sections read so far. After a section comes its question (S4), in a card under the text; once it is answered, `להמשך הלימוד` opens the next section, scrolled into view. After the last section comes the summary question, and then `לסיום השיעור` leads to the completion screen (S5). The progress bar shows the questions answered.
+- **Bottom bar:** sticky, with the dedication.
+- **Dedication:** when the portion has `dedications`, one of them, chosen at random for each lesson (by the lesson's seed, so it stays the same through the lesson), as a short line under the button, centered: small (15px, `--fs-dedication`) but clearly visible, in navy, medium weight, on a light gold band (`--gold-soft`). It appears on the reading screens of every learning path (S3 and the S8 cards), not on the finish screen. Its wording comes from `src/strings/he.ts` by kind: `הלימוד היומי מוקדש לעילוי נשמת …` (`leiluiNishmas`), `הלימוד היומי מוקדש לזכות …` (`lizchus`), or `השותף שלך בלימוד היומי: …` (`partner`: the sponsor of the learning, so the wording says "your partner" and is never read as another learner). The demo portion has four, and each lesson picks one of them at random: `לזכות אלכסנדר בן לייב`, `לעילוי נשמת לייב בן אליהו יצחק ז״ל`, `לעילוי נשמת גנריאטה בת יעקב יהודה ז״ל`, and the partner `תניא חי`.
 
-#### S4: Questions (`#/quiz`)
+#### S4: Questions (on the reading screen, S3)
 
-- One question per screen, with a progress dots header (●●○).
+- Each level has its own questions, on the same sections: one after each section but the last, and a summary question (`summary: true`) after the last (7 in the demo portion: 6 + 1). A question follows the section that holds its `unitRef`, at that section's level (S2). The card shows `שאלה 3 מתוך 7`, or `שאלת סיכום`, and on level 2 also `ניקוד כפול`.
 - **Question types:**
   - `choice`: 3–4 options. Options are shuffled per session, except options marked `fixedOrder`.
   - `trueFalse`: `נכון` / `לא נכון`.
-  - `findSentence`: "tap the sentence in the text that says …". The text is shown in compact form and the user taps a sentence.
+  - `findSentence`: "tap the sentence in the text that says …". Three consecutive sentences already read are shown in compact form, the right one among them, and the user taps a sentence. Where the right one falls among the three changes from session to session; the number of sentences is `quiz.findSentence.choices` in `app.config.json`.
 - **Feedback** appears immediately after answering:
   - **Correct:** the option turns gold, a short positive line appears (`יפה מאוד` / `בדיוק` and similar, rotating), plus the explanation, and the source sentence from the text is shown in a quote card with a gold highlight.
-  - **Wrong (first attempt):** a gentle shake (none under reduced motion) and a hint line. The relevant sentence is highlighted, and the user may try once more.
+  - **Wrong (first attempt):** a gentle shake (none under reduced motion) and a hint line, and the user may try once more. In a `choice` or `trueFalse` question, the sentence the question relies on is shown in a quote card. Nothing on screen marks the right answer: in a `findSentence` question no sentence or section is highlighted, and no option is set apart from the others (on a touch screen, an option keeps no hover border after a tap).
   - **Wrong (second attempt):** the correct answer is revealed, with its explanation and the highlighted sentence.
-- A `חזרה לטקסט` link opens the text in a bottom sheet scrolled to the relevant sentence, without losing the quiz state.
-- **Points:** 10 for a correct first attempt, 5 for a correct second attempt, 0 otherwise.
+- **Points:** 10 for a correct first attempt, 5 for a correct second attempt, 0 otherwise; a level-2 question earns double (`scoring.levelFactor` in `app.config.json`), to encourage learning in depth.
+- **Language:** the questions follow the lesson's language (S3). In English mode the whole question card is in English (LTR): the question's English texts (`translations.en`: prompt, options, hint and explanation), the card's own strings (`src/strings/en.ts`), and the cited sentences of the Tanya in the English translation, both in the quote card and as the `findSentence` choices. When a question or its explanation quotes the Tanya, it quotes the English translation word for word. Every Matmid question has its English (`contentRules.questions.translatedTracks`), and each language is approved on its own (`prompt.en`, `hint.en`, `explanation.en` in the review document). Avos uBanim is in Hebrew only for now.
 
 #### S5: Completion (`#/done`)
 
@@ -135,8 +143,8 @@ The last choice is remembered. The default selection is level 2.
 - A short line explaining the heart: `הקו המוזהב מקיף את הלב ככל שמתקדמים בלימוד`.
 - **Streak rule note** (small, under the streak): `הרצף נשמר בשבת ובחג, ואת השיעור משלימים במוצאי שבת`.
 - **Buttons:**
-  - `נסה רמה אחרת`, which goes back to S2 (points are not awarded twice for the same level).
   - `לימוד אבות ובנים`, which opens S8.
+  - `למסך הבית`. The lesson is simply completed, whatever the level of each section; learning it again awards its points again (§5.3).
   - `טעימה משינון` (only if the Shinun flag is on).
   - `אודות`.
 
@@ -156,29 +164,31 @@ Memorization is a secondary path, so this screen is built last and stays hidden 
 - **What is Tanya Chai:** 3–4 short lines.
 - **The paths, one line each:** מתמיד, לימוד אבות ובנים, משכיל, and שינון as a secondary path. Organizational or business models are not named.
 - **Sources and credits:** the Hebrew text from Sefaria; the English translation with the exact attribution line required by its license (from the API metadata, §8.1); the ביאור and questions written for Tanya Chai.
-- `התחל מחדש`: resets all local demo state.
-- A contact line placeholder: `[TO FILL BY ALEX]`.
+- **תצוגה:** the look, a choice of three: `לפי המכשיר` (the default, `defaultTheme` in `app.config.json`: the device's own light or dark mode), `בהירה` or `כהה`. It is kept in the state (`theme`), and starting over keeps it (§4.1).
+- `התחל מחדש`: resets all local demo state, except the chosen look.
+- **Contact:** Alex's email (a `mailto:` link) and the number for a direct message, from `he.about.contact`.
 - Version and build date (from the build).
 
 #### S8: Avos uBanim (`#/together`)
 
 A father learns the portion with his son on one device. The screen gives the father everything to say, so the session does not depend on the father's own skill in explaining Tanya.
 
+- **Language switch:** the `HE`/`EN` switch of S3 is shown dimmed in the header (intro, cards and questions); pressing it shows `בקרוב` for a moment (`motion.comingSoonMs`). Avos uBanim is in Hebrew only for now.
 - **Intro card:** the title `לימוד אבות ובנים`, and one line: `האב קורא, מסביר ושואל, והילד עונה. כל מה שצריך לומר כתוב כאן.` A button `מתחילים`.
-- **One thought per card:** 6–8 cards for the portion, each covering one or more consecutive units. Moving forward with `הבא` and back with `הקודם`. Each card shows:
+- **One thought per card:** 6–8 cards for the portion, one per section of the portion (S3): the card at each position covers the section at that position. Moving forward with `הבא` and back with `הקודם`. Each card shows:
   - the Tanya words of that thought, large;
   - `לאבא`: a short ביאור for the father (1–2 lines);
   - `לומר לילד`: ready-made words the father can read aloud as they are, in simple Hebrew (1–3 short sentences), in a warm gold-tinted card;
   - `שאלה לשיחה`: on some cards only, an open question for the conversation. It is not scored.
 - The glossary terms work here too.
 - The day's dedication (S3) appears under the `הקודם` / `הבא` buttons of each card.
-- **After the last card:** `עכשיו תורו של הילד`, and then S9.
+- **After each card:** its son's question (S9), when the father taps `הבא`. After the last card comes the son's summary question, and then the shared completion (S5).
 - Large text and large buttons: the phone is passed between father and son, often in a noisy place, such as a full beis midrash. Nothing depends on sound.
 - No names or other personal details are entered.
 
-#### S9: The son's questions (`#/together/quiz`)
+#### S9: The son's questions (in S8)
 
-- 3 simple questions with 2–3 answer options each, large buttons, one question per screen.
+- One simple question after each card but the last, and a summary question after the last (7 in the demo portion), with 2–3 answer options each and large buttons. The screen is headed `עכשיו תורו של הילד` (`שאלת סיכום לילד` for the summary), with a link back to the card; after the answer, `למחשבה הבאה`.
 - Gentle feedback: a correct answer turns gold with a short warm line. After a wrong answer there is no red: the line `ננסה שוב?` appears, with the sentence from the text and the words the father said about it. The son may try again.
 - The son sees points (`+10`); children may see points and ranks, unlike the adult screens.
 - **Completion (shared):** the same completion screen (S5), worded for both: `סיימתם את השיעור יחד!`, a family streak (`רצף משפחתי`), the heart advancing, and the community counter.
@@ -202,7 +212,7 @@ A father learns the portion with his son on one device. The screen gives the fat
 
 | Token | Value | Use |
 | --- | --- | --- |
-| `--navy` | `#1E2A5A` | Text, headings, תניא |
+| `--navy` | `#1E2A5A` | The brand's navy: text, headings and תניא in the light look (`--text`, below), text on gold in both |
 | `--gold` | `#E8A317` | Accents, the right chamber, contour, primary buttons |
 | `--gold-deep` | `#B47A00` | Gold text on light backgrounds, חי |
 | `--tint` | `#C9CEDB` | Left chamber, hidden-word pills, subtle fills |
@@ -215,12 +225,30 @@ A father learns the portion with his son on one device. The screen gives the fat
 
 The contrast of `--gold` on `--bg` is too low for body text, so use `--gold-deep` for gold text. Primary buttons are `--navy` background with white text, or `--gold` background with `--navy` text.
 
+**Light and dark.** The app has a light look (the beige background above) and a dark one (the navy background of the brand's dark logo, `logo-mark-dark.svg`). It follows the device's own mode unless the learner chooses one in About (S7). The tokens are defined by role, each once, with its light and dark values together through CSS `light-dark()`; `color-scheme` on the root follows the device, or the choice (`data-theme="light"` or `"dark"`, set from the state):
+
+| Role token | Light | Dark | Use |
+| --- | --- | --- | --- |
+| `--bg` | `#FBFAF6` | `#1E2A5A` | Page background |
+| `--bg-alt` | `#F3F0E7` | `#27346B` | Cards, bottom sheets |
+| `--surface` | `#FFFFFF` | `#2D3A75` | Options, quote cards, sentences to tap |
+| `--text` | `#1E2A5A` | `#F3F0E7` | Text, headings, תניא |
+| `--text-muted` | `#4A5478` | `#B9C0D6` | The ביאור, secondary text |
+| `--gold-deep` | `#B47A00` | `#F0B437` | Gold text, חי |
+| `--tint` | `#C9CEDB` | `#56628F` | Borders, pills, subtle fills |
+| `--track` | `#EEECE6` | `#3A4673` | The contour's track (the brand's dark track), dividers |
+| `--primary` / `--on-primary` | `#1E2A5A` / white | `#FBFAF6` / `#1E2A5A` | The main button, the chosen option of a switch |
+| `--gold-soft` | gold at 14% | `#4F3C16` | The dedication band, tips, badges, highlights (a translucent gold turns grey on navy) |
+| `--error` | `#B4463C` | `#EF8378` | |
+
+The brand's own colors stay the same in both (`--navy`, `--gold`, `--chamber` for the left chamber, `--purify`): a correct option is gold with navy text in both looks. The printed ביאור משולב is on paper, so the print takes the light values.
+
 ### 4.2 Typography
 
 - **Frank Ruhl Libre:** Tanya text, headings, the wordmark. Weights 400, 700 and 900.
 - **Rubik:** UI, ביאור, buttons. Weights 400, 500 and 700.
 - Self-host both via `@fontsource/frank-ruhl-libre` and `@fontsource/rubik`, importing only the Hebrew and Latin subsets and only the weights listed.
-- **Scale (phones):** Tanya text 21px; ביאור 16px; UI 15–16px; screen titles 24px; completion headline 28px.
+- **Scale (phones):** Tanya text 21px; ביאור 16px; UI 15–16px; the dedication 15px; screen titles 24px; completion headline 28px.
 
 ### 4.3 Logo
 
@@ -317,24 +345,32 @@ The build at the site's root uses the key as it is; the `dev` build under `/dev/
 
 ```ts
 type DemoState = {
-  level: number;                  // one of the levels in app.config.json
+  level: number;                  // the level of the current section and the next ones (S2), one of the levels in app.config.json
   streak: number;                 // seeded from demo.initialProgress
   points: number;                 // seeded from demo.initialProgress
   heartProgress: number;          // seeded from demo.initialProgress, 0..scoring.heartMax
-  completedLevels: number[];      // prevents double awarding
-  completedTogether: boolean;     // Avos uBanim done once (awards like a level)
+  completedSolo: boolean;         // the Matmid lesson done in this session, at any level: the streak counts once
+  completedTogether: boolean;     // Avos uBanim done in this session
   familyStreak: number;           // seeded from demo.initialProgress; shown only in the Avos uBanim completion
   togetherIndex: number;          // current card in S8
-  quiz: { track: "solo" | "together"; questionIds: string[]; index: number; attempts: Record<string, number>; earned: number } | null;
-  englishOpen: Record<string, boolean>; // per translation span (by its first unit ID)
+  quiz: {
+    track: "solo" | "together";
+    questionIds: string[];        // the questions asked so far, then those of the current level
+    index: number;
+    attempts: Record<string, number>;
+    earned: number;
+    biur?: Record<string, boolean>; // by section ID: the ביאור shown or hidden there by its switch (S2)
+  } | null;
+  english: boolean;               // the lesson is read with its English (S3)
+  theme: "auto" | "light" | "dark"; // the look (S7, §4.1); "auto" follows the device
   seenShinun: boolean;
-  lastCompletion: Completion | null; // what the completion screen shows and animates
+  lastCompletion: Completion | null; // what the completion screen shows and animates; not saved, so opening the demo again never starts on the completion screen
 };
 ```
 
 **Rules:**
 
-- Completing a level, or Avos uBanim, for the first time awards the points and the completion bonus, increments the streak once per session (not per level), and advances `heartProgress` by `scoring.heartStep`, capped at `scoring.heartMax`. Completing Avos uBanim also increments `familyStreak`. The demo's values: 10 and 5 points for a correct answer on the first and second attempt, a bonus of 20, and a step of 3 up to 100.
+- The demo is built to be used many times: every completion of the Matmid lesson, or of Avos uBanim, awards the points and the completion bonus, and advances `heartProgress` by `scoring.heartStep`, capped at `scoring.heartMax`. The streak increments once per session (not per path or per completion). Completing Avos uBanim also increments `familyStreak`. The demo's values: 10 and 5 points for a correct answer on the first and second attempt, doubled on level 2 (`scoring.levelFactor`), a bonus of 20, and a step of 3 up to 100.
 - The streak is a demo value. The Shabbos rule is displayed but not computed.
 
 ### 5.4 Architecture and code rules
@@ -378,9 +414,12 @@ All files are JSON, validated against the TypeScript types below (`src/domain/ty
 type Split = {
   id: UnitId;            // "LA.32.004"
   startsWith: string;    // "כי מאחר שגופו נמאס" — the raw file's words, unvocalized
+  continues?: true;      // this unit carries on the previous unit's sentence
 };
 // data/splits/he/LA/32.json: Split[] in reading order
 ```
+
+**Sentences.** The units follow the division of the Hebrew Shiurim (Lessons in Tanya), which sometimes cuts one sentence of the Tanya into two units: `בשגם שכולן מתאימות` / `ואב אחד לכולנה`. The unit IDs stay as they are; a sentence is annotated on top of them, by `continues: true` on each unit after the sentence's first. A sentence stays within its paragraph. The app shows the text sentence by sentence: one ביאור per sentence, after the whole sentence, and the sentence questions offer whole sentences. A sentence's ביאור is kept on its first unit, and its ID is its first unit's ID. The sentences are the Hebrew's: the other languages share the unit IDs and are joined the same way. In chapter 32, units 001–019 form 11 sentences: 001–002, 003, 004–005, 006–007, 008, 009–010, 011–012, 013, 014–015, 016–017, 018–019.
 
 **Other languages.** The same units are anchored in each other language's text, so that language can be read unit by unit too. `data/splits/en/LA/32.json` gives, for each Hebrew unit ID, in the same order, the words its English starts with. The validator checks that the IDs match the Hebrew. Matching works the same way, on letters only: in English, case, punctuation, quotes and footnote numbers are ignored, and an em dash counts as a space, as the maqaf does in Hebrew. The languages are the keys of `paths.splits` in `texts.config.json`; the app's own language is `language` in `app.config.json`.
 
@@ -394,6 +433,7 @@ type Unit = {
   chapter: number;
   paragraph: number;     // 1-based line of the raw file
   text: string;          // exact text from the anchor up to the next anchor or the end of the line
+  sentence?: UnitId;     // on a unit that continues a sentence: the sentence's first unit
 };
 ```
 
@@ -421,15 +461,16 @@ The file already holds chapter 32 for both year types, as given by Alex: in a re
 
 ```ts
 type TranslationSpan = {
-  from: UnitId; to: UnitId;              // the Hebrew units this English covers, usually one paragraph
-  text: string;                          // verbatim from the English source
+  from: UnitId; to: UnitId;              // the Hebrew unit this English covers (from = to)
+  text: string;                          // verbatim from the English source: the unit's English
+  footnotes?: Record<string, string>;    // the footnotes its text marks, "[n]"
   sourceId: "en-resource" | "sefaria-en";
   sourceSegments?: number[];             // Sefaria English segment numbers used (§8.1)
 };
 // data/translations/en/LA/32.json: TranslationSpan[] in order
 ```
 
-The per-paragraph `EN` toggle (S3) opens one span.
+`npm run build-translations` makes one span per unit, from the English units (`data/splits/en/`, §6.2), with the footnotes each marks. In English mode (S3), each span is shown under the sentence it starts in, so each sentence gets the English of its own units.
 
 ### 6.5 Learning content (keyed by unit ID)
 
@@ -444,9 +485,8 @@ type UnitContent = {
 type GlossaryEntry = { id: string; term: string; body: Reviewed<string> };
 // content/glossary.json: GlossaryEntry[]
 
-type TogetherCard = {                  // Avos uBanim (S8): one thought
+type TogetherCard = {                  // Avos uBanim (S8): one thought, on the section at its position
   id: string;
-  from: UnitId; to: UnitId;            // consecutive units covered by this card
   forParent: Reviewed<string>;         // short ביאור for the father
   toChild: Reviewed<string>;           // words the father reads aloud to his son
   talk?: Reviewed<string>;             // open question for the conversation, unscored
@@ -458,11 +498,13 @@ type Portion = {                       // content/portions/adar-09.json
   label: { he: "שיעור לדוגמה: ט׳ אדר"; en: "Sample lesson: 9 Adar" };
   location: { he: "ליקוטי אמרים, פרק ל״ב"; en: "Likkutei Amarim, chapter 32" };
   boundariesConfirmed: boolean;        // false until Alex confirms the daily division
+  sections: { from: UnitId; to: UnitId }[]; // the short sections, in order: they cover the portion
+                                       // exactly once, each starting a sentence (S3, S8)
   sources: Source[];                   // see §8.1
   questions: Question[];
-  together: TogetherCard[];            // 6–8 cards, in order
+  together: TogetherCard[];            // 6–8 cards, one per section, in order
   shinun?: { unitId: UnitId; rounds: number[][] }; // word indices hidden per round
-  dedication?: { kind: "leiluiNishmas" | "lizchus" | "partner"; name: string }; // S3, S8
+  dedications?: { kind: "leiluiNishmas" | "lizchus" | "partner"; name: string }[]; // S3, S8: one per lesson, at random
 };
 
 type Source = {
@@ -488,6 +530,13 @@ type Question = {
   hint: Reviewed<string>;
   explanation: Reviewed<string>;
   fixedOrder?: boolean;
+  summary?: true;                             // asked after the last section, about the whole lesson
+  translations?: Record<string, {             // by language, e.g. "en": the question in English mode (S4)
+    prompt: Reviewed<string>;
+    options?: { id: string; text: string }[]; // the same option IDs, in the same order
+    hint: Reviewed<string>;
+    explanation: Reviewed<string>;
+  }>;
 };
 
 type Reviewed<T> = { value: T; reviewed: boolean; note?: string };
@@ -503,8 +552,8 @@ type Reviewed<T> = { value: T; reviewed: boolean; note?: string };
 - Every `Range`, `TranslationSpan`, `unitRef`, unit-ID answer and `UnitContent.id` refers to existing units, with `from` not after `to`.
 - The translation spans of a chapter cover each of its units exactly once.
 - Every `glossary.match` occurs in its unit's text. Every `entryId` exists.
-- In the solo track, level 1 has 3 `literal` questions, and level 2 has 2 `understanding` questions and 1 `concept` question.
-- The Avos uBanim cards cover the portion's units exactly once, in order, with 6–8 cards. The together track has exactly 3 questions, all `category: "child"`, `kind` `choice` or `trueFalse`, with 2–3 options.
+- In each level of the solo track, and in the together track: `contentRules.questions.perSection` (1) questions after each section but the last, by the section of their `unitRef`, none after the last, and exactly one `summary` question. Level 1 questions are `literal`; level 2 questions are `understanding` or `concept` (`levelCategories`). Every question of the tracks in `translatedTracks` (the solo track) has its texts in `translationLanguage`, with all three fields and the same options.
+- The sections cover the portion's units exactly once, in order, each from a sentence's start. There are 6–8 Avos uBanim cards, one per section. The together track's questions are all `category: "child"`, `kind` `choice` or `trueFalse`, with 2–3 options.
 - Every solo `choice` question has exactly one correct option and 3–4 options in total.
 - The validator prints a **summary of unreviewed items**. It fails the build only when `CONTENT_STRICT=1` is set. The deploy validates `main` with `CONTENT_STRICT=1`, and `dev` without it (§10).
 
@@ -512,7 +561,7 @@ type Reviewed<T> = { value: T; reviewed: boolean; note?: string };
 
 ## 7. Behavior details
 
-- **Unit splitting:** split at the natural sentence and clause boundaries of the Tanya text (periods, `כי`, `ולכן`, `והנה`, etc.). Aim for 1–3 lines per unit on a phone. Splitting is defined by hand in the splits file (§6.2), never at runtime. A screen "sentence" is one unit.
+- **Unit splitting:** split at the natural sentence and clause boundaries of the Tanya text (periods, `כי`, `ולכן`, `והנה`, etc.). Aim for 1–3 lines per unit on a phone. Splitting is defined by hand in the splits file (§6.2), never at runtime. A screen "sentence" is one sentence of §6.2: one unit, or consecutive units joined by `continues`.
 - **Glossary underline:** rendered by splitting the unit's text at `match`. If a match appears twice, underline only the first occurrence.
 - **Shuffling:** seeded per session, so a reload does not reorder a question the user is looking at.
 - **Reading progress:** an IntersectionObserver per unit.
@@ -554,7 +603,7 @@ Claude Code prepares, for chapter 32:
 
 1. **Splits:** `data/splits/he/LA/32.json` already exists: 48 units for the whole chapter, prepared by Alex and Claude (§6.1, §7), and `data/splits/en/LA/32.json` anchors the same units in the English (§6.2). Do not change the existing IDs. The text itself is never changed.
 2. **Units:** `scripts/build-units.ts` generates `data/units/he/LA/32.json` and `data/units/en/LA/32.json`. It runs as the `predev`, `prebuild`, `pretest` and `precoverage` steps in `package.json`, so the units are always fresh.
-3. **Translations:** `data/translations/en/LA/32.json`, one span per paragraph, verbatim from the English source.
+3. **Translations:** `data/translations/en/LA/32.json`, one span per unit, verbatim from the English source.
 4. **Schedule:** `data/schedules/daily.json` already exists; do not change it. If a future portion boundary falls inside a unit, split that unit (§6.1).
 5. **Portion:** `content/portions/adar-09.json` with the date key, label, sources, questions and Avos uBanim cards.
 
@@ -567,7 +616,8 @@ These are drafted by Claude (in the claude.ai conversation or in Claude Code) an
 - Stay strictly within the plain meaning of the text, as it is learned in Chabad. No novel interpretations, no stories, no attributions to the Rebbe or other sources unless Alex supplies them.
 - The ביאור follows the meaning of the approved commentaries (§2), so it carries the inner, Chassidic point of each unit and not only its literal sense. It is written in our own words with our own examples. **Never** quote a commentary or rewrite its sentences one by one.
 - **Overlap check:** before review, a script compares every draft item with the local Shiurim file and flags any run of 5 or more words in common (letters only, nikud ignored). Flagged items are rewritten. The check runs only where the file exists, that is on Alex's machine, never in CI. The English ביאור is checked the same way against the English commentaries it follows.
-- **Short ביאור:** written in each language (Hebrew and English), at most 25 words per unit in Hebrew and 35 in English (`contentRules.biurMaxWords`). Each language explains its own text of the unit, with the same meaning, and is written from the commentaries in that language: the English ביאור follows Lessons in Tanya and Steinsaltz in English, and is not a translation of the Hebrew ביאור. (The English ביאור of `LA.32.001`–`LA.32.019` was carried over from the Hebrew; it is to be rewritten this way.) It explains words and the flow, so simply that a child of about 10, or someone opening Tanya for the first time, understands it. No unexplained terms. The third paragraph (`LA.32.011`–`LA.32.019`) is the hardest at this level and needs the most care. There is no extended ביאור in the demo.
+- **Sections, not paragraphs:** the learner sees the text one section at a time (S3), never as numbered paragraphs. Questions, hints, explanations and cards point to the text by its words, or as the section just read (`הקטע שקראתם עכשיו`), never by a paragraph number. The review document numbers the sections the same way (§8.4).
+- **Short ביאור:** written in each language (Hebrew and English), at most 25 words per unit in Hebrew and 35 in English (`contentRules.biurMaxWords`); a sentence of several units may have that many words for each of its units. Each language explains its own text of the sentence, with the same meaning, and is written from the commentaries in that language: the English ביאור follows Lessons in Tanya and Steinsaltz in English, and is not a translation of the Hebrew ביאור. (The English ביאור of `LA.32.001`–`LA.32.019` was carried over from the Hebrew; it is to be rewritten this way.) It explains words and the flow, so simply that a child of about 10, or someone opening Tanya for the first time, understands it. No unexplained terms. Sections 5–7 (`LA.32.011`–`LA.32.019`) are the hardest at this level and need the most care. There is no extended ביאור in the demo.
 - **Questions** test the text, not trivia.
   - **Literal:** what does the text say.
   - **Understanding:** why does it say so.
@@ -577,12 +627,12 @@ These are drafted by Claude (in the claude.ai conversation or in Claude Code) an
   - **For the father (`forParent`):** at most 30 words per card; what the thought says and why, so the father understands before explaining.
   - **To the child (`toChild`):** 1–3 short sentences, at most 35 words, that the father can read aloud as they are. Simple words and examples from a child's world (family, friends, class), always faithful to the text. No invented stories attributed to anyone.
   - **Conversation (`talk`):** on 2–3 cards only; an open question about the child's own life, with no right answer.
-  - **The son's questions:** 3 questions with 2–3 options, about the main idea, never about wording.
+  - **The son's questions:** one after each card but the last, and a summary question, with 2–3 options, about the main idea, never about wording.
 - **Hebrew register:** modern Hebrew that is clear and respectful, using Chabad terms.
 
 ### 8.4 Review and sign-off
 
-1. Claude Code generates `content/REVIEW.md` from the JSON: every reviewable item in reading order, with its id. Alex can read it in one pass.
+1. Claude Code generates `content/REVIEW.md` from the JSON: every reviewable item in reading order, with its id. Alex can read it in one pass. It follows the app's sections (S3): the text and its ביאור section by section (`Section 5 (LA.32.011–013)`), with no paragraph numbers, since the learner sees sections, not paragraphs, then each question with the section it follows and that section's text, then the Avos uBanim cards, one per section.
 2. Alex marks corrections, either in REVIEW.md or directly in the JSON. Claude Code applies them and flips `reviewed: true` only for items Alex approved.
 3. Before showing the demo publicly, all items must be `reviewed: true`. Alex's review is the first pass; an item becomes `reviewed: true` only after a rav or a recognized educator has also approved it (moderation). The deploy workflow validates `main` with `CONTENT_STRICT=1`.
 4. While items are unreviewed, a small `טיוטה` badge appears in the About screen. This is development mode only, never in the strict build.
@@ -646,7 +696,7 @@ Each milestone is a small, reviewable step. Work on a branch per milestone, and 
 | M0 | **Scaffold and pipeline:** Vite + React + TS, ESLint/Prettier, tokens, self-hosted fonts, `HeartMark` component, a placeholder Home screen, the deploy workflow | The placeholder page is live on the project URL, RTL is correct, and the heart renders at 62% |
 | M1 | **Text layer:** splits for chapter 32, `build-units`, the English (from `resources/` or fetched with `fetch-sefaria`, license reported) as translation spans, the schedule entry, the portion file, the loader and the validator | The validator passes the integrity rules of §6.5, and Alex has confirmed the portion boundaries |
 | M2 | **Content drafts:** short ביאור for the 19 units, glossary, 6 solo questions with hints and explanations, 6–8 Avos uBanim cards and 3 questions for the son, all `reviewed: false`; `REVIEW.md` generated | REVIEW.md is ready for Alex |
-| M3 | **Read screen:** levels, glossary sheet, per-paragraph English, reading progress | Works on a 360px phone and on desktop; no RTL glitches |
+| M3 | **Read screen:** levels (since: the ביאור switch per section, S2), glossary sheet, English (since: per sentence, with the `HE`/`EN` switch), reading progress | Works on a 360px phone and on desktop; no RTL glitches |
 | M4 | **Quiz:** three question types, feedback with sentence highlight, retry, points, back-to-text sheet | All 6 questions are playable, and state survives a reload |
 | M5 | **Completion:** streak, heart contour animation, purify effect, community counter, points line, level replay | Smooth on a mid-range Android; reduced motion respected |
 | M6 | **Avos uBanim** (S8, S9, shared completion) and the About & credits screen | A father can go through all cards and his son's questions on one phone; attribution lines are exact; reset works |
@@ -675,7 +725,7 @@ All of these are covered in the product blueprint, not here.
 
 1. Done: the portion boundaries for chapter 32 are in `data/schedules/daily.json`.
 2. Done: the source of the Hebrew text is recorded in `resources/texts/he/SOURCE.md`.
-3. Review all content in `content/REVIEW.md` (§8.4), including the Avos uBanim tools.
-4. Fill in the contact line on the About screen.
+3. Done: all content in `content/REVIEW.md` (§8.4) is reviewed and approved, including the Avos uBanim tools (2026-11-16). New or changed items start unreviewed again.
+4. Done: the contact details on the About screen.
 5. Register `tanyachai.app` and set the DNS record (§10.2).
 6. Review the UI strings in `src/strings/he.ts`.

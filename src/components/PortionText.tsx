@@ -1,66 +1,90 @@
-import type { PortionParagraph, PortionUnit } from '../domain/portion';
+import { sentenceText, sentenceTranslation, type PortionSentence } from '../domain/portion';
 import type { AnswerState } from '../domain/quiz';
 import './PortionText.css';
 
+/**
+ * A sentence's text: its translation in `language` when asked for and it has one, with the
+ * language's attributes; else the text itself.
+ */
+function textOf(s: PortionSentence, language?: string) {
+  const translated = language ? sentenceTranslation(s) : '';
+  return translated
+    ? { text: translated, attrs: { dir: 'ltr', lang: language } }
+    : { text: sentenceText(s), attrs: {} };
+}
+
 /** One sentence in a gold-highlighted quote card (SPEC §3.1, S4 feedback). */
-export function QuoteCard({ unit, label }: { unit: PortionUnit; label?: string }) {
+export function QuoteCard({
+  sentence,
+  label,
+  language,
+}: {
+  sentence: PortionSentence;
+  label?: string;
+  /** Quote the sentence's translation in this language. */
+  language?: string;
+}) {
+  const { text, attrs } = textOf(sentence, language);
   return (
     <figure className="quote-card">
       {label && <figcaption className="quote-card-label">{label}</figcaption>}
-      <blockquote className="quote-card-text">
-        <mark>{unit.display}</mark>
+      <blockquote className="quote-card-text" {...attrs}>
+        <mark>{text}</mark>
       </blockquote>
     </figure>
   );
 }
 
+/** A run of sentences shown together: the part of one section. */
+export type TextBlock = { key: string; sentences: PortionSentence[] };
+
 /**
- * The portion's text in compact form: used in the back-to-text sheet, and as the answer surface
- * of findSentence questions (each sentence is then a button).
+ * The portion's text in compact form, sentence by sentence, in blocks (one per section): the
+ * answer surface of findSentence questions, where each sentence is a button.
  */
 export function CompactText({
-  paragraphs,
+  blocks,
   highlight,
-  highlightParagraph,
   states = {},
   onSelect,
+  language,
 }: {
-  paragraphs: PortionParagraph[];
+  blocks: TextBlock[];
+  /** The ID of a sentence to mark. */
   highlight?: string;
-  /** The key of a paragraph to mark as a hint. */
-  highlightParagraph?: string;
   states?: Record<string, AnswerState>;
-  onSelect?: (unitId: string) => void;
+  onSelect?: (sentenceId: string) => void;
+  /** Show each sentence's translation in this language. */
+  language?: string;
 }) {
   return (
     <div className="compact-text">
-      {paragraphs.map((p) => (
-        <p
-          key={p.key}
-          className={`compact-paragraph${p.key === highlightParagraph ? ' compact-paragraph--hint' : ''}`}
-        >
-          {p.units.map((u) => {
+      {blocks.map((p) => (
+        <p key={p.key} className="compact-block">
+          {p.sentences.map((s) => {
             const cls = [
               'compact-sentence',
-              u.id === highlight ? 'compact-sentence--highlight' : '',
-              states[u.id] ? `compact-sentence--${states[u.id]}` : '',
+              s.id === highlight ? 'compact-sentence--highlight' : '',
+              states[s.id] ? `compact-sentence--${states[s.id]}` : '',
             ]
               .filter(Boolean)
               .join(' ');
+            const { text, attrs } = textOf(s, language);
             return onSelect ? (
               <button
-                key={u.id}
+                key={s.id}
                 type="button"
                 className={cls}
-                data-unit={u.id}
-                onClick={() => onSelect(u.id)}
-                aria-pressed={states[u.id] !== undefined}
+                data-unit={s.id}
+                onClick={() => onSelect(s.id)}
+                aria-pressed={states[s.id] !== undefined}
+                {...attrs}
               >
-                {u.display}
+                {text}
               </button>
             ) : (
-              <span key={u.id} className={cls} data-unit={u.id}>
-                {u.display}{' '}
+              <span key={s.id} className={cls} data-unit={s.id} {...attrs}>
+                {text}{' '}
               </span>
             );
           })}

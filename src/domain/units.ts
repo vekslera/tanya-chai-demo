@@ -25,6 +25,9 @@ export function chaptersOf(ranges: readonly Range[]): ChapterRef[] {
   return [...out.values()];
 }
 
+/** The ID of a unit's sentence: its first unit's (SPEC §6.2). */
+export const sentenceOf = (u: Unit): UnitId => u.sentence ?? u.id;
+
 /** The units from `range.from` to `range.to`, inclusive, in reading order. */
 export function unitsIn<U extends Unit>(units: readonly U[], range: Range): U[] {
   const seqOf = (id: UnitId) => units.find((u) => u.id === id)?.seq;
@@ -34,9 +37,4 @@ export function unitsIn<U extends Unit>(units: readonly U[], range: Range): U[] 
     throw new Error(`Unknown range ${range.from}–${range.to}`);
   }
   return units.filter((u) => u.seq >= lo && u.seq <= hi);
-}
-
-/** Whether a unit lies within a range of the given units. */
-export function isInRange(units: readonly Unit[], range: Range, id: UnitId): boolean {
-  return unitsIn(units, range).some((u) => u.id === id);
 }

@@ -1,7 +1,7 @@
 import { act, render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { currentRoute, navigate, redirectFrom, useRoute } from './router';
-import { quizRoute, ROUTES } from './routes';
+import { ROUTES, trackRoute } from './routes';
 
 beforeEach(() => window.history.replaceState(null, '', '#/'));
 
@@ -19,22 +19,22 @@ describe('router', () => {
     navigate(ROUTES.about);
     expect(window.location.hash).toBe('#/about');
     const length = window.history.length;
-    navigate(ROUTES.level, { replace: true });
-    expect(window.location.hash).toBe('#/level');
+    navigate(ROUTES.read, { replace: true });
+    expect(window.location.hash).toBe('#/read');
     expect(window.history.length).toBe(length);
   });
 
   it('redirects only while the screen is still current', () => {
     navigate(ROUTES.done, { replace: true });
-    redirectFrom(ROUTES.quiz, ROUTES.level);
+    redirectFrom(ROUTES.read, ROUTES.about);
     expect(currentRoute()).toBe(ROUTES.done);
     redirectFrom(ROUTES.done, ROUTES.home);
     expect(currentRoute()).toBe(ROUTES.home);
   });
 
-  it('names the quiz route of each track', () => {
-    expect(quizRoute('solo')).toBe(ROUTES.quiz);
-    expect(quizRoute('together')).toBe(ROUTES.togetherQuiz);
+  it('names the screen of each track', () => {
+    expect(trackRoute('solo')).toBe(ROUTES.read);
+    expect(trackRoute('together')).toBe(ROUTES.together);
   });
 });
 

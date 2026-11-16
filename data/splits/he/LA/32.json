@@ -5,7 +5,8 @@
   },
   {
     "id": "LA.32.002",
-    "startsWith": "רק שמחתו תהיה"
+    "startsWith": "רק שמחתו תהיה",
+    "continues": true
   },
   {
     "id": "LA.32.003",
@@ -17,7 +18,8 @@
   },
   {
     "id": "LA.32.005",
-    "startsWith": "והנפש והרוח מי יודע"
+    "startsWith": "והנפש והרוח מי יודע",
+    "continues": true
   },
   {
     "id": "LA.32.006",
@@ -25,7 +27,8 @@
   },
   {
     "id": "LA.32.007",
-    "startsWith": "ואב אחד לכולנה"
+    "startsWith": "ואב אחד לכולנה",
+    "continues": true
   },
   {
     "id": "LA.32.008",
@@ -37,7 +40,8 @@
   },
   {
     "id": "LA.32.010",
-    "startsWith": "אלא התלויה בדבר"
+    "startsWith": "אלא התלויה בדבר",
+    "continues": true
   },
   {
     "id": "LA.32.011",
@@ -45,7 +49,8 @@
   },
   {
     "id": "LA.32.012",
-    "startsWith": "ואידך פירושא הוא"
+    "startsWith": "ואידך פירושא הוא",
+    "continues": true
   },
   {
     "id": "LA.32.013",
@@ -57,7 +62,8 @@
   },
   {
     "id": "LA.32.015",
-    "startsWith": "במקור נשמות כל ישראל"
+    "startsWith": "במקור נשמות כל ישראל",
+    "continues": true
   },
   {
     "id": "LA.32.016",
@@ -65,7 +71,8 @@
   },
   {
     "id": "LA.32.017",
-    "startsWith": "ד״קודשא בריך הוא לא"
+    "startsWith": "ד״קודשא בריך הוא לא",
+    "continues": true
   },
   {
     "id": "LA.32.018",
@@ -73,7 +80,8 @@
   },
   {
     "id": "LA.32.019",
-    "startsWith": "וכמו שנתבאר במקום"
+    "startsWith": "וכמו שנתבאר במקום",
+    "continues": true
   },
   {
     "id": "LA.32.020",

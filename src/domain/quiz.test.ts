@@ -8,12 +8,55 @@ import {
   optionsOf,
   phaseOf,
   questionIdsFor,
+  questionIn,
+  sentenceChoices,
+  switchLevel,
   TRUE,
 } from './quiz';
 import type { Question } from './types';
 
 const byId = (id: string) => questions.find((q) => q.id === id)!;
-const rules = { solo: { maxAttempts: 2 }, together: { retryUntilCorrect: true } };
+const rules = {
+  solo: { maxAttempts: 2 },
+  findSentence: { choices: 3 },
+  together: { retryUntilCorrect: true },
+};
+
+describe('sentenceChoices', () => {
+  const ids = ['u1', 'u2', 'u3', 'u4', 'u5', 'u6'];
+  const at = (answer: string) => ({ ...byId('q-find'), answer });
+  const windows = (answer: string, count = 3, units = ids) =>
+    new Set(
+      Array.from({ length: 40 }, (_, s) => sentenceChoices(units, at(answer), count, s).join(' ')),
+    );
+
+  it('offers consecutive sentences around the answer, placing it anywhere among them', () => {
+    expect(windows('u4')).toEqual(new Set(['u2 u3 u4', 'u3 u4 u5', 'u4 u5 u6']));
+    expect(sentenceChoices(ids, at('u4'), 3, 7)).toEqual(sentenceChoices(ids, at('u4'), 3, 7));
+  });
+
+  it('stays within the portion at its edges, and offers all of a short one', () => {
+    expect(windows('u1')).toEqual(new Set(['u1 u2 u3']));
+    expect(windows('u6')).toEqual(new Set(['u4 u5 u6']));
+    expect(windows('u2', 3, ['u1', 'u2'])).toEqual(new Set(['u1 u2']));
+  });
+});
+
+describe('questionIn', () => {
+  it('gives a question in its translation’s language, or as written', () => {
+    const q = byId('q-choice');
+    const en = questionIn(q, 'en');
+    expect([en.prompt.value, en.hint.value, en.explanation.value]).toEqual([
+      'prompt q-choice en',
+      'hint q-choice en',
+      'explanation q-choice en',
+    ]);
+    expect(en.options![0]!.text).toBe('Right answer');
+    expect([en.id, en.answer]).toEqual([q.id, q.answer]);
+    expect(questionIn(q, 'fr')).toBe(q);
+    expect(questionIn(q)).toBe(q);
+  });
+});
 
 describe('optionsOf', () => {
   it('gives true and false, in that order, for a true/false question', () => {
@@ -39,10 +82,25 @@ describe('optionsOf', () => {
 });
 
 describe('questionIdsFor', () => {
-  it('selects by track, and by level on the solo track', () => {
-    expect(questionIdsFor(questions, 'solo', 1)).toEqual(['q-choice', 'q-find', 'q-tf']);
-    expect(questionIdsFor(questions, 'solo', 2)).toEqual(['q-l2']);
-    expect(questionIdsFor(questions, 'together')).toEqual(['q-child', 'q-child-tf']);
+  // The fixture's two sections: LA.1.001–002 and LA.1.003–004; the summary follows the last.
+  const sectionOf = (q: Question) => (q.summary || q.unitRef > 'LA.1.002' ? 1 : 0);
+
+  it('selects by track, and by level on the solo track, in the order they are asked', () => {
+    const reversed = [...questions].reverse();
+    expect(questionIdsFor(reversed, sectionOf, 'solo', 1)).toEqual(['q-choice', 'q-find', 'q-tf']);
+    expect(questionIdsFor(reversed, sectionOf, 'solo', 2)).toEqual(['q-l2', 'q-l2-tf']);
+    expect(questionIdsFor(questions, sectionOf, 'together')).toEqual(['q-child-tf', 'q-child']);
+  });
+});
+
+describe('switchLevel', () => {
+  const sectionOf = (q: Question) => (q.summary || q.unitRef > 'LA.1.002' ? 1 : 0);
+
+  it('keeps the questions asked, then follows the other level from the next section on', () => {
+    expect(switchLevel(questions, sectionOf, [], 2)).toEqual(['q-l2', 'q-l2-tf']);
+    expect(switchLevel(questions, sectionOf, ['q-choice'], 2)).toEqual(['q-choice', 'q-l2-tf']);
+    expect(switchLevel(questions, sectionOf, ['q-l2'], 1)).toEqual(['q-l2', 'q-find', 'q-tf']);
+    expect(switchLevel(questions, sectionOf, ['q-l2', 'q-l2-tf'], 1)).toEqual(['q-l2', 'q-l2-tf']);
   });
 });
 

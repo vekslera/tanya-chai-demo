@@ -32,13 +32,13 @@ GitHub Pages publishes one site with two builds (SPEC §10): `main`, the stable 
 
 ## Content pipeline
 
-Every file path, the chapter list and the Sefaria refs are named once, in [`texts.config.json`](texts.config.json). The app's parameters (scoring, attempts, timings, demo values, the validator's content rules) are named once, in [`app.config.json`](app.config.json).
+Every file path, the chapter list and the Sefaria refs are named once, in [`texts.config.json`](texts.config.json). The app's parameters (the levels and their score factor, scoring, attempts, timings, the default look, demo values, the validator's content rules) are named once, in [`app.config.json`](app.config.json).
 
 | Step | Command | Output |
 | --- | --- | --- |
 | Download the Hebrew and English from Sefaria (once; checks version and license) | `npm run fetch-sefaria` | `resources/texts/{he,en}/tanya/LA/32` and the raw `32.sefaria.json` |
 | Units from the raw text and the splits, in each language (runs before dev, build and test) | `npm run build-units` | `data/units/{he,en}/LA/32.json` (generated, not committed) |
-| English spans from the English resource | `npm run build-translations` | `data/translations/en/LA/32.json` |
+| English spans from the English resource, one per unit (from the English splits) | `npm run build-translations` | `data/translations/en/LA/32.json` |
 | Glossary matches written without nikud → exact vocalized text | `npm run resolve-matches` | `content/LA/32.json` |
 | Review document for Alex | `npm run review` | `content/REVIEW.md` |
 | Printable ביאור משולב, one per language: the Tanya text in bold with the ביאור woven in, as an editable Word file | `npm run print` | `out/biur-meshulav-{he,en}-LA-32.docx` (not committed) |

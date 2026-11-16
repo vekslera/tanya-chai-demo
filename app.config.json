@@ -1,6 +1,7 @@
 {
   "$comment": "The single place for the app's parameters. Each one is defined here once and read through src/config.ts (the app) or scripts/lib/config.ts (the scripts). Paths and text sources live in texts.config.json; colors, sizes and spacing live in src/styles/tokens.css.",
   "language": "he",
+  "translationLanguage": "en",
   "storage": {
     "key": "tanyachai.demo.v1"
   },
@@ -9,6 +10,7 @@
     { "id": 2, "showBiur": true }
   ],
   "defaultLevel": 2,
+  "defaultTheme": "auto",
   "demo": {
     "initialProgress": { "streak": 12, "points": 340, "heartProgress": 62, "familyStreak": 5 },
     "estimatedMinutes": 6,
@@ -17,21 +19,20 @@
   },
   "scoring": {
     "pointsByAttempt": [10, 5],
+    "levelFactor": { "1": 1, "2": 2 },
     "completionBonus": 20,
     "heartStep": 3,
     "heartMax": 100
   },
   "quiz": {
     "solo": { "maxAttempts": 2 },
+    "findSentence": { "choices": 3 },
     "together": { "retryUntilCorrect": true }
-  },
-  "read": {
-    "unlockAfterMs": 20000,
-    "seenMargin": "0px 0px -15% 0px"
   },
   "motion": {
     "heartContourMs": 1200,
     "countUpMs": 900,
+    "comingSoonMs": 2500,
     "done": {
       "contourAtMs": 500,
       "streakAtMs": 900,
@@ -48,8 +49,13 @@
   "contentRules": {
     "biurMaxWords": { "he": 25, "en": 35 },
     "overlapRunWords": 5,
-    "levelQuestions": { "1": { "literal": 3 }, "2": { "understanding": 2, "concept": 1 } },
-    "togetherQuestions": { "count": 3, "category": "child", "kinds": ["choice", "trueFalse"] },
+    "questions": {
+      "$comment": "In each level and in Avos uBanim: this many questions after each section but the last, then one summary question. The categories each level's questions may have, and the son's. The tracks whose questions are also written in translationLanguage, for the English mode.",
+      "perSection": 1,
+      "levelCategories": { "1": ["literal"], "2": ["understanding", "concept"] },
+      "together": { "category": "child", "kinds": ["choice", "trueFalse"] },
+      "translatedTracks": ["solo"]
+    },
     "optionCount": { "solo": [3, 4], "together": [2, 3] },
     "cards": { "count": [6, 8], "talks": [2, 3], "maxWords": { "forParent": 30, "toChild": 35 } }
   },

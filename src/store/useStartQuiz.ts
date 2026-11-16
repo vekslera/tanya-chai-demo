@@ -2,20 +2,21 @@ import { usePortion } from '../content/PortionProvider';
 import { questionIdsFor } from '../domain/quiz';
 import { isResumable } from '../domain/quizSession';
 import { newSeed } from '../domain/shuffle';
-import type { Level, Track } from '../domain/types';
+import type { Track } from '../domain/types';
 import { navigate } from '../router';
-import { quizRoute } from '../routes';
+import { trackRoute } from '../routes';
 import { useStore } from './StoreProvider';
 
-/** Starts a quiz, or resumes the one in progress for the same track and level. */
+/** Starts a track's questions, at the current level on the solo track (S2), or resumes those in
+ * progress on the same track. */
 export function useStartQuiz() {
   const { state, dispatch } = useStore();
-  const { portion } = usePortion();
-  return (track: Track, level?: Level) => {
-    if (!isResumable(state.quiz, track, level)) {
-      const questionIds = questionIdsFor(portion.questions, track, level);
-      dispatch({ type: 'startQuiz', track, level, questionIds, seed: newSeed() });
+  const { portion, questionSection } = usePortion();
+  return (track: Track) => {
+    if (!isResumable(state.quiz, track)) {
+      const questionIds = questionIdsFor(portion.questions, questionSection, track, state.level);
+      dispatch({ type: 'startQuiz', track, questionIds, seed: newSeed() });
     }
-    navigate(quizRoute(track));
+    navigate(trackRoute(track));
   };
 }

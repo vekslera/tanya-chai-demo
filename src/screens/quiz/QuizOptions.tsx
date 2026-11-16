@@ -1,6 +1,6 @@
 import { CheckIcon, CloseIcon } from '../../components/Icons';
 import { answerState, canAnswer, optionsOf } from '../../domain/quiz';
-import { he } from '../../strings/he';
+import type { QuizStrings } from '../../strings/quiz';
 import { optionLabel } from './labels';
 import type { QuizSessionView } from './useQuizSession';
 
@@ -9,8 +9,10 @@ export function QuizOptions({
   session,
   shake,
   onAnswer,
+  t,
 }: {
   session: QuizSessionView;
+  t: QuizStrings;
   shake: string | null;
   onAnswer: (id: string) => void;
 }) {
@@ -20,7 +22,7 @@ export function QuizOptions({
     <div className="options" role="group" aria-label={q.prompt.value}>
       {optionsOf(q, quiz.seed).map((o) => {
         const s = answerState(o.id, q, chosen, !open);
-        const text = optionLabel(o);
+        const text = optionLabel(o, t);
         return (
           <button
             key={o.id}
@@ -28,7 +30,7 @@ export function QuizOptions({
             className={`option${s ? ` option--${s}` : ''}${shake === o.id ? ' option--shake' : ''}`}
             onClick={() => onAnswer(o.id)}
             disabled={!open || chosen.includes(o.id)}
-            aria-label={s === 'wrong' ? `${text} (${he.quiz.chosenWrong})` : undefined}
+            aria-label={s === 'wrong' ? `${text} (${t.chosenWrong})` : undefined}
           >
             <span className="option-text">{text}</span>
             {s === 'correct' && <CheckIcon />}

@@ -65,9 +65,23 @@ describe('loadChapter', () => {
       'no he text or splits',
     );
   });
+
+  it('joins every language’s units into the app language’s sentences', () => {
+    const all = loadChapter(repoWith().files);
+    const sentences = (language: string) => all.texts[language]!.units.map((u) => u.sentence);
+    expect(sentences('he')[1]).toBe('LA.32.001');
+    expect(sentences('en')).toEqual(sentences('he'));
+  });
 });
 
 describe('build-translations', () => {
+  /** The English splits, with the last unit's ID changed. */
+  function renamedLast() {
+    const splits = JSON.parse(disk.read(pathOf('splits.en', ch)));
+    splits[splits.length - 1].id = 'LA.32.099';
+    return JSON.stringify(splits);
+  }
+
   it('rewrites the committed spans exactly', () => {
     const { files, written } = repoWith();
     expect(buildTranslations(memoryEnv(files).env)).toBe(0);
@@ -78,7 +92,8 @@ describe('build-translations', () => {
     ['no English', { [pathOf('text.en', ch)]: null }, 'not found'],
     ['bad units', { [pathOf('splits.he', ch)]: '[]' }, 'has no unit'],
     ['a bad footnote', { [pathOf('text.en', ch)]: 'One.\n\nbad\n' }, 'footnote line'],
-    ['misaligned English', { [pathOf('text.en', ch)]: 'One.\n' }, 'Ask Alex'],
+    ['no English splits', { [pathOf('splits.en', ch)]: null }, 'not found'],
+    ['misaligned English', { [pathOf('splits.en', ch)]: renamedLast() }, 'not have the same IDs'],
   ])('fails with %s', (_, replace, message) => {
     const { env, lines } = memoryEnv(repoWith(replace).files);
     expect(buildTranslations(env)).toBe(1);
@@ -154,17 +169,20 @@ describe('resolve-matches', () => {
 });
 
 describe('validate-content', () => {
-  const unapprove = (file: string) =>
-    disk.read(file).replaceAll('"reviewed": true', '"reviewed": false');
-  const unapproved = () =>
-    repoWith({
-      [pathOf('portion')]: unapprove(pathOf('portion')),
-      [pathOf('glossary')]: unapprove(pathOf('glossary')),
-      [pathOf('unitContent', ch)]: unapprove(pathOf('unitContent', ch)),
+  /** The demo content with every item marked as approved (`to` true) or not. */
+  const withAll = (to: boolean) => {
+    const mark = (file: string) =>
+      disk.read(file).replaceAll(`"reviewed": ${!to}`, `"reviewed": ${to}`);
+    return repoWith({
+      [pathOf('portion')]: mark(pathOf('portion')),
+      [pathOf('glossary')]: mark(pathOf('glossary')),
+      [pathOf('unitContent', ch)]: mark(pathOf('unitContent', ch)),
     }).files;
+  };
+  const unapproved = () => withAll(false);
 
-  it('passes the approved demo content, also when strict', () => {
-    const { env, lines } = memoryEnv(repoWith().files, { vars: { CONTENT_STRICT: '1' } });
+  it('passes the demo content once approved, also when strict', () => {
+    const { env, lines } = memoryEnv(withAll(true), { vars: { CONTENT_STRICT: '1' } });
     expect(validateContent(env)).toBe(0);
     expect(lines.info.join()).not.toMatch('unreviewed by group');
   });

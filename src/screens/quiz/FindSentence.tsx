@@ -1,30 +1,52 @@
 import { CompactText } from '../../components/PortionText';
 import { usePortion } from '../../content/PortionProvider';
-import { paragraphKey } from '../../domain/portion';
-import { answerState, canAnswer } from '../../domain/quiz';
-import { he } from '../../strings/he';
+import { config } from '../../config';
+import { answerState, canAnswer, sentenceChoices } from '../../domain/quiz';
+import type { QuizStrings } from '../../strings/quiz';
 import type { QuizSessionView } from './useQuizSession';
 
-/** A findSentence question: the text itself is the answer surface, one button per sentence. */
+/**
+ * A findSentence question: a few consecutive sentences already read, one button per sentence; with
+ * a `language`, in their translation.
+ */
 export function FindSentence({
   session,
   onAnswer,
+  t,
+  language,
 }: {
   session: QuizSessionView;
   onAnswer: (unitId: string) => void;
+  t: QuizStrings;
+  language?: string;
 }) {
-  const { paragraphs } = usePortion();
-  const { question: q, chosen, phase, unit } = session;
+  const { sections } = usePortion();
+  const { question: q, chosen, phase, quiz, section } = session;
+  const choices = new Set(
+    sentenceChoices(
+      sections
+        .slice(0, section + 1)
+        .flatMap((s) => s.sentences)
+        .map((s) => s.id),
+      q,
+      config.quiz.findSentence.choices,
+      quiz.seed,
+    ),
+  );
+  // The sentences offered, by the section they are in.
+  const shown = sections
+    .map((s) => ({ key: s.id, sentences: s.sentences.filter((x) => choices.has(x.id)) }))
+    .filter((b) => b.sentences.length > 0);
   const open = canAnswer(phase);
   const marked = open ? chosen : [...chosen, q.answer];
   return (
     <>
-      <p className="quiz-help">{he.quiz.findSentenceHelp}</p>
+      <p className="quiz-help">{t.findSentenceHelp}</p>
       <CompactText
-        paragraphs={paragraphs}
-        highlightParagraph={phase === 'retry' ? paragraphKey(unit) : undefined}
+        blocks={shown}
         states={Object.fromEntries(marked.map((id) => [id, answerState(id, q, chosen, !open)]))}
         onSelect={onAnswer}
+        language={language}
       />
     </>
   );

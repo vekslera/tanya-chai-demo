@@ -24,9 +24,15 @@ export type ContentRules = {
   biurMaxWords: Record<string, number>;
   /** Runs of this many words shared with a reference text are flagged (SPEC §8.3). */
   overlapRunWords: number;
-  /** By level: how many questions of each category. */
-  levelQuestions: Record<string, Record<string, number>>;
-  togetherQuestions: { count: number; category: string; kinds: string[] };
+  questions: {
+    /** Questions after each section but the last; a summary question follows the last. */
+    perSection: number;
+    /** By level: the categories its questions may have. */
+    levelCategories: Record<string, string[]>;
+    together: { category: string; kinds: string[] };
+    /** The tracks whose questions are also written in the translation's language. */
+    translatedTracks: string[];
+  };
   optionCount: Record<string, Range>;
   cards: { count: Range; talks: Range; maxWords: Record<string, number> };
 };
@@ -65,6 +71,8 @@ export const contentRules: ContentRules = appConfig.contentRules;
 export const printConfig: PrintConfig = appConfig.print;
 /** The app's language: its text, its ביאור and its UI. */
 export const appLanguage: string = appConfig.language;
+/** The translation's language: the learner may switch to it, with its ביאור and questions. */
+export const translationLanguage: string = appConfig.translationLanguage;
 /** The languages whose text is split into units: the keys of paths.splits. */
 export const textLanguages = Object.keys(config.paths.splits as Record<string, string>);
 

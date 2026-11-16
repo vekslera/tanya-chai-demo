@@ -20,14 +20,24 @@
 }
 
 .progress-dot--current {
-  background: var(--navy);
-  border-color: var(--navy);
+  background: var(--primary);
+  border-color: var(--primary);
 }
 
 .quiz-count {
   margin-block-start: 12px;
   font-size: 14px;
-  color: var(--navy-muted);
+  color: var(--text-muted);
+}
+
+/* A level-2 question earns more (S4): a small gold badge after the count. */
+.quiz-factor {
+  margin-inline-start: 8px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: var(--gold-soft);
+  color: var(--gold-deep);
+  font-weight: 500;
 }
 
 .quiz-prompt {
@@ -41,7 +51,7 @@
 .quiz-help {
   margin-block-end: 8px;
   font-size: 14px;
-  color: var(--navy-muted);
+  color: var(--text-muted);
 }
 
 .options {
@@ -60,8 +70,8 @@
   text-align: start;
   font-size: 17px;
   line-height: 1.45;
-  background: var(--white);
-  color: var(--navy);
+  background: var(--surface);
+  color: var(--text);
   border: 2px solid var(--track);
   border-radius: var(--radius-sm);
   cursor: pointer;
@@ -70,8 +80,11 @@
     border-color 0.25s var(--ease);
 }
 
-.option:hover:not(:disabled) {
-  border-color: var(--tint);
+/* Only where a pointer hovers: on a touch screen the hover would stay on the tapped option. */
+@media (hover: hover) {
+  .option:hover:not(:disabled) {
+    border-color: var(--tint);
+  }
 }
 
 .option:disabled {
@@ -91,7 +104,7 @@
 }
 
 .option--wrong {
-  color: var(--navy-muted);
+  color: var(--text-muted);
   border-color: var(--track);
   background: var(--bg-alt);
 }
@@ -163,15 +176,6 @@
   color: var(--gold-deep);
   font-size: 15px;
   font-weight: 700;
-}
-
-.quiz-footer {
-  margin-block-start: auto;
-  padding-block-start: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
 }
 
 @media (prefers-reduced-motion: reduce) {

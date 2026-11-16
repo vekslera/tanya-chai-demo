@@ -8,10 +8,10 @@ const days = (n: number) => (n === 1 ? 'יום אחד' : `${n} ימים`);
 const contentCredit =
   'הביאור, המילון, השאלות והכלים ללימוד אבות ובנים נכתבו עבור תניא חי. כל הזכויות שמורות.';
 
-/** The title and description of each level in app.config.json, by level ID. */
-const levelOptions: Record<number, { title: string; description: string }> = {
-  1: { title: 'טקסט בלבד', description: 'קוראים את לשון התניא כפי שהיא' },
-  2: { title: 'טקסט עם ביאור', description: 'ביאור קצר ופשוט אחרי כל משפט' },
+/** The name of each level in app.config.json, by level ID: the ביאור off or on (S2). */
+const levelOptions: Record<number, { title: string }> = {
+  1: { title: 'טקסט בלבד' },
+  2: { title: 'טקסט עם ביאור' },
 };
 
 export const he = {
@@ -22,7 +22,6 @@ export const he = {
     close: 'סגירה',
     next: 'הבא',
     prev: 'הקודם',
-    menu: 'אפשרויות נוספות',
     demoData: 'נתון להדגמה',
   },
 
@@ -32,34 +31,45 @@ export const he = {
     start: 'התחל ללמוד',
     together: 'לימוד אבות ובנים',
     about: 'אודות תניא חי',
-  },
-
-  level: {
-    title: 'איך תרצו ללמוד היום?',
-    options: levelOptions,
-    selected: 'הבחירה האחרונה',
     maskil: 'ללימוד מעמיק עם מפרשים: מסלול משכיל, בקרוב',
   },
 
+  level: {
+    options: levelOptions,
+  },
+
   read: {
-    backToLevel: 'חזרה לבחירת אופן הלימוד',
+    backToHome: 'חזרה למסך הבית',
+    /** The head of each section (S2): its number, and its ביאור switch. */
+    section: (n: number, total: number) => `קטע ${n} מתוך ${total}`,
+    biurSwitch: 'ביאור',
+    biurTip: 'אפשר להדליק ולכבות את הביאור בכל קטע. עם הביאור, הניקוד כפול.',
     progress: 'התקדמות הקריאה',
-    toQuestions: 'לשאלות',
-    englishChip: 'EN',
-    englishShow: 'הצגת התרגום לאנגלית של פסקה זו',
-    englishHide: 'הסתרת התרגום לאנגלית של פסקה זו',
-    englishAllShow: 'הצגת התרגום לאנגלית בכל הפסקאות',
-    englishAllHide: 'הסתרת התרגום לאנגלית בכל הפסקאות',
     biurLabel: 'ביאור',
     glossaryHint: 'הקישו על מילה מסומנת לביאור',
     footnote: (n: string) => `הערה ${n}`,
     footnoteTitle: 'הערה',
   },
 
+  /** The button for the other look (S1). */
+  theme: {
+    toDark: 'מעבר לתצוגה כהה',
+    toLight: 'מעבר לתצוגה בהירה',
+  },
+
+  /** The lesson's language: Hebrew only, or with the English translation and its ביאור. */
+  language: {
+    he: 'HE',
+    en: 'EN',
+    label: 'לימוד עם התרגום לאנגלית',
+    comingSoon: 'בקרוב',
+  },
+
   /** The day's dedication line, by kind (SPEC §4.4). */
   dedication: {
     leiluiNishmas: (name: string) => `הלימוד היומי מוקדש לעילוי נשמת ${name}`,
     lizchus: (name: string) => `הלימוד היומי מוקדש לזכות ${name}`,
+    // "Your partner": the sponsor of the learning, not another learner.
     partner: (name: string) => `השותף שלך בלימוד היומי: ${name}`,
   } satisfies Record<Dedication['kind'], (name: string) => string>,
 
@@ -68,10 +78,8 @@ export const he = {
   },
 
   quiz: {
-    title: 'שאלות על השיעור',
     progress: (i: number, n: number) => `שאלה ${i} מתוך ${n}`,
-    backToText: 'חזרה לטקסט',
-    textSheetTitle: 'לשון התניא',
+    summary: 'שאלת סיכום',
     true: 'נכון',
     false: 'לא נכון',
     findSentenceHelp: 'הקישו על המשפט בטקסט',
@@ -79,9 +87,10 @@ export const he = {
     tryAgain: 'כמעט. נסו שוב:',
     revealed: 'התשובה הנכונה:',
     fromText: 'מתוך הטקסט',
-    next: 'לשאלה הבאה',
+    next: 'להמשך הלימוד',
     finish: 'לסיום השיעור',
     points: (n: number) => `+${n}`,
+    factor: (n: number) => (n === 2 ? 'ניקוד כפול' : `ניקוד פי ${n}`),
     chosenWrong: 'תשובה שנבחרה',
   },
 
@@ -95,13 +104,10 @@ export const he = {
     pointsWord: 'נקודות',
     pointsDetail: (earned: number, bonus: number) =>
       `${earned} על השאלות ו־${bonus} על סיום השיעור`,
-    pointsAlready: 'על רמה זו כבר התקבלו נקודות, ולכן הפעם לא נוספו',
-    pointsAlreadyTogether: 'על לימוד אבות ובנים כבר התקבלו נקודות, ולכן הפעם לא נוספו',
     communityLabel: 'כל הלומדים יחד השבוע:',
     communityUnit: 'שיעורים',
     heartLine: 'הקו המוזהב מקיף את הלב ככל שמתקדמים בלימוד',
     heartLabel: (p: number) => `התקדמות בלימוד: ${p}%`,
-    otherLevel: 'נסה רמה אחרת',
     together: 'לימוד אבות ובנים',
     shinun: 'טעימה משינון',
     about: 'אודות',
@@ -117,18 +123,16 @@ export const he = {
     toChild: 'לומר לילד',
     talk: 'שאלה לשיחה',
     childTurn: 'עכשיו תורו של הילד',
-    childTurnText: 'שלוש שאלות קצרות. הילד קורא ועונה, ואבא עוזר אם צריך.',
-    toChildQuestions: 'לשאלות של הילד',
-    backToCards: 'חזרה למחשבות',
+    backToCard: 'חזרה למחשבה',
   },
 
   togetherQuiz: {
-    title: 'השאלות של הילד',
+    summary: 'שאלת סיכום לילד',
     correct: ['נכון, יפה מאוד!', 'כל הכבוד!', 'בדיוק כך!'],
     tryAgain: 'ננסה שוב?',
     fatherSaid: 'מה שאבא אמר:',
     fromText: 'מתוך התניא:',
-    next: 'לשאלה הבאה',
+    next: 'למחשבה הבאה',
     finish: 'לסיום',
     points: (n: number) => `+${n}`,
   },
@@ -166,7 +170,15 @@ export const he = {
     licenseLink: 'נוסח הרישיון',
     contentCredit,
     contactTitle: 'יצירת קשר',
-    contact: '[TO FILL BY ALEX]',
+    /** Alex's contact details: the email opens a message, the number is for a direct message. */
+    contact: {
+      emailLabel: 'דוא״ל',
+      email: 'vekslera@gmail.com',
+      phoneLabel: 'הודעה ישירה',
+      phone: '+972 (52) 835 3205',
+    },
+    themeTitle: 'תצוגה',
+    themes: { auto: 'לפי המכשיר', light: 'בהירה', dark: 'כהה' },
     resetTitle: 'התחלה מחדש',
     reset: 'התחל מחדש',
     resetConfirm: 'כל ההתקדמות בהדגמה תתאפס. להמשיך?',

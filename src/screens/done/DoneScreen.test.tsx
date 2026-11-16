@@ -12,8 +12,8 @@ import { DoneActions } from './DoneActions';
 const start = initialStateFrom(config);
 
 function afterCompleting(track: 'solo' | 'together', twice = false) {
-  let { progress, completion } = complete(start, track, 1, 15, config.scoring);
-  if (twice) completion = complete(progress, track, 1, 15, config.scoring).completion;
+  let { progress, completion } = complete(start, track, 15, config.scoring);
+  if (twice) completion = complete(progress, track, 15, config.scoring).completion;
   progress = completion.after;
   return memoryStorage({
     [config.storage.key]: JSON.stringify({ ...progress, lastCompletion: completion }),
@@ -55,13 +55,10 @@ describe('DoneScreen', () => {
     expect(screen.getByText(he.common.demoData)).toBeTruthy();
   });
 
-  it('explains when nothing was added', async () => {
+  it('awards the points again on a second completion', async () => {
     reducedMotion(true);
-    const { unmount } = await renderApp(ROUTES.done, { storage: afterCompleting('solo', true) });
-    expect(screen.getByText(he.done.pointsAlready)).toBeTruthy();
-    unmount();
-    await renderApp(ROUTES.done, { storage: afterCompleting('together', true) });
-    expect(screen.getByText(he.done.pointsAlreadyTogether)).toBeTruthy();
+    await renderApp(ROUTES.done, { storage: afterCompleting('solo', true) });
+    expect(screen.getByText(he.done.pointsDetail(15, config.scoring.completionBonus))).toBeTruthy();
   });
 
   it('shows the family streak after Avos uBanim, and goes home', async () => {
@@ -74,8 +71,8 @@ describe('DoneScreen', () => {
   });
 
   it.each([
-    [he.done.otherLevel, ROUTES.level],
     [he.done.together, ROUTES.together],
+    [he.done.home, ROUTES.home],
     [he.done.about, ROUTES.about],
   ])('"%s" goes to %s', async (label, route) => {
     reducedMotion(true);

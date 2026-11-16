@@ -14,7 +14,8 @@ describe('initialStateFrom', () => {
     expect(initialState).toMatchObject({
       ...config.demo.initialProgress,
       level: config.defaultLevel,
-      completedLevels: [],
+      completedSolo: false,
+      theme: config.defaultTheme,
       togetherIndex: -1,
       quiz: null,
     });
@@ -25,7 +26,6 @@ describe('reducer', () => {
   const started = reducer(initialState, {
     type: 'startQuiz',
     track: 'solo',
-    level: 1,
     questionIds: ['q1', 'q2'],
     seed: 1,
   });
@@ -37,13 +37,17 @@ describe('reducer', () => {
       choice: 'a',
       correct: true,
       maxAttempts: 2,
+      level: 2,
     });
     s = reducer(s, { type: 'nextQuestion' });
-    expect(s.quiz).toMatchObject({ index: 1, earned: config.scoring.pointsByAttempt[0] });
+    expect(s.quiz).toMatchObject({
+      index: 1,
+      earned: config.scoring.pointsByAttempt[0]! * config.scoring.levelFactor[2]!,
+    });
     s = reducer(s, { type: 'completeQuiz' });
     expect(s.quiz).toBeNull();
-    expect(s.completedLevels).toEqual([1]);
-    expect(s.lastCompletion?.awarded).toBe(true);
+    expect(s.completedSolo).toBe(true);
+    expect(s.lastCompletion?.bonus).toBe(config.scoring.completionBonus);
   });
 
   it('ignores quiz actions without a quiz', () => {
@@ -51,25 +55,34 @@ describe('reducer', () => {
       { type: 'answer', questionId: 'q', choice: 'a', correct: true, maxAttempts: 2 },
       { type: 'nextQuestion' },
       { type: 'completeQuiz' },
+      { type: 'showBiur', section: 's', shown: true },
     ] as const) {
       expect(reducer(initialState, action)).toBe(initialState);
     }
   });
 
+  it('switches the ביאור of a section, and the level with its questions', () => {
+    let s = reducer(started, { type: 'showBiur', section: 's1', shown: false });
+    expect(s).toMatchObject({ quiz: { biur: { s1: false } } });
+    s = reducer(s, { type: 'setLevel', level: 1, questionIds: ['q1', 'q3'] });
+    expect(s).toMatchObject({ level: 1, quiz: { questionIds: ['q1', 'q3'] } });
+  });
+
   it('handles the other actions', () => {
-    let s: DemoState = reducer(initialState, { type: 'setLevel', level: 1 });
-    expect(s.level).toBe(1);
-    s = reducer(s, { type: 'toggleEnglish', spanId: 'x' });
-    expect(s.englishOpen).toEqual({ x: true });
-    s = reducer(s, { type: 'toggleEnglish', spanId: 'x' });
-    expect(s.englishOpen).toEqual({ x: false });
-    s = reducer(s, { type: 'setAllEnglish', spanIds: ['x', 'y'], open: true });
-    expect(s.englishOpen).toEqual({ x: true, y: true });
+    let s: DemoState = reducer(initialState, { type: 'setLevel', level: 1, questionIds: [] });
+    expect(s).toMatchObject({ level: 1, quiz: null });
+    s = reducer(s, { type: 'toggleEnglish' });
+    expect(s.english).toBe(true);
+    s = reducer(s, { type: 'toggleEnglish' });
+    expect(s.english).toBe(false);
     s = reducer(s, { type: 'setTogetherIndex', index: 3 });
     expect(s.togetherIndex).toBe(3);
     s = reducer(s, { type: 'seenShinun' });
     expect(s.seenShinun).toBe(true);
-    expect(reducer(s, { type: 'reset' })).toBe(initialState);
+    expect(reducer(s, { type: 'reset' })).toEqual(initialState);
+    // Starting over keeps the chosen look.
+    s = reducer(s, { type: 'setTheme', theme: 'dark' });
+    expect(reducer(s, { type: 'reset' })).toEqual({ ...initialState, theme: 'dark' });
   });
 });
 
@@ -81,6 +94,14 @@ describe('persistence', () => {
     const p = createPersistence(storage, key, initialState);
     p.save({ ...initialState, points: 999 });
     expect(p.load().points).toBe(999);
+  });
+
+  it('does not keep the last completion', () => {
+    const storage = memoryStorage();
+    const p = createPersistence(storage, key, initialState);
+    const done = { track: 'solo', earned: 1, bonus: 2, before: initialState, after: initialState };
+    p.save({ ...initialState, lastCompletion: done } as DemoState);
+    expect(p.load().lastCompletion).toBeNull();
   });
 
   it('falls back to the initial state on missing or broken data', () => {
@@ -102,7 +123,7 @@ describe('persistence', () => {
 function Points() {
   const { state, dispatch } = useStore();
   return (
-    <button type="button" onClick={() => dispatch({ type: 'setLevel', level: 1 })}>
+    <button type="button" onClick={() => dispatch({ type: 'setLevel', level: 1, questionIds: [] })}>
       {state.points}:{state.level}
     </button>
   );

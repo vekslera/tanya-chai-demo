@@ -1,10 +1,11 @@
-import { act, render, renderHook, screen } from '@testing-library/react';
-import { useRef } from 'react';
+import { act, renderHook } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import type { Theme } from '../domain/theme';
 import { prefersReducedMotion } from './reducedMotion';
 import { easeOut, useCountUp } from './useCountUp';
-import { useElapsed } from './useElapsed';
-import { useSeen } from './useSeen';
+import { useDocumentTheme } from './useDocumentTheme';
+import { useNotice } from './useNotice';
+import { usePrefersDark } from './usePrefersDark';
 import { useTimeline } from './useTimeline';
 
 const setReducedMotion = (matches: boolean) => {
@@ -68,60 +69,54 @@ describe('useTimeline', () => {
   });
 });
 
-describe('useElapsed', () => {
-  it('turns true after the time', () => {
-    const { result } = renderHook(() => useElapsed(500));
-    expect(result.current).toBe(false);
-    act(() => void vi.advanceTimersByTime(500));
-    expect(result.current).toBe(true);
+describe('useNotice', () => {
+  it('shows a note for a while, the wait starting again when asked again', () => {
+    const { result } = renderHook(() => useNotice(1000));
+    expect(result.current[0]).toBe(false);
+    act(() => result.current[1]());
+    expect(result.current[0]).toBe(true);
+    act(() => void vi.advanceTimersByTime(600));
+    act(() => result.current[1]());
+    act(() => void vi.advanceTimersByTime(600));
+    expect(result.current[0]).toBe(true);
+    act(() => void vi.advanceTimersByTime(400));
+    expect(result.current[0]).toBe(false);
   });
 });
 
-function Seen({ ids }: { ids: string[] }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const seen = useSeen(ref, ids, '0px', [ids]);
-  return (
-    <div ref={ref}>
-      {ids.map((id) => (
-        <p key={id} data-unit={id} />
-      ))}
-      <output>{[...seen].join(',')}</output>
-    </div>
-  );
-}
-
-describe('useSeen', () => {
-  it('counts every unit as seen without IntersectionObserver', () => {
-    render(<Seen ids={['a', 'b']} />);
-    expect(screen.getByRole('status').textContent).toBe('a,b');
-  });
-
-  it('adds the units that come into view, once each', () => {
-    let callback!: IntersectionObserverCallback;
-    const observe = vi.fn();
-    const unobserve = vi.fn();
-    const disconnect = vi.fn();
-    window.IntersectionObserver = vi.fn(function (this: unknown, cb: IntersectionObserverCallback) {
-      callback = cb;
-      return { observe, unobserve, disconnect };
-    }) as never;
-    const { unmount } = render(<Seen ids={['a', 'b']} />);
-    expect(observe).toHaveBeenCalledTimes(2);
-    const [a, b] = [...document.querySelectorAll('[data-unit]')];
-    act(() =>
-      callback(
-        [
-          { isIntersecting: true, target: a },
-          { isIntersecting: false, target: b },
-        ] as never,
-        {} as never,
-      ),
-    );
-    act(() => callback([{ isIntersecting: false, target: b }] as never, {} as never));
-    expect(screen.getByRole('status').textContent).toBe('a');
-    expect(unobserve).toHaveBeenCalledWith(a);
+describe('useDocumentTheme', () => {
+  it('sets the chosen look on the page, and leaves the device’s own for "auto"', () => {
+    const { rerender, unmount } = renderHook(({ theme }) => useDocumentTheme(theme), {
+      initialProps: { theme: 'dark' as Theme },
+    });
+    expect(document.documentElement.dataset.theme).toBe('dark');
+    rerender({ theme: 'light' });
+    expect(document.documentElement.dataset.theme).toBe('light');
+    rerender({ theme: 'auto' });
+    expect(document.documentElement.dataset.theme).toBeUndefined();
     unmount();
-    expect(disconnect).toHaveBeenCalled();
-    delete (window as { IntersectionObserver?: unknown }).IntersectionObserver;
+  });
+});
+
+describe('usePrefersDark', () => {
+  it('follows the device’s dark mode, and is false when it cannot be told', () => {
+    const listeners = new Set<() => void>();
+    let matches = false;
+    window.matchMedia = vi.fn(() => ({
+      get matches() {
+        return matches;
+      },
+      addEventListener: (_: string, f: () => void) => listeners.add(f),
+      removeEventListener: (_: string, f: () => void) => listeners.delete(f),
+    })) as never;
+    const { result, unmount } = renderHook(() => usePrefersDark());
+    expect(result.current).toBe(false);
+    matches = true;
+    act(() => listeners.forEach((f) => f()));
+    expect(result.current).toBe(true);
+    unmount();
+    expect(listeners.size).toBe(0);
+    delete (window as { matchMedia?: unknown }).matchMedia;
+    expect(renderHook(() => usePrefersDark()).result.current).toBe(false);
   });
 });

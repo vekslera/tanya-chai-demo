@@ -1,4 +1,4 @@
-// Checks of the Avos uBanim cards and of the Shinun sentence.
+// Checks of the portion's sections, of the Avos uBanim cards on them, and of the Shinun sentence.
 import type { Portion, TogetherCard, Unit } from '../../../src/domain/types.ts';
 import type { ContentRules } from '../config.ts';
 import { isReviewed, wordCount, type Context } from './context.ts';
@@ -18,21 +18,34 @@ function checkCard(ctx: Context, c: TogetherCard, rules: ContentRules) {
   }
 }
 
-/** The cards cover the portion's units exactly once, in order. */
-export function checkCards(ctx: Context, p: Portion, portionUnits: Unit[], rules: ContentRules) {
+/** The sections cover the portion's units exactly once, in order, each from a sentence's start. */
+export function checkSections(ctx: Context, p: Portion, portionUnits: Unit[]) {
+  const sections = p.sections ?? [];
+  const covered: string[] = [];
+  sections.forEach((s, i) => {
+    const where = `section ${i + 1}`;
+    if (!ctx.range(where, s)) return;
+    covered.push(...ctx.unitsOf(s).map((u) => u.id));
+    const continued = ctx.byId.get(s.from)!.sentence;
+    if (continued) ctx.errors.push(`${where}: starts inside ${continued}'s sentence`);
+  });
+  if (covered.join() !== portionUnits.map((u) => u.id).join()) {
+    ctx.errors.push('portion: the sections do not cover its units exactly once, in order');
+  }
+}
+
+/** One card per section, in order. */
+export function checkCards(ctx: Context, p: Portion, rules: ContentRules) {
   const cards = p.together ?? [];
   const [min, max] = rules.cards.count;
   if (!inside(cards.length, rules.cards.count)) {
     ctx.errors.push(`together: ${cards.length} cards (expected ${min}–${max})`);
   }
-  const covered: string[] = [];
-  for (const c of cards) {
-    checkCard(ctx, c, rules);
-    if (ctx.range(`card ${c.id}`, c)) covered.push(...ctx.unitsOf(c).map((u) => u.id));
+  const sections = (p.sections ?? []).length;
+  if (cards.length !== sections) {
+    ctx.errors.push(`together: ${cards.length} cards for ${sections} sections (one per section)`);
   }
-  if (covered.join() !== portionUnits.map((u) => u.id).join()) {
-    ctx.errors.push('together: cards do not cover the portion units exactly once, in order');
-  }
+  for (const c of cards) checkCard(ctx, c, rules);
   const talks = cards.filter((c) => c.talk).length;
   if (!inside(talks, rules.cards.talks)) {
     const [lo, hi] = rules.cards.talks;

@@ -85,7 +85,7 @@ export function HeartMark({ progress, animated, drawIn, beating, purify, label }
             className={purify ? 'heartmark-purify' : undefined}
             transform={left.transform}
             d={left.d}
-            fill="var(--tint)"
+            fill="var(--chamber)"
           />
           <path transform={right.transform} d={right.d} fill="var(--gold)" />
         </g>

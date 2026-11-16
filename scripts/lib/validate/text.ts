@@ -31,7 +31,8 @@ function checkSpan(ctx: Context, s: TranslationSpan, where: string) {
   const en = ctx.all.enResource;
   if (typeof s.text !== 'string' || !s.text.trim()) ctx.errors.push(`${where}: empty text`);
   else if (/<[^>]+>/.test(s.text)) ctx.errors.push(`${where}: contains HTML tags`);
-  if (s.sourceId === EN_RESOURCE && en && !en.paragraphs.includes(s.text)) {
+  // A span is one unit's English: a verbatim part of a paragraph of the resource.
+  if (s.sourceId === EN_RESOURCE && en && !en.paragraphs.some((p) => p.includes(s.text))) {
     ctx.errors.push(`${where}: text is not verbatim from the English resource`);
   }
   const marks = footnoteMarks(s.text ?? '');

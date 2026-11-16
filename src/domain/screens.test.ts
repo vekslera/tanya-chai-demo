@@ -4,24 +4,22 @@ import { portionData } from '../test/fixtures';
 import { completionView, doneDelays } from './completion';
 import { assemblePortion } from './portion';
 import type { Completion, Progress } from './progress';
-import { englishSpanIds, isUnlocked, readingProgress, showsBiur } from './reading';
+import { hasEnglish, levelFor, readingProgress, showsBiur } from './reading';
 import { cardOfUnit, togetherStep } from './together';
 
 const before: Progress = {
   streak: 3,
   points: 0,
   heartProgress: 10,
-  completedLevels: [],
+  completedSolo: false,
   completedTogether: false,
   familyStreak: 1,
 };
 const after: Progress = { ...before, streak: 4, heartProgress: 13, familyStreak: 2 };
 const solo: Completion = {
   track: 'solo',
-  level: 1,
   earned: 15,
   bonus: 20,
-  awarded: true,
   before,
   after,
 };
@@ -50,54 +48,61 @@ describe('completion', () => {
     });
   });
 
-  it('shows the family streak for Avos uBanim, and no points when nothing was awarded', () => {
-    const together: Completion = { ...solo, track: 'together', awarded: false, after: before };
+  it('shows the family streak for Avos uBanim', () => {
+    const together: Completion = { ...solo, track: 'together', after: before };
     expect(completionView(together, 4)).toMatchObject({
       together: true,
       streak: 1,
       streakChanged: false,
-      points: 0,
-      purify: false,
+      points: 35,
+      purify: true,
     });
   });
 });
 
 describe('together', () => {
   it('maps the stored index to a step', () => {
-    expect(togetherStep(-1, 2)).toEqual({ kind: 'intro' });
-    expect(togetherStep(-5, 2)).toEqual({ kind: 'intro' });
-    expect(togetherStep(1, 2)).toEqual({ kind: 'card', index: 1 });
-    expect(togetherStep(2, 2)).toEqual({ kind: 'childTurn' });
+    // Without questions under way, the intro; before the cards too.
+    expect(togetherStep(1, 2)).toEqual({ kind: 'intro' });
+    expect(togetherStep(-1, 2, 0)).toEqual({ kind: 'intro' });
+    expect(togetherStep(-5, 2, 0)).toEqual({ kind: 'intro' });
+    // A card up to the one the current question follows, then the question.
+    expect(togetherStep(0, 2, 0)).toEqual({ kind: 'card', index: 0 });
+    expect(togetherStep(1, 2, 0)).toEqual({ kind: 'question' });
+    expect(togetherStep(5, 2, 9)).toEqual({ kind: 'card', index: 1 });
   });
 
   it('finds the card that covers a unit', () => {
     const p = assemblePortion(portionData());
-    expect(cardOfUnit(p.portion.together, p.units, 'LA.1.004')?.id).toBe('card-2');
-    expect(cardOfUnit([], p.units, 'LA.1.004')).toBeUndefined();
+    expect(cardOfUnit(p.portion.together, p.sections, 'LA.1.004')?.id).toBe('card-2');
+    expect(cardOfUnit(p.portion.together, p.sections, 'nope')).toBeUndefined();
   });
 });
 
 describe('reading', () => {
+  const levels = [
+    { id: 1, showBiur: false },
+    { id: 2, showBiur: true },
+  ];
+
   it('shows the ביאור on the configured levels only', () => {
-    const levels = [
-      { id: 1, showBiur: false },
-      { id: 2, showBiur: true },
-    ];
     expect([1, 2, 3].map((l) => showsBiur(levels, l))).toEqual([false, true, false]);
+    expect(showsBiur(levels)).toBe(false);
+  });
+
+  it('gives the level a section switch sets', () => {
+    expect([levelFor(levels, true), levelFor(levels, false)]).toEqual([2, 1]);
   });
 
   it('computes the progress and the unlock', () => {
     expect(readingProgress(1, 3)).toBe(33);
     expect(readingProgress(0, 0)).toBe(100);
-    expect(isUnlocked(false, new Set(['a']), 'b')).toBe(false);
-    expect(isUnlocked(false, new Set(['b']), 'b')).toBe(true);
-    expect(isUnlocked(true, new Set(), 'b')).toBe(true);
   });
 
-  it('lists the English spans by their first unit', () => {
-    expect(englishSpanIds(assemblePortion(portionData()).paragraphs)).toEqual([
-      'LA.1.001',
-      'LA.1.003',
-    ]);
+  it('tells whether the portion has English', () => {
+    const data = portionData();
+    expect(hasEnglish(assemblePortion(data).sections)).toBe(true);
+    data.translations = [];
+    expect(hasEnglish(assemblePortion(data).sections)).toBe(false);
   });
 });

@@ -1,6 +1,7 @@
 import { CheckIcon } from '../../components/Icons';
 import { QuoteCard } from '../../components/PortionText';
 import { ProgressDots } from '../../components/ProgressDots';
+import { LanguageToggle } from '../../components/LanguageToggle';
 import { TopBar } from '../../components/TopBar';
 import { config } from '../../config';
 import { usePortion } from '../../content/PortionProvider';
@@ -10,27 +11,39 @@ import { cardOfUnit } from '../../domain/together';
 import { ROUTES } from '../../routes';
 import { he } from '../../strings/he';
 import { optionLabel } from '../quiz/labels';
-import { useQuizSession } from '../quiz/useQuizSession';
+import type { QuizSessionView } from '../quiz/useQuizSession';
 import { CardSection } from './CardSection';
 import './Together.css';
 import './TogetherQuiz.css';
 
-/** The son's questions (S9): large buttons, no red, try again as often as needed. */
-export function TogetherQuizScreen() {
+/**
+ * The son's question after a card (S9): large buttons, no red, try again as often as needed. Back
+ * to the card, or on to the next one.
+ */
+export function ChildQuestion({
+  session,
+  onBack,
+  onNext,
+}: {
+  session: QuizSessionView;
+  onBack: () => void;
+  onNext: () => void;
+}) {
   const portion = usePortion();
-  const session = useQuizSession('together', ROUTES.togetherQuiz, ROUTES.together);
-  if (!session) return null;
-  const { quiz, question: q, chosen, phase, unit } = session;
+  const { quiz, question: q, chosen, phase, unit, sentence } = session;
   const solved = phase === 'correct';
-  const card = cardOfUnit(portion.portion.together, portion.units, unit.id);
+  const card = cardOfUnit(portion.portion.together, portion.sections, unit.id);
 
   return (
     <main className="screen together child-quiz">
       <TopBar
-        back={ROUTES.together}
+        back={ROUTES.home}
         title={<ProgressDots count={quiz.questionIds.length} current={quiz.index} />}
+        end={<LanguageToggle comingSoon />}
       />
-      <p className="child-quiz-count">{he.togetherQuiz.title}</p>
+      <p className="child-quiz-count">
+        {q.summary ? he.togetherQuiz.summary : he.together.childTurn}
+      </p>
       <h1 className="child-prompt">{q.prompt.value}</h1>
 
       <div className="child-options" role="group" aria-label={q.prompt.value}>
@@ -45,7 +58,7 @@ export function TogetherQuizScreen() {
               onClick={() => session.answer(o.id)}
               disabled={solved || tried}
             >
-              <span>{optionLabel(o)}</span>
+              <span>{optionLabel(o, he.quiz)}</span>
               {isCorrect && <CheckIcon />}
             </button>
           );
@@ -66,7 +79,7 @@ export function TogetherQuizScreen() {
         {phase === 'retry' && (
           <>
             <p className="child-try-again">{he.togetherQuiz.tryAgain}</p>
-            <QuoteCard unit={unit} label={he.togetherQuiz.fromText} />
+            <QuoteCard sentence={sentence} label={he.togetherQuiz.fromText} />
             {card && (
               <CardSection label={he.togetherQuiz.fatherSaid} className="together-child">
                 <p>{card.toChild.value}</p>
@@ -78,14 +91,15 @@ export function TogetherQuizScreen() {
 
       {solved && (
         <div className="together-nav together-nav--single">
-          <button
-            type="button"
-            className="btn btn-primary btn-big btn-block"
-            onClick={session.next}
-          >
+          <button type="button" className="btn btn-primary btn-big btn-block" onClick={onNext}>
             {session.isLast ? he.togetherQuiz.finish : he.togetherQuiz.next}
           </button>
         </div>
+      )}
+      {!solved && (
+        <button type="button" className="link-btn" onClick={onBack}>
+          {he.together.backToCard}
+        </button>
       )}
     </main>
   );

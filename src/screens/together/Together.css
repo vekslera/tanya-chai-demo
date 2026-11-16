@@ -35,7 +35,7 @@
   gap: 12px;
   margin-block: 8px 12px;
   font-size: 15px;
-  color: var(--navy-muted);
+  color: var(--text-muted);
 }
 
 .together-card {
@@ -62,7 +62,7 @@
   font-family: var(--font-ui);
   font-size: 14px;
   font-weight: 700;
-  color: var(--navy-muted);
+  color: var(--text-muted);
 }
 
 .together-section p {
@@ -72,8 +72,8 @@
 
 /* The words the father reads aloud: warm, gold-tinted. */
 .together-child {
-  background: rgba(232, 163, 23, 0.16);
-  border: 1px solid rgba(232, 163, 23, 0.45);
+  background: var(--gold-soft);
+  border: 1px solid var(--gold-line);
 }
 
 .together-child .together-label {
@@ -99,7 +99,7 @@
   margin-block-start: auto;
   margin-inline: calc(-1 * var(--gutter));
   padding: 16px var(--gutter) calc(12px + env(safe-area-inset-bottom));
-  background: linear-gradient(to top, var(--bg) 80%, rgba(251, 250, 246, 0));
+  background: linear-gradient(to top, var(--bg) 80%, transparent);
 }
 
 @keyframes card-in {
