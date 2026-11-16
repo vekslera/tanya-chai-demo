@@ -32,7 +32,7 @@ GitHub Pages publishes one site with two builds (SPEC §10): `main`, the stable 
 
 ## Content pipeline
 
-Every file path, the chapter list and the Sefaria refs are named once, in [`texts.config.json`](texts.config.json). The app's parameters (scoring, attempts, timings, demo values, the validator's content rules) are named once, in [`app.config.json`](app.config.json).
+Every file path, the chapter list and the Sefaria refs are named once, in [`texts.config.json`](texts.config.json). The app's parameters (the levels and their score factor, scoring, attempts, timings, the default look, demo values, the validator's content rules) are named once, in [`app.config.json`](app.config.json).
 
 | Step | Command | Output |
 | --- | --- | --- |
