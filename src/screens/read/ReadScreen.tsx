@@ -85,7 +85,7 @@ export function ReadScreen() {
       </div>
 
       <div className="bottom-bar">
-        <Dedication />
+        <Dedication seed={quiz.seed} />
       </div>
 
       <GlossarySheet entry={term} onClose={() => setTerm(null)} />

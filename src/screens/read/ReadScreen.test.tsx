@@ -293,7 +293,7 @@ describe('ReadScreen', () => {
   it('shows the dedication under the text, when the day has one', async () => {
     for (const kind of Object.keys(he.dedication) as (keyof typeof he.dedication)[]) {
       const data = portionData();
-      data.portion.dedication = { kind, name: 'פלוני בן פלוני' };
+      data.portion.dedications = [{ kind, name: 'פלוני בן פלוני' }];
       const { unmount } = await renderApp(ROUTES.read, { data, storage: reading() });
       expect(screen.getByText(he.dedication[kind]('פלוני בן פלוני'))).toBeTruthy();
       unmount();

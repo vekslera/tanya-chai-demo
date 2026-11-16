@@ -69,6 +69,7 @@ export const he = {
   dedication: {
     leiluiNishmas: (name: string) => `הלימוד היומי מוקדש לעילוי נשמת ${name}`,
     lizchus: (name: string) => `הלימוד היומי מוקדש לזכות ${name}`,
+    // "Your partner": the sponsor of the learning, not another learner.
     partner: (name: string) => `השותף שלך בלימוד היומי: ${name}`,
   } satisfies Record<Dedication['kind'], (name: string) => string>,
 

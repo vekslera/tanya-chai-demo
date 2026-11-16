@@ -112,5 +112,6 @@ export type Portion = {
   questions: Question[];
   together: TogetherCard[];
   shinun?: { unitId: UnitId; rounds: number[][] };
-  dedication?: Dedication;
+  /** The demo's dedications: each lesson shows one of them, at random (SPEC S3). */
+  dedications?: Dedication[];
 };
