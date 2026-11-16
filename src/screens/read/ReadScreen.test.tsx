@@ -2,7 +2,9 @@ import { screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { memoryStorage } from '../../adapters/memoryStorage';
 import { config } from '../../config';
+import { dedicationFor } from '../../domain/dedication';
 import { startSession } from '../../domain/quizSession';
+import { newSeed } from '../../domain/shuffle';
 import { ROUTES } from '../../routes';
 import { en } from '../../strings/en';
 import { he } from '../../strings/he';
@@ -300,5 +302,34 @@ describe('ReadScreen', () => {
     }
     await renderApp(ROUTES.read, { storage: reading() });
     expect(document.querySelector('.dedication')).toBeNull();
+  });
+
+  it('draws the dedication anew each time the lesson is started or resumed', async () => {
+    const data = portionData();
+    data.portion.dedications = [
+      { kind: 'lizchus', name: 'ראובן' },
+      { kind: 'partner', name: 'שמעון' },
+    ];
+    // Two draws that choose different dedications.
+    const pick = (r: number) =>
+      dedicationFor(
+        data.portion.dedications,
+        newSeed(() => r),
+      )!.name;
+    const draws = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9];
+    const first = draws[0]!;
+    const second = draws.find((r) => pick(r) !== pick(first))!;
+    const random = vi.spyOn(Math, 'random');
+    const storage = reading();
+    await renderApp(ROUTES.home, { data, storage });
+    for (const r of [first, second]) {
+      random.mockReturnValue(r);
+      await click(button(he.home.start));
+      expect(hash()).toBe(ROUTES.read);
+      expect(document.querySelector('.dedication')!.textContent).toContain(pick(r));
+      await click(button(he.read.backToHome));
+    }
+    // The same lesson, resumed: only the dedication changed.
+    expect(saved(storage).quiz.seed).toBe(1);
   });
 });
