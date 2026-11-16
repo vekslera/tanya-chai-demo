@@ -1,6 +1,6 @@
 # Tanya Chai (תניא חי): Demo Specification
 
-**Version:** 1.3 (draft for build; demo portion ט׳ אדר, two levels, Avos uBanim cards by thought)
+**Version:** 1.4 (demo portion ט׳ אדר; two levels, chosen section by section; Hebrew and English; light and dark; Avos uBanim cards by thought; all content approved)
 **Owner:** Alex Veksler
 **Repository:** `vekslera/tanya-chai-demo` (public; code under Apache-2.0, content under its own terms, see §9)
 **Target URL:** `https://demo.tanyachai.app` (initially `https://vekslera.github.io/tanya-chai-demo/`)
@@ -617,7 +617,7 @@ These are drafted by Claude (in the claude.ai conversation or in Claude Code) an
 - The ביאור follows the meaning of the approved commentaries (§2), so it carries the inner, Chassidic point of each unit and not only its literal sense. It is written in our own words with our own examples. **Never** quote a commentary or rewrite its sentences one by one.
 - **Overlap check:** before review, a script compares every draft item with the local Shiurim file and flags any run of 5 or more words in common (letters only, nikud ignored). Flagged items are rewritten. The check runs only where the file exists, that is on Alex's machine, never in CI. The English ביאור is checked the same way against the English commentaries it follows.
 - **Sections, not paragraphs:** the learner sees the text one section at a time (S3), never as numbered paragraphs. Questions, hints, explanations and cards point to the text by its words, or as the section just read (`הקטע שקראתם עכשיו`), never by a paragraph number. The review document numbers the sections the same way (§8.4).
-- **Short ביאור:** written in each language (Hebrew and English), at most 25 words per unit in Hebrew and 35 in English (`contentRules.biurMaxWords`); a sentence of several units may have that many words for each of its units. Each language explains its own text of the sentence, with the same meaning, and is written from the commentaries in that language: the English ביאור follows Lessons in Tanya and Steinsaltz in English, and is not a translation of the Hebrew ביאור. (The English ביאור of `LA.32.001`–`LA.32.019` was carried over from the Hebrew; it is to be rewritten this way.) It explains words and the flow, so simply that a child of about 10, or someone opening Tanya for the first time, understands it. No unexplained terms. The third paragraph (`LA.32.011`–`LA.32.019`) is the hardest at this level and needs the most care. There is no extended ביאור in the demo.
+- **Short ביאור:** written in each language (Hebrew and English), at most 25 words per unit in Hebrew and 35 in English (`contentRules.biurMaxWords`); a sentence of several units may have that many words for each of its units. Each language explains its own text of the sentence, with the same meaning, and is written from the commentaries in that language: the English ביאור follows Lessons in Tanya and Steinsaltz in English, and is not a translation of the Hebrew ביאור. (The English ביאור of `LA.32.001`–`LA.32.019` was carried over from the Hebrew; it is to be rewritten this way.) It explains words and the flow, so simply that a child of about 10, or someone opening Tanya for the first time, understands it. No unexplained terms. Sections 5–7 (`LA.32.011`–`LA.32.019`) are the hardest at this level and need the most care. There is no extended ביאור in the demo.
 - **Questions** test the text, not trivia.
   - **Literal:** what does the text say.
   - **Understanding:** why does it say so.
@@ -696,7 +696,7 @@ Each milestone is a small, reviewable step. Work on a branch per milestone, and 
 | M0 | **Scaffold and pipeline:** Vite + React + TS, ESLint/Prettier, tokens, self-hosted fonts, `HeartMark` component, a placeholder Home screen, the deploy workflow | The placeholder page is live on the project URL, RTL is correct, and the heart renders at 62% |
 | M1 | **Text layer:** splits for chapter 32, `build-units`, the English (from `resources/` or fetched with `fetch-sefaria`, license reported) as translation spans, the schedule entry, the portion file, the loader and the validator | The validator passes the integrity rules of §6.5, and Alex has confirmed the portion boundaries |
 | M2 | **Content drafts:** short ביאור for the 19 units, glossary, 6 solo questions with hints and explanations, 6–8 Avos uBanim cards and 3 questions for the son, all `reviewed: false`; `REVIEW.md` generated | REVIEW.md is ready for Alex |
-| M3 | **Read screen:** levels, glossary sheet, per-paragraph English, reading progress | Works on a 360px phone and on desktop; no RTL glitches |
+| M3 | **Read screen:** levels (since: the ביאור switch per section, S2), glossary sheet, English (since: per sentence, with the `HE`/`EN` switch), reading progress | Works on a 360px phone and on desktop; no RTL glitches |
 | M4 | **Quiz:** three question types, feedback with sentence highlight, retry, points, back-to-text sheet | All 6 questions are playable, and state survives a reload |
 | M5 | **Completion:** streak, heart contour animation, purify effect, community counter, points line, level replay | Smooth on a mid-range Android; reduced motion respected |
 | M6 | **Avos uBanim** (S8, S9, shared completion) and the About & credits screen | A father can go through all cards and his son's questions on one phone; attribution lines are exact; reset works |
@@ -725,7 +725,7 @@ All of these are covered in the product blueprint, not here.
 
 1. Done: the portion boundaries for chapter 32 are in `data/schedules/daily.json`.
 2. Done: the source of the Hebrew text is recorded in `resources/texts/he/SOURCE.md`.
-3. Review all content in `content/REVIEW.md` (§8.4), including the Avos uBanim tools.
+3. Done: all content in `content/REVIEW.md` (§8.4) is reviewed and approved, including the Avos uBanim tools (2026-11-16). New or changed items start unreviewed again.
 4. Done: the contact details on the About screen.
 5. Register `tanyachai.app` and set the DNS record (§10.2).
 6. Review the UI strings in `src/strings/he.ts`.

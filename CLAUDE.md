@@ -10,7 +10,7 @@ This repo is the **Tanya Chai (תניא חי) demo**: a static, Hebrew-first, RT
 - **No external requests at runtime:** no Google Fonts, CDNs, embeds, analytics or live Sefaria calls. Fonts are self-hosted via `@fontsource`.
 - **Do not modify anything under `resources/` by hand** (logo files and texts). The texts change only through `npm run fetch-sefaria`, run on Alex's instruction. `HeartMark` draws the logo's own paths, read from `resources/brand/logo/` at build time (`virtual:brand`); never copy them into the code.
 - **Never hardcode a resource or data file path in code.** Every path is named once, in `texts.config.json`; scripts read it through `scripts/lib/config.ts`, and the app through `virtual:texts`.
-- **Never hardcode a parameter.** Each one is defined once (SPEC §5.4): behavior and content rules in `app.config.json` (read through `src/config.ts` or `scripts/lib/config.ts`), design values in `src/styles/tokens.css`, strings in `src/strings/he.ts`, routes in `src/routes.ts`.
+- **Never hardcode a parameter.** Each one is defined once (SPEC §5.4): behavior and content rules in `app.config.json` (read through `src/config.ts` or `scripts/lib/config.ts`), design values in `src/styles/tokens.css` (colors by role, each with its light and dark value through `light-dark()`; never a color outside it), strings in `src/strings/he.ts`, routes in `src/routes.ts`.
 - The name is written **חי, without gershayim**. The Tanya text is shown exactly as in the resource file.
 
 ## Code rules (SPEC §5.4)
@@ -30,6 +30,7 @@ The demo is the first step toward the full app.
 - **UI strings:** all of them go in `src/strings/he.ts`; the few shown in English (the question card in English mode, the English print) go in `src/strings/en.ts`, with the same keys. Use Chabad terminology: ביאור (not הסבר), שיעור, לימוד. Words of learning, not of games: never call the study a game (משחק). The tone is respectful and warm.
 - **Storage:** only through the `KeyValueStorage` port; the browser adapter wraps every `localStorage` access in try/catch. The app must work without storage.
 - **Motion:** respect `prefers-reduced-motion` everywhere.
+- **Built to be used many times:** the demo is shown and replayed again and again, so a repeat run must be as full as the first: every completion awards its points, tips show in every lesson, and opening the demo never starts on a finished screen. Ask Alex before adding anything that happens only once.
 - Mobile first (360–430px), with a centered single column up to 680px on desktop.
 
 ## Workflow
